@@ -1,0 +1,19 @@
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+.rotate20 {
+  .rotate(20deg);
+}
+
+.my-cap { 
+  margin:3px;
+  text-align:center;
+  font-style:italic;
+  width:100%
+}
+
+.buffer {
+  height:100px;
+}
