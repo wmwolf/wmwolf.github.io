@@ -17,3 +17,11 @@
 .buffer {
   height:100px;
 }
+
+.img-wrap-right{
+  display: inline-block;
+  float:right;
+  width:40%;
+  height:auto;
+  margin: 5px;
+}
