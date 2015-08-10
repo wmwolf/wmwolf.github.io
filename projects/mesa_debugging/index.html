@@ -8,15 +8,21 @@ header: MESA Hydro Debugging
 <h2> The Situation </h2>
 <p>In certain circumstances, you will run into situations where the issue
 limiting the timesteps is the mysterious <code>newton_iters</code>. To demonstrate this, I'll be using the <code>wd2</code> test case from MESA version
-7624 with a few minor changes:
+7624 with a few minor changes:</p>
+
 <ul>
   <li> Lowered accretion rate to 5e-8. </li>
   <li> Shut off super-Eddington wind. </li>
 </ul>
-These are sufficient to make thins really bad difficult for the solver when the
-first nova goes off and the envelope expands to large sizes.</p>
-<img width=100% src="images/terminal.png" alt="Terminal output of newton_iters-
-limited run." class="img-rounded">
+
+<p>These are sufficient to make things really difficult for the solver when
+the first nova goes off and the envelope expands to large sizes.</p>
+
+<a href="images/terminal.png">
+  <img src="images/terminal.png"
+  class="img-thumbnail center-block img-responsive" width=90%
+  alt="Terminal output of newton_iters-limited run.">
+</a>
 <div class="my-cap">
   You don't want to be seeing this. Terminal output from the example case when
   the solver starts struggling.
@@ -95,11 +101,141 @@ The full list of commands there is</p>
 !trace_k = 0
 </pre>
 <p> I personally don't know what most of these do, but we can get a lot done
-with just three of these commands. First, you should uncomment the first line</p>
+with just three of these commands. First, you should copy all of the contents of 
+<code>debugging_stuff_for_inlists</code> to the <code>controls</code> section
+of your inlist. Then, you should uncomment the first line:</p>
 
 <pre class='prettify pre-x-scrollable'>
-report_hydrog_solver_progress = .true. ! set true to see info about newton iterations
+report_hydro_solver_progress = .true. ! set true to see info about newton iterations
 </pre>
 
 <p> Running your model again will now produce a <strong>lot</strong> more output,
-giving information about each and every call to the solver.</p>
+giving information about each and every call to the solver:</p>
+
+<a href="images/hydro_info.png">
+  <img src="images/hydro_info.png" class="img-thumbnail img-responsive 
+  center-block" width=90% alt="Information from showing hydro solver.">
+</a>
+<div class='my-cap'>
+  Terminal output when displaying hydro solver progress.
+</div>
+<p>The above screenshot shows the output after turning on the reporting of
+hydro solver information. You can see there is an initial line that gives
+some general information about the call to the solver:</p>
+<pre class='prettify pre-x-scrollable'>
+hydro_call_number, s% dt, dt, dt/secyer, log dt/yr           1    2.8844841852876043D+05    2.8844841852876043D+05    9.1402195209479616D-03   -2.0390433736762885D+00
+</pre>
+<p> In particular, the value for <code>hydro_call_number</code> will be of
+interest to us (in this case it's 1). Then, there is a series six lines that
+give step by step summaries of what the solver did. The last column is the 
+simplest to understand. It tells us that for the first four steps, the solution
+was rejected because the correction from the last guess was too deviant. In 
+those cases, the average correction over the whole model was too large, and the
+largest correction in any one location was also too large. By the fourth
+iteration, the neither of these corrections were too large, and after being
+"fine" on the fifth iteration, it decided the solution was good enough.</p>
+
+<p> You'll note that in the timestep, the number of steps (6) is also recorded in
+the normal terminal output (second to last column, second row). Normally this is
+the only information you get about the hydro solver unless a retry or backup
+is required.</p>
+
+<p> Now that we can track the progress of the solver, we should get to a time
+when things are really bad:</p>
+<a href="images/hydro_bad_terminal.png">
+  <img src="images/hydro_bad_terminal.png" class="img-thumbnail img-responsive
+  center-block" width=90% alt="Terminal output from timestep with bad
+  convergence">
+</a>
+
+<p> Ouch! Fourteen steps is way over our default tolerance of 7. You can bet
+the next step will have a reduced timestep with a reason of "newton_iters". We
+see now that the last problem to "give" is the max coorection (steps 9-12). So
+there's probably a troublesome location within the star that is the real issue
+here, rather than generally poor temporal or spatial resolution. Now let's
+really dig into the guts!</p>
+
+<h2>Pinpointing the Problem</h2>
+<p>Now we make a directory in our work directory called "plot_data" and another
+directory inside of that one called "solve_logs". We're going to instruct MESA
+to dump all the solver data into this directory (solve_logs) for the one 
+problematic timestep.</p>
+
+<p> To do this, we uncomment two more lines of the debugging material we added
+to our inlist. The first is <code>hydro_inspectB_flag = .true.</code>. 
+<code>B</code> is the name of the vector of corrections in the hydro solver, so
+we are telling MESA to actually look at that stuff. The second line is
+<code>hydro_dump_call_number = 195</code>. The number 195 here is really just
+random. We'll be replacing it with the <code>hydro_call_number</code> from
+the timestep we want to investigate. The reason we can't use a model number is
+because due to retries and backups, any given timestep could have an arbitrary
+number of calls to the hydro solver, so the solver call number is a unique
+identifier. In this case, for the model shown above, we'll want to put in a
+value of 3 (see the first line before all of the iterations).</p>
+
+<p>Now if we rerun the model, it will crash once it has completed it's call to
+the hydro solver at the call number we specified. Our new plot_data/solve_logs
+directory will be chock full of data files.</p>
+
+<p> These new files aren't as user-friendly as the profiles and history files
+you're used to. The data for most files is two-dimensional, giving values of
+various quantities (like the log of the density, or the corrections thereof) 
+at each grid point <emph>and at each iteration</emph>. So for a model with
+<var>N</var> zones and <var>M</var> iterations, each of these data files will
+have <var>N</var> &times; <var>M</var> entries. They are not arranged in a grid,
+so using the data requires a little manipulation.</p>
+
+<h3> The Tioga Way </h3>
+
+<p>The simplest solution to this problem is to use Bill Paxton's nifty Tioga
+script <code>solve_log.rb</code> found in many test suite cases (for example,
+<code>wd2</code> has it in its plotters directory as of version 7624).
+Dropping this file in your plot_data directory and replacing the various
+instances of "../../../.." with an explicit path to your <code>$MESA_DIR</code>
+gives you quick access to some informative plots. For instance, running</p>
+
+<pre class='prettify pre-x-scrollable'>
+tioga solve_log -s 0
+</pre>
+<p>produces a nice image plot of the correction to density as a function of the 
+iteration (y-axis) and the grid point (x-axis), as shown below.</p>
+
+<a href="images/corr_lnd_tioga.pdf">
+  <img src="images/corr_lnd_tioga.pdf" class="img-responsive img-thumbnail
+  block-center" width=90% alt="Plot of corrections to the log of density made in
+  Tioga.">
+</a>
+<div class='my-cap'>
+Image plot of corrections to the log of density as made by Bill Paxton's Tioga 
+script. Bright colors indicate large corrections.
+</div>
+
+<p> Varying the values of <code>first_row</code> and <code>last_row</code> let
+you hone in on particular iterations, and changing <code>first_col</code> and
+<code>last_col</code> lets you hone in on particular grid points (this is the
+useful one). We'll get to interpreting the data in a moment, but first...</p>
+
+<h3> The Python Way </h3>
+
+<p> Word on the street is that the cool kids these days use Python to make
+plots, so I coded up a file that emulates what Bill Paxton's tioga scripts do.
+You can find a version of it <a href="files/solve_log.py">here</a> (requires
+numpy and matplotlib). An updated (and possibly better) version should also be
+available on <a href="http://mesastar.org"> MesaStar.org</a>. You can either run
+it interactively in iPython (or just the regular python shell if that's your
+thing) or run it straight from the shell via <code>python solve_log.py</code>
+which will produce the default plot, which shows the corrections in the log of
+the density over all grid points and all iterations, making a pdf called
+corr_lnd.pdf:</p>
+
+<a href="images/corr_lnd_python.pdf">
+  <img src="images/corr_lnd_python.pdf" class="img-responsive img-thumbnail
+  center-block" width=90% alt="Plot of corrections to the log of density made in
+  Python">
+</a>
+<div class='my-cap'>
+Image plot of corrections to the log of density as made by my Python 
+script. Bright colors indicate large corrections.
+</div>
+
+<p> Or you could code your own thing up.</p>
