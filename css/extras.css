@@ -110,3 +110,9 @@ p {
 .btn {
   font-size: 20px;
 }
+
+.pre-x-scrollable {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
+}
