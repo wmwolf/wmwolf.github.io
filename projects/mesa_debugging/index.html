@@ -1,0 +1,105 @@
+---
+layout: default
+title: MESA Hydro Debugging
+realm: "projects"
+header: MESA Hydro Debugging
+---
+
+<h2> The Situation </h2>
+<p>In certain circumstances, you will run into situations where the issue
+limiting the timesteps is the mysterious <code>newton_iters</code>. To demonstrate this, I'll be using the <code>wd2</code> test case from MESA version
+7624 with a few minor changes:
+<ul>
+  <li> Lowered accretion rate to 5e-8. </li>
+  <li> Shut off super-Eddington wind. </li>
+</ul>
+These are sufficient to make thins really bad difficult for the solver when the
+first nova goes off and the envelope expands to large sizes.</p>
+<img width=100% src="images/terminal.png" alt="Terminal output of newton_iters-
+limited run." class="img-rounded">
+<div class="my-cap">
+  You don't want to be seeing this. Terminal output from the example case when
+  the solver starts struggling.
+</div>
+
+<p>The simple solution would be to raise the maximum number of iterations
+allowed. In <code>controls.defaults</code>, one finds</p>
+
+<pre class='prettify pre-x-scrollable'>
+! limits based on iterations required by various solvers and op-splitting
+
+     !### newton_iterations_limit
+
+     ! If newton solve uses more `newton_iterations` than this, reduce the next timestep.
+
+  newton_iterations_limit = 7
+</pre>
+
+<p>We could simply add something like <code>newton_iterations_limit = 7</code>
+to our inlist to "solve" the problem. However, this doesn't really address the
+problem that MESA is struggling to converge because of your model (there are
+times for adjusting the above setting, but I'm not overly familiar with
+them). Rather, there is probably (hopefully?) something you can do to just
+make the number of iterations required to go down.</p>
+
+<h2> Finding out more information </h2>
+<p>There are inlist commands available to you that can tell you more about the 
+struggle that the solver is going through. They are stored in the aptly-named
+<code>debugging_stuff_for_inlists</code> which lives in the test suite directory.
+The full list of commands there is</p>
+
+<pre class='prettify pre-scrollable pre-x-scrollable'>
+! FOR DEBUGGING
+
+!report_hydro_solver_progress = .true. ! set true to see info about newton iterations
+!report_ierr = .true. ! if true, produce terminal output when have some internal error
+!hydro_show_correction_info = .true.
+
+!max_years_for_timestep = 3.67628942044319d-05
+
+!report_why_dt_limits = .true.
+!report_all_dt_limits = .true.
+!report_hydro_dt_info = .true.
+
+!show_mesh_changes = .true.
+!mesh_dump_call_number = 5189
+!okay_to_remesh = .false.
+
+!trace_evolve = .true.
+      
+
+! hydro debugging
+!hydro_check_everything = .true.
+!hydro_inspectB_flag = .true.
+
+!hydro_numerical_jacobian = .true.
+!hydro_save_numjac_plot_data = .true.
+!hydro_dump_call_number = 195
+!hydro_dump_iter_number = 5
+
+!trace_newton_bcyclic_solve_input = .true. ! input is "B" j k iter B(j,k)
+!trace_newton_bcyclic_solve_output = .true. ! output is "X" j k iter X(j,k)
+
+!trace_newton_bcyclic_steplo = 1 ! 1st model number to trace
+!trace_newton_bcyclic_stephi = 1 ! last model number to trace
+
+!trace_newton_bcyclic_iterlo = 2 ! 1st newton iter to trace
+!trace_newton_bcyclic_iterhi = 2 ! last newton iter to trace
+
+!trace_newton_bcyclic_nzlo = 1 ! 1st cell to trace
+!trace_newton_bcyclic_nzhi = 10000 ! last cell to trace; if < 0, then use nz as nzhi
+
+!trace_newton_bcyclic_jlo = 1 ! 1st var to trace
+!trace_newton_bcyclic_jhi = 100 ! last var to trace; if < 0, then use nvar as jhi
+
+!trace_k = 0
+</pre>
+<p> I personally don't know what most of these do, but we can get a lot done
+with just three of these commands. First, you should uncomment the first line</p>
+
+<pre class='prettify pre-x-scrollable'>
+report_hydrog_solver_progress = .true. ! set true to see info about newton iterations
+</pre>
+
+<p> Running your model again will now produce a <strong>lot</strong> more output,
+giving information about each and every call to the solver.</p>
