@@ -201,7 +201,7 @@ tioga solve_log -s 0
 iteration (y-axis) and the grid point (x-axis), as shown below.</p>
 
 <a href="images/corr_lnd_tioga.pdf">
-  <img src="images/corr_lnd_tioga.pdf" class="img-responsive img-thumbnail
+  <img src="images/corr_lnd_tioga.png" class="img-responsive img-thumbnail
   center-block" width=90% alt="Plot of corrections to the log of density made in
   Tioga.">
 </a>
@@ -229,7 +229,7 @@ the density over all grid points and all iterations, making a pdf called
 corr_lnd.pdf:</p>
 
 <a href="images/corr_lnd_python.pdf">
-  <img src="images/corr_lnd_python.pdf" class="img-responsive img-thumbnail
+  <img src="images/corr_lnd_python.png" class="img-responsive img-thumbnail
   center-block" width=90% alt="Plot of corrections to the log of density made in
   Python">
 </a>
@@ -239,3 +239,61 @@ script. Bright colors indicate large corrections.
 </div>
 
 <p> Or you could code your own thing up.</p>
+
+<p> Anyway, it looks like there's a problem that persists for many iterations
+near zone 1700. Let's adjust the x-axis to zoom in on that issue. To do this, 
+we alter the <code>first_col</code> and <code>last_col</code> to 1600 and 1800,
+respectively (in the Tioga case)</p>
+
+<a href="images/corr_lnd_zoom.pdf">
+  <img src="images/corr_lnd_zoom.png" class="img-responsive img_thumbnail
+  center-block" alt="Zoomed plot of log density corrections." width=90%>
+</a>
+<div class="my-cap">
+  Zoom of previous plot... yep, the issue around point 1700 is definitly the
+  cause of the problem.
+</div>
+
+<p>So indeed, it is this area that is causing convergence difficulties. Let's
+look at what might be causing this.</p>
+
+<h3> Comparing to the model </h3>
+<p>My suspicion is that due to the large envelope, opacity problems may be the
+source of the issue, so I went back and re-ran things with a maximum model
+number of 304, being sure to save the last profile. The opacity then looks like
+</p>
+
+<a href="images/opacity_profile.pdf">
+  <img src="images/opacity_profile.png" class="img-responsive img-thumbnail
+  center-block" alt="Plot of opacity profile in troublesome model." width=90%>
+</a>
+<div class="my-cap">
+  Well lookee here... A spike around zone 1700!
+</div>
+<p>
+  So it looks like the convergence errors are related to the extreme bump in 
+  opacity.
+</p>
+<h3>Solving the Problem</h3>
+<p>
+  Now that we know something about the problem, we might look at related 
+  quantities (perhaps the opacity bump causes a density inversion? Maybe there
+  are supersonic velocities here? Is it even convectively unstable? What does
+  the pressure profile look like?).
+
+  When you identify what is physically going on, the first question is "Do I 
+  even care about this region of the star?" If the answer is no, the easiest
+  solution is to cut this part out. If it's in the core, try removing the
+  core from the model (like in the ccsn test case or the neutron star test
+  cases). If it's near the surface, you might move the outer boundary condition
+  inwards, likely using the tau_factor controls.
+</p>
+
+<p>
+  If however, you <emph>do</emph> care about what's going on in the troublesome
+  region, you'll need to think hard about a solution that eases the numerical
+  convergence without doing an unaccepatable amount of damage to the 
+  believability of the model. For this case, turning on MLT++ (via <code>okay_to_reduce_gradT_excess = .true.</code> and friends) is probably a 
+  good first step towards easing the convergence. There is, however no
+  silver bullet.
+</p>
