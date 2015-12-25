@@ -235,8 +235,8 @@ $( document ).ready( ->
     $( '.game' ).toggleClass 'hidden'
     game.setBidder(game.players[(game.i + 1) % 4])
     game.setBid(4)
-    $( '.instruct' ).text("#{game.bidder.name} " +
-      "automaticlaly bids 4. What suit is it in?")
+    $( '.instruct' ).text("#{game.players[game.i % 4]} deals and " +
+      "#{game.bidder.name} automaticlaly bids 4. What suit is it in?")
     $( '.btn' ).hide()
     $( '.btn-suit' ).show()
 
