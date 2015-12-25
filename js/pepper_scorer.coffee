@@ -173,7 +173,7 @@ class PepperGame
       if @i < 4
         @bidder = @players[(@i + 1) % 4]
         @bid = 4
-        $( '.instruct' ).text("#{@players[i%4]} deals and #{@bidder.name} " +
+        $( '.instruct' ).text("#{@players[@i%4].name} deals and #{@bidder.name} " +
           "automaticlaly bids 4. What suit is it in?")
         $( '.btn-suit' ).show()
       else
@@ -235,7 +235,7 @@ $( document ).ready( ->
     $( '.game' ).toggleClass 'hidden'
     game.setBidder(game.players[(game.i + 1) % 4])
     game.setBid(4)
-    $( '.instruct' ).text("#{game.players[game.i % 4]} deals and " +
+    $( '.instruct' ).text("#{game.players[game.i % 4].name} deals and " +
       "#{game.bidder.name} automaticlaly bids 4. What suit is it in?")
     $( '.btn' ).hide()
     $( '.btn-suit' ).show()

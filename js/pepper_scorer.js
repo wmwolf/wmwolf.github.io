@@ -7,15 +7,15 @@
 
   Team = (function() {
     function Team(player11, player21) {
-      var j, len, player, ref;
+      var i, len, player, ref;
       this.player1 = player11;
       this.player2 = player21;
       this.name = '';
       this.score = 0;
       this.players = [this.player1, this.player2];
       ref = this.players;
-      for (j = 0, len = ref.length; j < len; j++) {
-        player = ref[j];
+      for (i = 0, len = ref.length; i < len; i++) {
+        player = ref[i];
         player.setTeam(this);
       }
     }
@@ -104,12 +104,12 @@
     };
 
     PepperGame.prototype.getDecision = function(suit) {
-      var j, len, ref, ref1, team;
+      var i, len, ref, ref1, team;
       this.suit = suit;
       this.biddingTeam = this.bidder.teamAffil;
       ref = this.teams;
-      for (j = 0, len = ref.length; j < len; j++) {
-        team = ref[j];
+      for (i = 0, len = ref.length; i < len; i++) {
+        team = ref[i];
         if (ref1 = this.bidder, indexOf.call(team.players, ref1) < 0) {
           this.defendingTeam = team;
         }
@@ -234,7 +234,7 @@
         if (this.i < 4) {
           this.bidder = this.players[(this.i + 1) % 4];
           this.bid = 4;
-          $('.instruct').text((this.players[i % 4] + " deals and " + this.bidder.name + " ") + "automaticlaly bids 4. What suit is it in?");
+          $('.instruct').text((this.players[this.i % 4].name + " deals and " + this.bidder.name + " ") + "automaticlaly bids 4. What suit is it in?");
           return $('.btn-suit').show();
         } else {
           $('.instruct').text(this.players[this.i % 4].name + " deals. Who won the bid?");
@@ -250,11 +250,11 @@
     };
 
     PepperGame.prototype.restart = function() {
-      var dealer, j, len, ref, team;
+      var dealer, i, len, ref, team;
       this.i = 0;
       ref = this.teams;
-      for (j = 0, len = ref.length; j < len; j++) {
-        team = ref[j];
+      for (i = 0, len = ref.length; i < len; i++) {
+        team = ref[i];
         team.resetScore();
       }
       this.bidder = this.players[1];
@@ -315,7 +315,7 @@
       $('.game').toggleClass('hidden');
       game.setBidder(game.players[(game.i + 1) % 4]);
       game.setBid(4);
-      $('.instruct').text((game.players[game.i % 4] + " deals and ") + (game.bidder.name + " automaticlaly bids 4. What suit is it in?"));
+      $('.instruct').text((game.players[game.i % 4].name + " deals and ") + (game.bidder.name + " automaticlaly bids 4. What suit is it in?"));
       $('.btn').hide();
       return $('.btn-suit').show();
     });
