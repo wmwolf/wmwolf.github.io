@@ -7,15 +7,15 @@
 
   Team = (function() {
     function Team(player11, player21) {
-      var i, len, player, ref;
+      var j, len, player, ref;
       this.player1 = player11;
       this.player2 = player21;
       this.name = '';
       this.score = 0;
       this.players = [this.player1, this.player2];
       ref = this.players;
-      for (i = 0, len = ref.length; i < len; i++) {
-        player = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        player = ref[j];
         player.setTeam(this);
       }
     }
@@ -104,12 +104,12 @@
     };
 
     PepperGame.prototype.getDecision = function(suit) {
-      var i, len, ref, ref1, team;
+      var j, len, ref, ref1, team;
       this.suit = suit;
       this.biddingTeam = this.bidder.teamAffil;
       ref = this.teams;
-      for (i = 0, len = ref.length; i < len; i++) {
-        team = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        team = ref[j];
         if (ref1 = this.bidder, indexOf.call(team.players, ref1) < 0) {
           this.defendingTeam = team;
         }
@@ -234,7 +234,7 @@
         if (this.i < 4) {
           this.bidder = this.players[(this.i + 1) % 4];
           this.bid = 4;
-          $('.instruct').text((this.bidder.name + " automaticlaly bids 4.") + " What suit is it in?");
+          $('.instruct').text((this.players[i % 4] + " deals and " + this.bidder.name + " ") + "automaticlaly bids 4. What suit is it in?");
           return $('.btn-suit').show();
         } else {
           $('.instruct').text(this.players[this.i % 4].name + " deals. Who won the bid?");
@@ -250,11 +250,11 @@
     };
 
     PepperGame.prototype.restart = function() {
-      var dealer, i, len, ref, team;
+      var dealer, j, len, ref, team;
       this.i = 0;
       ref = this.teams;
-      for (i = 0, len = ref.length; i < len; i++) {
-        team = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        team = ref[j];
         team.resetScore();
       }
       this.bidder = this.players[1];

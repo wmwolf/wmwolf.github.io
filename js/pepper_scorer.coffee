@@ -173,8 +173,8 @@ class PepperGame
       if @i < 4
         @bidder = @players[(@i + 1) % 4]
         @bid = 4
-        $( '.instruct' ).text("#{@bidder.name} automaticlaly bids 4."+
-          " What suit is it in?")
+        $( '.instruct' ).text("#{@players[i%4]} deals and #{@bidder.name} " +
+          "automaticlaly bids 4. What suit is it in?")
         $( '.btn-suit' ).show()
       else
         $( '.instruct' ).text("#{@players[@i%4].name} deals. Who won the bid?")
