@@ -97,12 +97,7 @@ invisible when next button is pushed-->
 
 <!-- Finally: Play the game! Becomes visible wen previous button is hit, becomes
 invisible when winner is determined.-->
-<!-- <div class="row hidden game">
-  <div class="col-xs-12 vcenter">
-    <h2>Nice! Now let's play some pepper!</h2>
-  </div>
-</div>
- --><div class="row game">
+<div class="row game">
   <div class="col-md-6">
     <table class="table">
       <tr>
@@ -244,5 +239,32 @@ invisible when winner is determined.-->
       </tr>
     </table>
   </div>
-  <div class="row buffer"></div>
 </div>
+
+<div class="row">
+  <button type="button" class="btn btn-default" data-toggle="modal" 
+  data-target="#help-modal">
+    How do I use this thing?
+  </button>
+  <div class="modal fade" id="help-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title" id="help-title">How to Use Pepper Scorer</h3>
+        </div>
+        <div class="modal-body">
+          <p>Useful information goes here</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Okay, I got it!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row buffer"></div>

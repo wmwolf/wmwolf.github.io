@@ -652,10 +652,17 @@
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
     });
-    return $('#btn-restart').click(function() {
+    $('#btn-restart').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('#btn-restart').fadeOut(f_dur, function() {
         return game.restart();
       });
+    });
+    $('#help-button').click(function() {
+      return $('#help-modal').modal('show');
+    });
+    return $('#help-hide').click(function() {
+      return $('#help-modal').modal('hide');
     });
   });
 
