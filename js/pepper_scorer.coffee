@@ -254,6 +254,8 @@ suit_symbols =
 
 
 $( document ).ready( ->
+  # set initial focus in first field
+  $( '#player-1-name' ).focus()
   # stuff that happens once the "I like my names" button is pressed
   $( ".names form input" ).keypress( (e) ->
     if ((e.which and e.which == 13) or (e.keyCode and e.keyCode == 13))
@@ -281,7 +283,7 @@ $( document ).ready( ->
     # $( '.names' ).fadeOut(f_dur, () -> $( '.teams' ).fadeIn())
     $('.names').fadeOut( () -> 
       # alert($( '.teams' ).html())
-      $( '.teams' ).fadeIn()
+      $( '.teams' ).fadeIn( () -> $('#team-1-name').focus())
     )
   )
 

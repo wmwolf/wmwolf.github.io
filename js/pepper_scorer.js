@@ -326,6 +326,7 @@
   };
 
   $(document).ready(function() {
+    $('#player-1-name').focus();
     $(".names form input").keypress(function(e) {
       if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
         $('#name-submit').click();
@@ -346,7 +347,9 @@
       $('#player-3').text(player3.name);
       $('#player-4').text(player4.name);
       return $('.names').fadeOut(function() {
-        return $('.teams').fadeIn();
+        return $('.teams').fadeIn(function() {
+          return $('#team-1-name').focus();
+        });
       });
     });
     $(".teams form input").keypress(function(e) {
