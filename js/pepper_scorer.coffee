@@ -128,7 +128,10 @@ class PepperGame
 
     partialSet = false
     wasSet = false
+
+    # Color code sets and weak sets
     if team1Change < 0
+      team1ScoreString = "<span style='color:red;'>#{@teams[0].score}</span>"
       if @teams[0] == @defendingTeam
         if @suit == 'clubs'
           partialSet = true
@@ -139,7 +142,10 @@ class PepperGame
           partialSet = true
         else
           wasSet = true
+    else
+      team1ScoreString = "<span>#{@teams[0].score}</span>"
     if team2Change < 0
+      team2ScoreString = "<span style='color:red;'>#{@teams[1].score}</span>"
       if @teams[1] == @defendingTeam
         if @suit == 'clubs'
           partialSet = true
@@ -150,14 +156,29 @@ class PepperGame
           partialSet = true
         else
           wasSet = true
-          
+    else
+      team2ScoreString = "<span>#{@teams[1].score}</span>"
+
+    # Make moons show up in bid
+    if bid == 7
+      bid = '&#x1F319;'
+    else if bid == 14
+      bid = '&#x1F319;&#x1F319;'
+
+    # Make all passes show up right
+    if bidder == "Pass"
+      bidString = "#{bidder}"
+    else
+      bidString = "#{bidder}-#{bid}#{suit}"
     $( '#score tr:last' ).after( "<tr><td>#{@i + 1}</td><td>#{dealer.name}</td>" +
-      "<td>#{bidder}-#{bid}#{suit}</td><td>#{@teams[0].score}</td>" +
-      "<td>#{@teams[1].score}</td></tr>")
+      "<td>#{team1ScoreString}</td>" +
+      "<td>#{team2ScoreString}</td><td>#{bidString}</td></tr>")
     if wasSet
       $( '#score tr:last' ).addClass('danger')
     if partialSet
       $( '#score tr:last' ).addClass('warning')
+    $( '#team1-score' ).text "#{@teams[0].score}"
+    $( '#team2-score' ).text "#{@teams[1].score}"
     if @teams[0].victorious(@teams[1])
       @triggerVictory(@teams[0])
     if @teams[1].victorious(@teams[0])
@@ -174,7 +195,7 @@ class PepperGame
         @bidder = @players[(@i + 1) % 4]
         @bid = 4
         $( '.instruct' ).text("#{@players[@i%4].name} deals and #{@bidder.name} " +
-          "automaticlaly bids 4. What suit is it in?")
+          "automatically bids 4. What suit is it in?")
         $( '.btn-suit' ).show()
       else
         $( '.instruct' ).text("#{@players[@i%4].name} deals. Who won the bid?")
@@ -195,6 +216,9 @@ class PepperGame
       "automaticlaly bids 4. What suit is it in?")
     $( '.btn' ).hide()
     $( '.btn-suit' ).show()
+    $( '#score' ).html("<tr><th>Hand</th><th>Dealer</th>" +
+    "<th>#{@teams[0].name}</th><th>#{@teams[1].name}</th><th>Bid</th></tr>")
+
 
 player1 = new Player 'player1'
 player2 = new Player 'player2'
@@ -204,11 +228,11 @@ team1 = new Team(player1, player3)
 team2 = new Team(player2, player4)
 game = new PepperGame(team1, team2)
 suit_symbols = 
-  'clubs':'&#9827;'
-  'diamonds':'&#9830;'
-  'spades':'&#9824;'
-  'hearts':'&#9829;'
-  'no trump': '&#8709;'
+  'clubs':'<span>&#9827;</span>'
+  'diamonds':'<span style="color: red;">&#9830</span>;'
+  'spades':'<span>&#9824;</span>'
+  'hearts':'<span style="color: red;">&#9829</span;'
+  'no trump': '<span>&#8709;</span>'
 
 
 $( document ).ready( ->

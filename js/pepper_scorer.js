@@ -171,7 +171,7 @@
     };
 
     PepperGame.prototype.updateScores = function(bidder, bid, suit, team1Change, team2Change) {
-      var dealer, partialSet, pepper, wasSet;
+      var bidString, dealer, partialSet, pepper, team1ScoreString, team2ScoreString, wasSet;
       this.teams[0].updatePoints(team1Change);
       this.teams[1].updatePoints(team2Change);
       dealer = this.players[this.i % 4];
@@ -182,6 +182,7 @@
       partialSet = false;
       wasSet = false;
       if (team1Change < 0) {
+        team1ScoreString = "<span style='color:red;'>" + this.teams[0].score + "</span>";
         if (this.teams[0] === this.defendingTeam) {
           if (this.suit === 'clubs') {
             partialSet = true;
@@ -195,8 +196,11 @@
             wasSet = true;
           }
         }
+      } else {
+        team1ScoreString = "<span>" + this.teams[0].score + "</span>";
       }
       if (team2Change < 0) {
+        team2ScoreString = "<span style='color:red;'>" + this.teams[1].score + "</span>";
         if (this.teams[1] === this.defendingTeam) {
           if (this.suit === 'clubs') {
             partialSet = true;
@@ -210,14 +214,28 @@
             wasSet = true;
           }
         }
+      } else {
+        team2ScoreString = "<span>" + this.teams[1].score + "</span>";
       }
-      $('#score tr:last').after(("<tr><td>" + (this.i + 1) + "</td><td>" + dealer.name + "</td>") + ("<td>" + bidder + "-" + bid + suit + "</td><td>" + this.teams[0].score + "</td>") + ("<td>" + this.teams[1].score + "</td></tr>"));
+      if (bid === 7) {
+        bid = '&#x1F319;';
+      } else if (bid === 14) {
+        bid = '&#x1F319;&#x1F319;';
+      }
+      if (bidder === "Pass") {
+        bidString = "" + bidder;
+      } else {
+        bidString = bidder + "-" + bid + suit;
+      }
+      $('#score tr:last').after(("<tr><td>" + (this.i + 1) + "</td><td>" + dealer.name + "</td>") + ("<td>" + team1ScoreString + "</td>") + ("<td>" + team2ScoreString + "</td><td>" + bidString + "</td></tr>"));
       if (wasSet) {
         $('#score tr:last').addClass('danger');
       }
       if (partialSet) {
         $('#score tr:last').addClass('warning');
       }
+      $('#team1-score').text("" + this.teams[0].score);
+      $('#team2-score').text("" + this.teams[1].score);
       if (this.teams[0].victorious(this.teams[1])) {
         this.triggerVictory(this.teams[0]);
       }
@@ -234,7 +252,7 @@
         if (this.i < 4) {
           this.bidder = this.players[(this.i + 1) % 4];
           this.bid = 4;
-          $('.instruct').text((this.players[this.i % 4].name + " deals and " + this.bidder.name + " ") + "automaticlaly bids 4. What suit is it in?");
+          $('.instruct').text((this.players[this.i % 4].name + " deals and " + this.bidder.name + " ") + "automatically bids 4. What suit is it in?");
           return $('.btn-suit').show();
         } else {
           $('.instruct').text(this.players[this.i % 4].name + " deals. Who won the bid?");
@@ -262,7 +280,8 @@
       dealer = this.players[0];
       $('.instruct').text((dealer.name + " deals and " + this.bidder.name + " ") + "automaticlaly bids 4. What suit is it in?");
       $('.btn').hide();
-      return $('.btn-suit').show();
+      $('.btn-suit').show();
+      return $('#score').html("<tr><th>Hand</th><th>Dealer</th>" + ("<th>" + this.teams[0].name + "</th><th>" + this.teams[1].name + "</th><th>Bid</th></tr>"));
     };
 
     return PepperGame;
@@ -284,11 +303,11 @@
   game = new PepperGame(team1, team2);
 
   suit_symbols = {
-    'clubs': '&#9827;',
-    'diamonds': '&#9830;',
-    'spades': '&#9824;',
-    'hearts': '&#9829;',
-    'no trump': '&#8709;'
+    'clubs': '<span>&#9827;</span>',
+    'diamonds': '<span style="color: red;">&#9830</span>;',
+    'spades': '<span>&#9824;</span>',
+    'hearts': '<span style="color: red;">&#9829</span;',
+    'no trump': '<span>&#8709;</span>'
   };
 
   $(document).ready(function() {

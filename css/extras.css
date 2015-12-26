@@ -50,6 +50,19 @@ p {
   background-repeat: no-repeat;
 }
 
+.splash-scorer {
+  height: 12em;
+  padding-top: 3em;
+  margin-bottom: 1em;
+  background-size: auto;
+  color: #fff;
+  vertical-align: middle;
+  text-shadow: 2px 2px 2px #000;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-image: url("../images/card_suits.jpg");
+}
+
 .bckgrd-1{
 /*  position: absolute;*/
   background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2007-16-e-xlarge_web.jpg");  
