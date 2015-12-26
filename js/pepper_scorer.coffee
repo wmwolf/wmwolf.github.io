@@ -180,10 +180,8 @@ class PepperGame
     $( '#team1-score' ).text "#{@teams[0].score}"
     $( '#team2-score' ).text "#{@teams[1].score}"
     if @teams[0].victorious(@teams[1])
-      alert "#{@teams[0].name} is victorious!"
       @triggerVictory(@teams[0])
     else if @teams[1].victorious(@teams[0])
-      alert "#{@teams[0].name} is victorious!"
       @triggerVictory(@teams[1])
     else
       @i += 1
@@ -216,6 +214,8 @@ class PepperGame
     @bidder = @players[1]
     @bid = 4
     dealer = @players[0]
+    $( '#team1-score' ).text "#{@teams[0].score}"
+    $( '#team2-score' ).text "#{@teams[1].score}"    
     $( '.instruct' ).text("#{dealer.name} deals and #{@bidder.name} " +
       "automaticlaly bids 4. What suit is it in?")
     $( '#score' ).html("<tr><th>Hand</th><th>Dealer</th>" +
