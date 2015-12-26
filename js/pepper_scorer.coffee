@@ -62,11 +62,13 @@ class PepperGame
     @bidder = bidder
 
     $( '.instruct' ).text("Okay, what did #{bidder.name} bid?")
+    $( '.instruct' ).fadeIn()
     $( '.btn-bid' ).fadeIn()
 
   getSuit: (bid) ->
     @bid = bid
     $( '.instruct' ).text("What suit is #{@bidder.name}'s bid in?")
+    $( '.instruct' ).fadeIn()
     $( '.btn-suit' ).show()
 
   getDecision: (suit) ->
@@ -80,6 +82,7 @@ class PepperGame
       this.getOutcome()
     else
       $( '.instruct' ).text("What will #{@defendingTeam.name} do?")
+      $( '.instruct' ).fadeIn()
       if @bid == 4
         $( '.btn-decision4' ).fadeIn()
       else if @bid == 5
@@ -87,15 +90,14 @@ class PepperGame
       else
         $( '.btn-decision-other' ).fadeIn()
 
-
-
-
   getOutcome: () ->
     if @suit == 'clubs'
       $( '.instruct' ).text("Too bad, #{@defendingTeam.name}, you're playing. How many tricks did you get?")
+      $( '.instruct' ).fadeIn()
     else
       $( '.instruct' ).text("So #{@defendingTeam.name} is playing! How many " +
         "tricks did they get?")
+      $( '.instruct' ).fadeIn()
     $( '.btn-tricks' ).fadeIn()
 
 
@@ -177,8 +179,17 @@ class PepperGame
       $( '#score tr:last' ).addClass('danger')
     if partialSet
       $( '#score tr:last' ).addClass('warning')
-    $( '#team1-score' ).text "#{@teams[0].score}"
-    $( '#team2-score' ).text "#{@teams[1].score}"
+    score_1 = @teams[0].score
+    score_2 = @teams[1].score
+    $( '#team1-score' ).fadeOut(f_dur/2.0, () ->
+      $( '#team2-score' ).fadeOut(f_dur/2.0, () ->     
+        $( '#team1-score' ).text "#{score_1}"
+        $( '#team2-score' ).text "#{score_2}"
+        $( '#team1-score' ).fadeIn(f_dur/2.0, () ->
+          $( '#team2-score' ).fadeIn(f_dur/2.0)
+        )
+      )
+    )
     if @teams[0].victorious(@teams[1])
       @triggerVictory(@teams[0])
     else if @teams[1].victorious(@teams[0])
@@ -198,14 +209,17 @@ class PepperGame
         @bid = 4
         $( '.instruct' ).text("#{dealer} deals and #{@bidder.name} " +
           "automatically bids 4. What suit is it in?")
+        $( '.instruct' ).fadeIn()
         $( '.btn-suit' ).fadeIn()
       else
         $( '.instruct' ).text("#{dealer} deals. Who won the bid?")
+        $( '.instruct' ).fadeIn()
         $( '.btn-player' ).fadeIn()
 
 
   triggerVictory: (team) ->
     $( '.instruct' ).text("#{team.name} has won the game!")
+    $( '.instruct' ).fadeIn()    
     $( '#btn-restart' ).fadeIn()
 
   restart: () ->
@@ -218,6 +232,7 @@ class PepperGame
     $( '#team2-score' ).text "#{@teams[1].score}"    
     $( '.instruct' ).text("#{dealer.name} deals and #{@bidder.name} " +
       "automaticlaly bids 4. What suit is it in?")
+    $( '.instruct' ).fadeIn()    
     $( '#score' ).html("<tr><th>Hand</th><th>Dealer</th>" +
     "<th>#{@teams[0].name}</th><th>#{@teams[1].name}</th><th>Bid</th></tr>")
     $( '.btn-suit' ).fadeIn()
@@ -240,7 +255,15 @@ suit_symbols =
 
 $( document ).ready( ->
   # stuff that happens once the "I like my names" button is pressed
-  $( '#name-submit' ).click () ->
+  $( ".names form input" ).keypress( (e) ->
+    if ((e.which and e.which == 13) or (e.keyCode and e.keyCode == 13))
+      $('#name-submit').click()
+      false
+    else
+      true
+  )
+
+  $( '#name-submit' ).click(() ->
     # save player names
     player1.setName $( '#player-1-name' ).val()
     player2.setName $( '#player-2-name' ).val()
@@ -255,10 +278,23 @@ $( document ).ready( ->
     $( '#player-3' ).text(player3.name)
     $( '#player-4' ).text(player4.name)
     # fade out name selection screen, then fade in team name selection screen
-    $( '.names' ).fadeOut(f_dur, () -> $( '.teams' ).fadeIn())
+    # $( '.names' ).fadeOut(f_dur, () -> $( '.teams' ).fadeIn())
+    $('.names').fadeOut( () -> 
+      # alert($( '.teams' ).html())
+      $( '.teams' ).fadeIn()
+    )
+  )
 
     
   # stuff that happens once the "I like my team names" button is pressed
+  $( ".teams form input" ).keypress( (e) ->
+    if ((e.which and e.which == 13) or (e.keyCode and e.keyCode == 13))
+      $('#team-submit').click()
+      false
+    else
+      true
+  )
+
   $( '#team-submit' ).click () ->
     # save team names
     team1.setName $( '#team-1-name' ).val()
@@ -274,7 +310,6 @@ $( document ).ready( ->
     # fade out team name selection screen, then bring in everthing in the games
     # setion except the non-suit buttons
     $( '.teams' ).fadeOut(f_dur,  () ->
-      # $( '.btn' ).hide()
       $( '.game' ).fadeIn()
       $( '.btn-suit' ).fadeIn()  
     ) 
@@ -284,25 +319,72 @@ $( document ).ready( ->
   # themselves and then call the appropriate method in PepperGame.
 
   # First do bidder buttons
-  $( '#player-1' ).click(() -> $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player1)))
-  $( '#player-2' ).click(() -> $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player2)))
-  $( '#player-3' ).click(() -> $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player3)))
-  $( '#player-4' ).click(() -> $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player4)))
-  $( '#player-no' ).click(() -> $( '.btn-player' ).fadeOut(f_dur,  () -> game.updateScores('Pass', '', '', 0, 0)))
+  $( '#player-1' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player1))
+  )
+  $( '#player-2' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player2))
+  )    
+  $( '#player-3' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player3))
+  )    
+  $( '#player-4' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-player' ).fadeOut(f_dur,  () -> game.getBid(player4))
+  )    
+  $( '#player-no' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-player' ).fadeOut(f_dur,  () -> 
+      game.updateScores('Pass', '', '', 0, 0)
+    )
+  )
 
   # Bid buttons
-  $( '#bid-4' ).click(() -> $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(4)))
-  $( '#bid-5' ).click(() -> $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(5)))
-  $( '#bid-6' ).click(() -> $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(6)))
-  $( '#bid-7' ).click(() -> $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(7)))  
-  $( '#bid-14' ).click(() -> $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(14)))
+  $( '#bid-4' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(4))
+  )    
+  $( '#bid-5' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(5))
+  )    
+  $( '#bid-6' ).click(() ->
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(6))
+  )    
+  $( '#bid-7' ).click(() ->
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(7))
+  )    
+  $( '#bid-14' ).click(() ->
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-bid' ).fadeOut(f_dur,  () -> game.getSuit(14))
+  )    
 
   # Suit buttons
-  $( '#clubs' ).click(() -> $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('clubs')))
-  $( '#diamonds' ).click(() -> $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('diamonds')))
-  $( '#spades' ).click(() -> $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('spades')))
-  $( '#hearts' ).click(() -> $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('hearts')))
-  $( '#no-trump' ).click(() -> $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('no trump')))
+  $( '#clubs' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('clubs'))
+  )    
+  $( '#diamonds' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('diamonds'))
+  )
+  $( '#spades' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('spades'))
+  )
+  $( '#hearts' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('hearts'))
+  )
+  $( '#no-trump' ).click(() -> 
+    $( '.instruct' ).fadeOut(f_dur)
+    $( '.btn-suit' ).fadeOut(f_dur,  () -> game.getDecision('no trump'))
+  )
 
   # Decision buttons    
   $( '.pass' ).click(() ->
@@ -319,6 +401,7 @@ $( document ).ready( ->
       cls = '.btn-decision5'
     else
       cls = '.btn-decision-other'
+    $( '.instruct' ).fadeOut(f_dur)
     $( cls ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], 
         team1Change, team2Change)
@@ -338,6 +421,7 @@ $( document ).ready( ->
       cls = '.btn-decision5'
     else
       cls = '.btn-decision-other'
+    $( '.instruct' ).fadeOut(f_dur)
     $( cls ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], 
         team1Change, team2Change)
@@ -357,6 +441,7 @@ $( document ).ready( ->
       cls = '.btn-decision5'
     else
       cls = '.btn-decision-other'
+    $( '.instruct' ).fadeOut(f_dur)
     $( cls ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], 
         team1Change, team2Change)
@@ -370,7 +455,9 @@ $( document ).ready( ->
       cls = '.btn-decision5'
     else
       cls = '.btn-decision-other'    
-    $( cls ).fadeOut(f_dur,  () -> game.getOutcome()))
+    $( '.instruct' ).fadeOut(f_dur)
+    $( cls ).fadeOut(f_dur,  () -> game.getOutcome())
+  )
 
   # Outcome Buttons
   $( '#0-tricks' ).click(() ->
@@ -380,6 +467,7 @@ $( document ).ready( ->
     else
       team2Change = game.defChange(0, true)
       team1Change = game.bidChange(0)
+    $( '.instruct' ).fadeOut(f_dur)
     $( '.btn-tricks' ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit],
         team1Change, team2Change)
@@ -392,6 +480,7 @@ $( document ).ready( ->
     else
       team2Change = game.defChange(1, true)
       team1Change = game.bidChange(1)
+    $( '.instruct' ).fadeOut(f_dur)
     $( '.btn-tricks' ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit],
         team1Change, team2Change)
@@ -404,6 +493,7 @@ $( document ).ready( ->
     else
       team2Change = game.defChange(2, true)
       team1Change = game.bidChange(2)
+    $( '.instruct' ).fadeOut(f_dur)
     $( '.btn-tricks' ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit],
         team1Change, team2Change)
@@ -416,6 +506,7 @@ $( document ).ready( ->
     else
       team2Change = game.defChange(3, true)
       team1Change = game.bidChange(3)
+    $( '.instruct' ).fadeOut(f_dur)
     $( '.btn-tricks' ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit],
         team1Change, team2Change)
@@ -428,6 +519,7 @@ $( document ).ready( ->
     else
       team2Change = game.defChange(4, true)
       team1Change = game.bidChange(4)
+    $( '.instruct' ).fadeOut(f_dur)
     $( '.btn-tricks' ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit],
         team1Change, team2Change)
@@ -440,6 +532,7 @@ $( document ).ready( ->
     else
       team2Change = game.defChange(5, true)
       team1Change = game.bidChange(5)
+    $( '.instruct' ).fadeOut(f_dur)
     $( '.btn-tricks' ).fadeOut(f_dur,  () ->
       game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit],
         team1Change, team2Change)

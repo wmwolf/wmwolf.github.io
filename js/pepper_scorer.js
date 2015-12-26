@@ -93,12 +93,14 @@
     PepperGame.prototype.getBid = function(bidder) {
       this.bidder = bidder;
       $('.instruct').text("Okay, what did " + bidder.name + " bid?");
+      $('.instruct').fadeIn();
       return $('.btn-bid').fadeIn();
     };
 
     PepperGame.prototype.getSuit = function(bid) {
       this.bid = bid;
       $('.instruct').text("What suit is " + this.bidder.name + "'s bid in?");
+      $('.instruct').fadeIn();
       return $('.btn-suit').show();
     };
 
@@ -117,6 +119,7 @@
         return this.getOutcome();
       } else {
         $('.instruct').text("What will " + this.defendingTeam.name + " do?");
+        $('.instruct').fadeIn();
         if (this.bid === 4) {
           return $('.btn-decision4').fadeIn();
         } else if (this.bid === 5) {
@@ -130,8 +133,10 @@
     PepperGame.prototype.getOutcome = function() {
       if (this.suit === 'clubs') {
         $('.instruct').text("Too bad, " + this.defendingTeam.name + ", you're playing. How many tricks did you get?");
+        $('.instruct').fadeIn();
       } else {
         $('.instruct').text(("So " + this.defendingTeam.name + " is playing! How many ") + "tricks did they get?");
+        $('.instruct').fadeIn();
       }
       return $('.btn-tricks').fadeIn();
     };
@@ -167,7 +172,7 @@
     };
 
     PepperGame.prototype.updateScores = function(bidder, bid, suit, team1Change, team2Change) {
-      var bidString, dealer, partialSet, pepper, team1ScoreString, team2ScoreString, wasSet;
+      var bidString, dealer, partialSet, pepper, score_1, score_2, team1ScoreString, team2ScoreString, wasSet;
       this.teams[0].updatePoints(team1Change);
       this.teams[1].updatePoints(team2Change);
       dealer = this.players[this.i % 4];
@@ -230,13 +235,20 @@
       if (partialSet) {
         $('#score tr:last').addClass('warning');
       }
-      $('#team1-score').text("" + this.teams[0].score);
-      $('#team2-score').text("" + this.teams[1].score);
+      score_1 = this.teams[0].score;
+      score_2 = this.teams[1].score;
+      $('#team1-score').fadeOut(f_dur / 2.0, function() {
+        return $('#team2-score').fadeOut(f_dur / 2.0, function() {
+          $('#team1-score').text("" + score_1);
+          $('#team2-score').text("" + score_2);
+          return $('#team1-score').fadeIn(f_dur / 2.0, function() {
+            return $('#team2-score').fadeIn(f_dur / 2.0);
+          });
+        });
+      });
       if (this.teams[0].victorious(this.teams[1])) {
-        alert(this.teams[0].name + " is victorious!");
         return this.triggerVictory(this.teams[0]);
       } else if (this.teams[1].victorious(this.teams[0])) {
-        alert(this.teams[0].name + " is victorious!");
         return this.triggerVictory(this.teams[1]);
       } else {
         this.i += 1;
@@ -252,9 +264,11 @@
           this.biddingTeam = this.teams[(this.i + 1) % 2];
           this.bid = 4;
           $('.instruct').text((dealer + " deals and " + this.bidder.name + " ") + "automatically bids 4. What suit is it in?");
+          $('.instruct').fadeIn();
           return $('.btn-suit').fadeIn();
         } else {
           $('.instruct').text(dealer + " deals. Who won the bid?");
+          $('.instruct').fadeIn();
           return $('.btn-player').fadeIn();
         }
       }
@@ -262,6 +276,7 @@
 
     PepperGame.prototype.triggerVictory = function(team) {
       $('.instruct').text(team.name + " has won the game!");
+      $('.instruct').fadeIn();
       return $('#btn-restart').fadeIn();
     };
 
@@ -276,7 +291,10 @@
       this.bidder = this.players[1];
       this.bid = 4;
       dealer = this.players[0];
+      $('#team1-score').text("" + this.teams[0].score);
+      $('#team2-score').text("" + this.teams[1].score);
       $('.instruct').text((dealer.name + " deals and " + this.bidder.name + " ") + "automaticlaly bids 4. What suit is it in?");
+      $('.instruct').fadeIn();
       $('#score').html("<tr><th>Hand</th><th>Dealer</th>" + ("<th>" + this.teams[0].name + "</th><th>" + this.teams[1].name + "</th><th>Bid</th></tr>"));
       return $('.btn-suit').fadeIn();
     };
@@ -308,6 +326,14 @@
   };
 
   $(document).ready(function() {
+    $(".names form input").keypress(function(e) {
+      if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+        $('#name-submit').click();
+        return false;
+      } else {
+        return true;
+      }
+    });
     $('#name-submit').click(function() {
       player1.setName($('#player-1-name').val());
       player2.setName($('#player-2-name').val());
@@ -319,9 +345,17 @@
       $('#player-2').text(player2.name);
       $('#player-3').text(player3.name);
       $('#player-4').text(player4.name);
-      return $('.names').fadeOut(f_dur, function() {
+      return $('.names').fadeOut(function() {
         return $('.teams').fadeIn();
       });
+    });
+    $(".teams form input").keypress(function(e) {
+      if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+        $('#team-submit').click();
+        return false;
+      } else {
+        return true;
+      }
     });
     $('#team-submit').click(function() {
       team1.setName($('#team-1-name').val());
@@ -337,76 +371,91 @@
       });
     });
     $('#player-1').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-player').fadeOut(f_dur, function() {
         return game.getBid(player1);
       });
     });
     $('#player-2').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-player').fadeOut(f_dur, function() {
         return game.getBid(player2);
       });
     });
     $('#player-3').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-player').fadeOut(f_dur, function() {
         return game.getBid(player3);
       });
     });
     $('#player-4').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-player').fadeOut(f_dur, function() {
         return game.getBid(player4);
       });
     });
     $('#player-no').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-player').fadeOut(f_dur, function() {
         return game.updateScores('Pass', '', '', 0, 0);
       });
     });
     $('#bid-4').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-bid').fadeOut(f_dur, function() {
         return game.getSuit(4);
       });
     });
     $('#bid-5').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-bid').fadeOut(f_dur, function() {
         return game.getSuit(5);
       });
     });
     $('#bid-6').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-bid').fadeOut(f_dur, function() {
         return game.getSuit(6);
       });
     });
     $('#bid-7').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-bid').fadeOut(f_dur, function() {
         return game.getSuit(7);
       });
     });
     $('#bid-14').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-bid').fadeOut(f_dur, function() {
         return game.getSuit(14);
       });
     });
     $('#clubs').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-suit').fadeOut(f_dur, function() {
         return game.getDecision('clubs');
       });
     });
     $('#diamonds').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-suit').fadeOut(f_dur, function() {
         return game.getDecision('diamonds');
       });
     });
     $('#spades').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-suit').fadeOut(f_dur, function() {
         return game.getDecision('spades');
       });
     });
     $('#hearts').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-suit').fadeOut(f_dur, function() {
         return game.getDecision('hearts');
       });
     });
     $('#no-trump').click(function() {
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-suit').fadeOut(f_dur, function() {
         return game.getDecision('no trump');
       });
@@ -428,6 +477,7 @@
       } else {
         cls = '.btn-decision-other';
       }
+      $('.instruct').fadeOut(f_dur);
       return $(cls).fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -449,6 +499,7 @@
       } else {
         cls = '.btn-decision-other';
       }
+      $('.instruct').fadeOut(f_dur);
       return $(cls).fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -470,6 +521,7 @@
       } else {
         cls = '.btn-decision-other';
       }
+      $('.instruct').fadeOut(f_dur);
       return $(cls).fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -484,6 +536,7 @@
       } else {
         cls = '.btn-decision-other';
       }
+      $('.instruct').fadeOut(f_dur);
       return $(cls).fadeOut(f_dur, function() {
         return game.getOutcome();
       });
@@ -497,6 +550,7 @@
         team2Change = game.defChange(0, true);
         team1Change = game.bidChange(0);
       }
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-tricks').fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -510,6 +564,7 @@
         team2Change = game.defChange(1, true);
         team1Change = game.bidChange(1);
       }
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-tricks').fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -523,6 +578,7 @@
         team2Change = game.defChange(2, true);
         team1Change = game.bidChange(2);
       }
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-tricks').fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -536,6 +592,7 @@
         team2Change = game.defChange(3, true);
         team1Change = game.bidChange(3);
       }
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-tricks').fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -549,6 +606,7 @@
         team2Change = game.defChange(4, true);
         team1Change = game.bidChange(4);
       }
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-tricks').fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
@@ -562,6 +620,7 @@
         team2Change = game.defChange(5, true);
         team1Change = game.bidChange(5);
       }
+      $('.instruct').fadeOut(f_dur);
       return $('.btn-tricks').fadeOut(f_dur, function() {
         return game.updateScores(game.bidder.name, game.bid, suit_symbols[game.suit], team1Change, team2Change);
       });
