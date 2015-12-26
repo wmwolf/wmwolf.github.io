@@ -63,6 +63,46 @@ p {
   background-image: url("../images/card_suits.jpg");
 }
 
+.teams {
+  display: none;
+}
+
+.game {
+  display: none;
+}
+
+.btn-player {
+  display: none;
+}
+
+.btn-bid {
+  display: none;
+}
+
+.btn-suit {
+  display: none;
+}
+
+.btn-decision4 {
+  display: none;
+}
+
+.btn-decision5 {
+  display: none;
+}
+
+.btn-decision-other {
+  display: none;
+}
+
+.btn-tricks {
+  display: none;
+}
+
+#btn-restart {
+  display: none;
+}
+
 .bckgrd-1{
 /*  position: absolute;*/
   background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2007-16-e-xlarge_web.jpg");  

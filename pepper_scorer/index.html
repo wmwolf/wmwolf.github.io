@@ -62,12 +62,12 @@ header: Pepper Scorer in the Cloud
 
 <!-- Next: Get team names, becomes visible when previous button pushed, 
 invisible when next button is pushed-->
-<div class="row hidden teams">
+<div class="row teams">
   <div class="col-xs-12 vcenter">
     <h2>Cool, and what are your team names?</h2>
   </div>
 </div>
-<div class="row hidden teams">
+<div class="row teams">
   <form class="form-horizontal">
     <div class="form-group form-group-lg">
       <label class="col-md-3 col-sm-4 control-label" for="team-1-name"
@@ -90,7 +90,7 @@ invisible when next button is pushed-->
   </form>
 </div>
 <!-- this button should hide all content above and reveal first chunk below !-->
-<div class="row hidden teams">
+<div class="row teams">
   <div class="col-xs-12 vcenter" style="top:30px;">
     <div class="btn-toolbar">
       <button type="button" class="btn btn-primary btn-lg" id="team-submit">
@@ -107,7 +107,7 @@ invisible when winner is determined.-->
     <h2>Nice! Now let's play some pepper!</h2>
   </div>
 </div>
- --><div class="row hidden game">
+ --><div class="row game">
   <div class="col-md-6">
     <table class="table">
       <tr>
@@ -120,104 +120,121 @@ invisible when winner is determined.-->
     </table>    
     <h3 class="instruct"> Instructions should go here </h3>
     <div class='text-center'>
-      <button type="button" class="btn btn-default btn-player btn-lg" 
-      id="player-1">
-        Player 1
-      </button>
-      <button type="button" class="btn btn-default btn-player btn-lg" 
-      id="player-2">
-        Player 2
-      </button>
-      <button type="button" class="btn btn-default btn-player btn-lg" 
-      id="player-3">
-        Player 3
-      </button>
-      <button type="button" class="btn btn-default btn-player btn-lg" 
-      id="player-4">
-        Player 4
-      </button>
-      <button type="button" class="btn btn-default btn-player btn-lg" 
-      id="player-no">
-        No one
-      </button>
+      <span class="btn-player">
+        <button type="button" class="btn btn-default btn-lg" id="player-1">
+          Player 1
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id="player-2">
+          Player 2
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id="player-3">
+          Player 3
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id="player-4">
+          Player 4
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id="player-no">
+          No one
+        </button>
+      </span>
 
-      <button type="button" class="btn btn-default btn-bid btn-lg" id='bid-4'>
-        4
-      </button>
-      <button type="button" class="btn btn-default btn-bid btn-lg" id='bid-5'>
-        5
-      </button>
-      <button type="button" class="btn btn-default btn-bid btn-lg" id='bid-6'>
-        6
-      </button>
-      <button type="button" class="btn btn-default btn-bid btn-lg" id='bid-7'>
-        &#x1F319;
-      </button>
-      <button type="button" class="btn btn-default btn-bid btn-lg" id='bid-14'>
-        &#x1F319;&#x1F319;
-      </button>
+      <span class="btn-bid">
+        <button type="button" class="btn btn-default btn-lg" id='bid-4'>
+          4
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='bid-5'>
+          5
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='bid-6'>
+          6
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='bid-7'>
+          &#x1F319;
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='bid-14'>
+          &#x1F319;&#x1F319;
+        </button>
+      </span>
 
-      <button type="button" class="btn btn-default btn-suit btn-lg" id='clubs'>
-        <span>&#9827;</span>
-      </button>
-      <button type="button" class="btn btn-default btn-suit btn-lg"
-      id='diamonds'>
-        <span style="color: red;">&#9830;</span>
-      </button>
-      <button type="button" class="btn btn-default btn-suit btn-lg"
-      id='spades'>
-        <span>&#9824;</span>
-      </button>
-      <button type="button" class="btn btn-default btn-suit btn-lg"
-      id='hearts'>
-        <span style="color: red;">&#9829;</span>
-      </button>
-      <button type="button" class="btn btn-default btn-suit btn-lg"
-      id='no-trump'>
-        <span>&#8709;</span>
-      </button>
-      <button type="button" class="btn btn-default btn-decision btn-lg"id='pass'>
-        Pass
-      </button>
-      <button type="button" class="btn btn-default btn-decision btn-lg" id='pass1'>
-        Pass (+1)
-      </button>
-      <button type="button" class="btn btn-default btn-decision btn-lg" id='pass2'>
-        Pass (+2)
-      </button>
-      <button type="button" class="btn btn-success btn-decision btn-lg" id="play">
-        Play
-      </button>
+      <span class="btn-suit">
+        <button type="button" class="btn btn-default btn-lg" id='clubs'>
+          <span>&#9827;</span>
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='diamonds'>
+          <span style="color: red;">&#9830;</span>
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='spades'>
+          <span>&#9824;</span>
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='hearts'>
+          <span style="color: red;">&#9829;</span>
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='no-trump'>
+          <span>&#8709;</span>
+        </button>
+      </span>
+
+      <span class="btn-decision4">
+        <button type="button" class="btn btn-default btn-lg pass">
+          Pass
+        </button>
+        <button type="button" class="btn btn-default btn-lg pass1">
+          Pass (+1)
+        </button>
+        <button type="button" class="btn btn-default btn-lg pass2">
+          Pass (+2)
+        </button>
+        <button type="button" class="btn btn-success btn-lg play">
+          Play
+        </button>
+      </span>
+
+      <span class="btn-decision5">
+        <button type="button" class="btn btn-default btn-lg pass">
+          Pass
+        </button>
+        <button type="button" class="btn btn-default btn-lg pass1">
+          Pass (+1)
+        </button>
+        <button type="button" class="btn btn-success btn-lg play">
+          Play
+        </button>
+      </span>
+
+      <span class="btn-decision-other">
+        <button type="button" class="btn btn-default btn-lg pass">
+          Pass
+        </button>
+        <button type="button" class="btn btn-success btn-lg play">
+          Play
+        </button>
+      </span>
 
 
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='0-tricks'>
-        0
-      </button>
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='1-tricks'>
-        1
-      </button>
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='2-tricks'>
-        2
-      </button>
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='3-tricks'>
-        3
-      </button>
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='4-tricks'>
-        4
-      </button>
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='5-tricks'>
-        5
-      </button>
-      <button type="button" class="btn btn-default btn-tricks btn-lg"
-      id='6-tricks'>
-        6
-      </button>        
+      <span class="btn-tricks">
+        <button type="button" class="btn btn-default btn-lg" id='0-tricks'>
+          0
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='1-tricks'>
+          1
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='2-tricks'>
+          2
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='3-tricks'>
+          3
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='4-tricks'>
+          4
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='5-tricks'>
+          5
+        </button>
+        <button type="button" class="btn btn-default btn-lg" id='6-tricks'>
+          6
+        </button>
+      </span>
+
       <button type="button" class="btn btn-primary btn-lg" id='btn-restart'>
         Let's play again!
       </button> 
