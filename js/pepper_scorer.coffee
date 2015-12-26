@@ -179,12 +179,12 @@ class PepperGame
       $( '#score tr:last' ).addClass('danger')
     if partialSet
       $( '#score tr:last' ).addClass('warning')
-    score_1 = @teams[0].score
-    score_2 = @teams[1].score
+    score_1 = "#{@teams[0].score}"
+    score_2 = "#{@teams[1].score}"
     $( '#team1-score' ).fadeOut(f_dur/2.0, () ->
       $( '#team2-score' ).fadeOut(f_dur/2.0, () ->     
-        $( '#team1-score' ).text "#{score_1}"
-        $( '#team2-score' ).text "#{score_2}"
+        $( '#team1-score' ).text score_1
+        $( '#team2-score' ).text score_2
         $( '#team1-score' ).fadeIn(f_dur/2.0, () ->
           $( '#team2-score' ).fadeIn(f_dur/2.0)
         )
