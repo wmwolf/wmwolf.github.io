@@ -4,6 +4,20 @@
 
 f_dur = 400
 
+bid_symbols =
+  4 : '4'
+  5 : '5'
+  6 : '6'
+  7 : '&#x1F319;'
+  14 : '&#x1F319;&#x1F319;'
+
+suit_symbols = 
+  'clubs':'<span>&#9827;</span>'
+  'diamonds':'<span style="color: red;">&#9830;</span>'
+  'spades':'<span>&#9824;</span>'
+  'hearts':'<span style="color: red;">&#9829;</span>'
+  'no trump': '<span>&#8709;</span>'
+
 class Team
   constructor: (@player1, @player2) ->
     @name = ''
@@ -81,7 +95,9 @@ class PepperGame
     if @suit == 'clubs'
       this.getOutcome()
     else
-      $( '.instruct' ).text("What will #{@defendingTeam.name} do?")
+      $( '.instruct' ).html("#{@bidder.name} has bid " +
+        "#{bid_symbols[@bid]} in #{suit_symbols[@suit]}. What will "+
+        "#{@defendingTeam.name} do?")
       $( '.instruct' ).fadeIn()
       if @bid == 4
         $( '.btn-decision4' ).fadeIn()
@@ -162,10 +178,7 @@ class PepperGame
       team2ScoreString = "<span>#{@teams[1].score}</span>"
 
     # Make moons show up in bid
-    if bid == 7
-      bid = '&#x1F319;'
-    else if bid == 14
-      bid = '&#x1F319;&#x1F319;'
+    bid = bid_symbols[bid]
 
     # Make all passes show up right
     if bidder == "Pass"
@@ -228,8 +241,15 @@ class PepperGame
     @bidder = @players[1]
     @bid = 4
     dealer = @players[0]
-    $( '#team1-score' ).text "#{@teams[0].score}"
-    $( '#team2-score' ).text "#{@teams[1].score}"    
+    $( '#team1-score' ).fadeOut(f_dur/2.0, () ->
+      $( '#team2-score' ).fadeOut(f_dur/2.0, () ->     
+        $( '#team1-score' ).text 0
+        $( '#team2-score' ).text 0
+        $( '#team1-score' ).fadeIn(f_dur/2.0, () ->
+          $( '#team2-score' ).fadeIn(f_dur/2.0)
+        )
+      )
+    )
     $( '.instruct' ).text("#{dealer.name} deals and #{@bidder.name} " +
       "automaticlaly bids 4. What suit is it in?")
     $( '.instruct' ).fadeIn()    
@@ -245,12 +265,7 @@ player4 = new Player 'player4'
 team1 = new Team(player1, player3)
 team2 = new Team(player2, player4)
 game = new PepperGame(team1, team2)
-suit_symbols = 
-  'clubs':'<span>&#9827;</span>'
-  'diamonds':'<span style="color: red;">&#9830</span>;'
-  'spades':'<span>&#9824;</span>'
-  'hearts':'<span style="color: red;">&#9829</span;'
-  'no trump': '<span>&#8709;</span>'
+
 
 
 $( document ).ready( ->
