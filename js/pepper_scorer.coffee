@@ -571,9 +571,6 @@ $( document ).ready( ->
     $( '.instruct' ).fadeOut(f_dur)
     $( '#btn-restart' ).fadeOut(f_dur,  () -> game.restart())
   )
-
-  $( '#help-button' ).click(() -> $( '#help-modal' ).modal('show'))
-  $( '#help-hide' ).click( () -> $( '#help-modal' ).modal('hide'))
 )
 
 
