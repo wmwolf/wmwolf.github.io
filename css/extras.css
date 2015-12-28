@@ -18,7 +18,6 @@
   height:100px;
 }
 
-
 .contact-block{
   width:33%;
   display: inline-block;
@@ -103,8 +102,19 @@ p {
   display: none;
 }
 
-#notes {
-  display: none;
+#scorer-body {
+  min-height: 100%;
+  position: relative;
+}
+
+.full-height {
+  top:12em;
+  bottom:0%;
+}
+
+.help-footer {
+  position: absolute;
+  bottom: 0%;
 }
 
 .bckgrd-1{
