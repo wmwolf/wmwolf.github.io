@@ -149,7 +149,7 @@ class PepperGame
   getSuit: () ->
     $( '.instruct' ).text("What suit is #{@bidder().name}'s bid in?")
     $( '.instruct' ).fadeIn()
-    $( '.btn-suit' ).show()
+    $( '.btn-suit' ).fadeIn()
 
   getDecision: () ->
     if @suit() == 'clubs'
