@@ -230,7 +230,7 @@ class PepperGame
     # Color code sets and weak sets
     if team1Change < 0
       team1ScoreString = "<span style='color:red;'>#{@team1.score()}</span>"
-      if @team1 == @defendingTeam
+      if @team1 == @defendingTeam()
         if @suit() == 'clubs'
           partialSet = true
         else
@@ -244,7 +244,7 @@ class PepperGame
       team1ScoreString = "<span>#{@team1.score()}</span>"
     if team2Change < 0
       team2ScoreString = "<span style='color:red;'>#{@team2.score()}</span>"
-      if @team2 == @defendingTeam
+      if @team2 == @defendingTeam()
         if @suit() == 'clubs'
           partialSet = true
         else
