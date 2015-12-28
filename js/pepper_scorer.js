@@ -176,7 +176,7 @@
     PepperGame.prototype.getSuit = function() {
       $('.instruct').text("What suit is " + (this.bidder().name) + "'s bid in?");
       $('.instruct').fadeIn();
-      return $('.btn-suit').show();
+      return $('.btn-suit').fadeIn();
     };
 
     PepperGame.prototype.getDecision = function() {
@@ -315,6 +315,9 @@
       }
       if (partialSet) {
         $('#score tr:last').addClass('warning');
+      }
+      if (this.passPlay() === 'pass') {
+        $('#score tr:last').addClass('success');
       }
       score_1 = "" + (this.team1.score());
       score_2 = "" + (this.team2.score());
