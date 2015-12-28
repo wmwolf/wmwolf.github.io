@@ -274,6 +274,8 @@ class PepperGame
       $( '#score tr:last' ).addClass('danger')
     if partialSet
       $( '#score tr:last' ).addClass('warning')
+    if @passPlay() == 'pass'
+      $( '#score tr:last' ).addClass('success')
     score_1 = "#{@team1.score()}"
     score_2 = "#{@team2.score()}"
     $( '#team1-score' ).fadeOut(f_dur/2.0, () ->
