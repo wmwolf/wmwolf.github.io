@@ -269,7 +269,7 @@
       wasSet = false;
       if (team1Change < 0) {
         team1ScoreString = "<span style='color:red;'>" + (this.team1.score()) + "</span>";
-        if (this.team1 === this.defendingTeam) {
+        if (this.team1 === this.defendingTeam()) {
           if (this.suit() === 'clubs') {
             partialSet = true;
           } else {
@@ -287,7 +287,7 @@
       }
       if (team2Change < 0) {
         team2ScoreString = "<span style='color:red;'>" + (this.team2.score()) + "</span>";
-        if (this.team2 === this.defendingTeam) {
+        if (this.team2 === this.defendingTeam()) {
           if (this.suit() === 'clubs') {
             partialSet = true;
           } else {
