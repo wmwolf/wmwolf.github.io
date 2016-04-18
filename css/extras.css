@@ -18,7 +18,6 @@
   height:100px;
 }
 
-
 .contact-block{
   width:33%;
   display: inline-block;
@@ -48,6 +47,74 @@ p {
   text-shadow: 5px 5px 5px #000;
   text-align: center;
   background-repeat: no-repeat;
+}
+
+.splash-scorer {
+  height: 12em;
+  padding-top: 3em;
+  margin-bottom: 1em;
+  background-size: auto;
+  color: #fff;
+  vertical-align: middle;
+  text-shadow: 2px 2px 2px #000;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-image: url("../images/card_suits.jpg");
+}
+
+.teams {
+  display: none;
+}
+
+.game {
+  display: none;
+}
+
+.btn-player {
+  display: none;
+}
+
+.btn-bid {
+  display: none;
+}
+
+.btn-suit {
+  display: none;
+}
+
+.btn-decision4 {
+  display: none;
+}
+
+.btn-decision5 {
+  display: none;
+}
+
+.btn-decision-other {
+  display: none;
+}
+
+.btn-tricks {
+  display: none;
+}
+
+#btn-restart {
+  display: none;
+}
+
+#scorer-body {
+  min-height: 100%;
+  position: relative;
+}
+
+.full-height {
+  top:12em;
+  bottom:0%;
+}
+
+.help-footer {
+  position: absolute;
+  bottom: 0%;
 }
 
 .bckgrd-1{
@@ -109,4 +176,10 @@ p {
 
 .btn {
   font-size: 20px;
+}
+
+.pre-x-scrollable {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
 }
