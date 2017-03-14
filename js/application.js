@@ -23,6 +23,180 @@ var img_dimensions = function(klass) {
   };
 };
 
+var MesaTest = {
+  setup: function() {
+    MesaTest.make_checkboxes();
+    $('.add-on').popover({
+      trigger: "hover",
+      title: function() {
+        return $(this).find('td').first().text()
+      },
+      placement: 'bottom'
+    });
+  },
+  platformFilters: {
+    'python': true,
+    'ruby': true,
+    'fortran': true,
+    'otherPlatform': true
+  },
+  usageFilters: {
+    'plotting': true,
+    'io': true,
+    'utility': true,
+    'runStarExtras': true,
+    'otherUsage': true
+  },
+  platformIdClasses: ['python', 'ruby', 'fortran', 'otherPlatform'],
+  usageIdClasses: ['plotting', 'io', 'utility', 'runStarExtras', 'otherUsage'],
+  make_checkboxes: function () {
+    // insert checkboxes below the faculty profiles. Do this here so that
+    // if user has no javascript enabled, this never shows up
+    var new_html = '';
+    new_html += '<div class="row">';
+    new_html += '<div class="col-xs-12">';
+    new_html += '<p>Select or deselect platforms to only show add-ons that ';
+    new_html += 'use the selected language. Similarly, select or deselet ';
+    new_html += 'different usage categories to see add-ons pertinent to that ';
+    new_html += 'scenario. Select at least one platform' ;
+    new_html += ' and at least one usage. ' ;
+    new_html += 'To learn more about ';
+    new_html += 'an individual add-on, click on their table name.';
+    new_html += '</p>';
+    new_html += '</div>';
+    new_html += '</div>';
+    new_html += '<div class="row" id="filter">';
+    new_html += '<div class="col-xs-12 col-md-6">';
+    new_html += '<h4> Platforms </h4>';
+    new_html += '<form class="form-inline">';
+    new_html += '<div class="form-group">';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="python" checked>Python</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="ruby" checked>Ruby</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="fortran" checked>Fortran</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="otherPlatform" checked>Other</label>';
+    new_html += '</div>';
+    new_html += '</div>';
+    new_html += '</form>';
+    new_html += '</div>';
+    new_html += '<div class="col-xs-12 col-md-6">';
+    new_html += '<h4> Usages </h4>';
+    new_html += '<form class="form-inline">';
+    new_html += '<div class="form-group">';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="plotting" checked>Plotting</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="io" checked>I/O</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="utility" checked>Utility</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="runStarExtras" checked>run_star_extras</label>';
+    new_html += '</div>';
+    new_html += '<div class="checkbox">';
+    new_html += '<label><input type="checkbox" id="otherUsage" checked>Other</label>';
+    new_html += '</div>';
+    new_html += '</div>';
+    new_html += '</form>';
+    new_html += '</div>';
+    new_html += '</div>';
+    // wrap this in jQuery magic and actually insert into DOM
+    new_html = $(new_html);
+    new_html.insertBefore('#before-add-ons');
+
+    // Set up handlers for each checkbox
+    // This is really repetitive... couldn't figure out a better way, though
+    $('#python').change(function() {
+      var key = 'python';
+      MesaTest.platformFilters[key] = !MesaTest.platformFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#ruby').change(function() {
+      var key = 'ruby';
+      MesaTest.platformFilters[key] = !MesaTest.platformFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#fortran').change(function() {
+      var key = 'fortran';
+      MesaTest.platformFilters[key] = !MesaTest.platformFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#otherPlatform').change(function() {
+      var key = 'otherPlatform';
+      MesaTest.platformFilters[key] = !MesaTest.platformFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#plotting').change(function() {
+      var key = 'plotting';
+      MesaTest.usageFilters[key] = !MesaTest.usageFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#io').change(function() {
+      var key = 'io';
+      MesaTest.usageFilters[key] = !MesaTest.usageFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#utility').change(function() {
+      var key = 'utility';
+      MesaTest.usageFilters[key] = !MesaTest.usageFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#runStarExtras').change(function() {
+      var key = 'runStarExtras';
+      MesaTest.usageFilters[key] = !MesaTest.usageFilters[key];
+      MesaTest.updateAddons();
+    });
+    $('#otherUsage').change(function() {
+      var key = 'otherUsage';
+      MesaTest.usageFilters[key] = !MesaTest.usageFilters[key];
+      MesaTest.updateAddons();
+    });
+  },
+
+  // "Hide" all faculty profiles and then show only those who have at least one
+  // of the selected methodologies and at least one of the subfields
+  updateAddons: function() {
+    var platformWhitelist = [];
+    var usageWhitelist = [];
+    for (var i = 0; i < MesaTest.platformIdClasses.length; i++) {
+      var key = MesaTest.platformIdClasses[i];
+      if (MesaTest.platformFilters[key] & key !== undefined) {
+        platformWhitelist.push(key);
+      }      
+    }
+    alert("whitelist: " + platformWhitelist);
+    for (var i = 0; i < MesaTest.usageIdClasses.length; i++) {
+      var key = MesaTest.usageIdClasses[i];
+      if (MesaTest.usageFilters[key] & key !== undefined) {
+        usageWhitelist.push(key);
+      }      
+    }
+    // require at least one pair of method-subfield to be present
+    var showSelector = '';
+    for (i = 0; i < platformWhitelist.length; i++) {
+      for (var j = 0; j < usageWhitelist.length; j++) {
+        showSelector += '.add-on.' + platformWhitelist[i] + '.' + 
+        usageWhitelist[j] + ', ';
+      }
+    }
+    alert("showSelector: " + showSelector);
+    // strip off last comma and space from selector
+    showSelector = showSelector.substring(0, showSelector.length-2);
+    $('#add-ons .add-on').hide();
+    $(showSelector).show();
+  }
+};
+
+
+
 $( document ).ready(function() {
   var bckgrd_options = ['bckgrd-1', 'bckgrd-2', 'bckgrd-3', 'bckgrd-4',
                         'bckgrd-5'];
@@ -71,5 +245,6 @@ $( document ).ready(function() {
   // var background_width = dimensions[0];
   // var background_height = dimensions[1];
   // alert("width = " + background_width + "; height = " + background_height)
+  MesaTest.setup();
 }); 
 
