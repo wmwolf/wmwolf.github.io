@@ -204,30 +204,41 @@ var Papers = {
     alert(Papers.papers[1]);
   },
   papers: [],
-  base_url: "https://api.adsabs.harvard.edu/v1/search",
-  search_query: "/query?q=" +
-    // papers that cite any of the instrument papers
-    "citations:(bibcode:2011ApJS..192....3P)" +
-    "+OR+citations:(bibcode:2013ApJS..208....4P)" +
-    "+OR+citations:(bibcode:2015ApJS..220...15P)" +
-    // get the titles, authors, and bibcodes of matching papers
-    "&fl=title,author,bibcode" + 
-    // restrict search to refereed articles
-    "&fq=property:refereed" +
-    // only get 10 articles
-    "&rows=10" + 
-    // sort by publication date
-    "&sort=pubdate",
+  base_url: "https://api.adsabs.harvard.edu/v1/search/query",
+  search_query: {
+    q: ("citations:(bibcode:2011ApJS..192....3P)+OR+" +
+        "citations:(bibcode:2013ApJS..208....4P)+OR+" +
+        "citations:(bibcode:2015ApJS..220...15P)"),
+    fl: "title,author,bibcode",
+    fq: "property:refereed",
+    rows: "10",
+    sort: "pubdate"
+  },
+  // "q=" +
+  //   // papers that cite any of the instrument papers
+  //   "citations:(bibcode:2011ApJS..192....3P)" +
+  //   "+OR+citations:(bibcode:2013ApJS..208....4P)" +
+  //   "+OR+citations:(bibcode:2015ApJS..220...15P)" +
+  //   // get the titles, authors, and bibcodes of matching papers
+  //   "&fl=title,author,bibcode" + 
+  //   // restrict search to refereed articles
+  //   "&fq=property:refereed" +
+  //   // only get 10 articles
+  //   "&rows=10" + 
+  //   // sort by publication date
+  //   "&sort=pubdate",
   search_url: function() {
     return Papers.base_url + Papers.search_query;
   },
   get_papers: function() {
     $.ajax({
-      url: Papers.search_url(),
-      type: 'GET',
+      url: Papers.base_url, //Papers.search_url(),
+      data: Papers.search_query,
+      // type: 'GET',
       beforeSend: function(xhr) {
         xhr.setRequestHeader(
-          "Authorization", "Bearer UNWCzKzFZpUKPburKg5K7eK7N3djJoW6IMPC4w7j")
+          "Authorization", "Bearer UNWCzKzFZpUKPburKg5K7eK7N3djJoW6IMPC4w7j");
+        xhr.setRequestHeader("Access-Control-Allow-Origin", '*');
       },
       success: Papers.organize_papers,
       dataType: 'json'});
