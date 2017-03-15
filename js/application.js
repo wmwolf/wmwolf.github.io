@@ -195,7 +195,75 @@ var MesaTest = {
   }
 };
 
-
+var Papers = {
+  setup: function() {
+    alert('about to call get_papers');
+    Papers.get_papers();
+    alert('about to call add_content');
+    Papers.add_content();
+    alert(Papers.papers[1]);
+  },
+  papers: [],
+  base_url: "https://api.adsabs.harvard.edu/v1/search",
+  search_query: "/query?q=" +
+    // papers that cite any of the instrument papers
+    "citations:(bibcode:2011ApJS..192....3P)" +
+    "+OR+citations:(bibcode:2013ApJS..208....4P)" +
+    "+OR+citations:(bibcode:2015ApJS..220...15P)" +
+    // get the titles, authors, and bibcodes of matching papers
+    "&fl=title,author,bibcode" + 
+    // restrict search to refereed articles
+    "&fq=property:refereed" +
+    // only get 10 articles
+    "&rows=10" + 
+    // sort by publication date
+    "&sort=pubdate",
+  search_url: function() {
+    return Papers.base_url + Papers.search_query;
+  },
+  get_papers: function() {
+    $.ajax({
+      url: Papers.search_url(),
+      type: 'GET',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(
+          "Authorization", "Bearer UNWCzKzFZpUKPburKg5K7eK7N3djJoW6IMPC4w7j")
+      },
+      success: Papers.organize_papers,
+      dataType: 'json'});
+  },
+  organize_papers: function(json) {
+    Papers.papers=[];
+    $(json).find("docs").each(function() {
+      Papers.papers.push({
+        title: $(this).find('title').text(),
+        authors: Papers.format_authors($(this).find('authors')),
+        bibcode: $(this).find('bibcode').text(),
+        url: 'https://ui.adsabs.harvard.edu/#abs/' + 
+          $(this).find('bibcode').text() + '/abstract'
+      });
+    });
+  },
+  paper_html: function() {
+    var content = '<div class="row" id="ads"><div class="col-sm-12">' +
+      '<a id="papers"></a><div class="panel panel-primary no-height-fix">' +
+      '<div class="panel-heading"><h3 class="panel-title">Recent Papers using '+
+      'MESA</h3></div><div class="panel-content">' +
+      '<ul class="list-group" id="papers-content">';
+    for (var i = 0; i < Papers.papers.length; i++) {
+      var paper = Papers.papers[i];
+      content += '<a href=' + url + ' class="list-group-item paper"><h4>' +
+        paper.title + '</h4>' + paper.authors + '</a>';
+    }
+    content += '</ul></div><a href=#papers><div class="panel-footer ' +
+      'text-center expandable"><span class="glyphicon glyphicon-chevron-down">'+
+      '</span></div></a></div></div></div>';
+    return $(content)
+  },
+  add_content: function() {
+    $(Papers.paper_html()).insertAfter('#publications')
+  }
+};
 
 $( document ).ready(function() {
   var bckgrd_options = ['bckgrd-1', 'bckgrd-2', 'bckgrd-3', 'bckgrd-4',
@@ -246,5 +314,6 @@ $( document ).ready(function() {
   // var background_height = dimensions[1];
   // alert("width = " + background_width + "; height = " + background_height)
   MesaTest.setup();
+  Papers.setup();
 }); 
 
