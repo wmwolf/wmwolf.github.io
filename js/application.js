@@ -172,7 +172,7 @@ var MesaTest = {
         platformWhitelist.push(key);
       }      
     }
-    alert("whitelist: " + platformWhitelist);
+    // alert("whitelist: " + platformWhitelist);
     for (var i = 0; i < MesaTest.usageIdClasses.length; i++) {
       var key = MesaTest.usageIdClasses[i];
       if (MesaTest.usageFilters[key] & key !== undefined) {
@@ -187,7 +187,7 @@ var MesaTest = {
         usageWhitelist[j] + ', ';
       }
     }
-    alert("showSelector: " + showSelector);
+    // alert("showSelector: " + showSelector);
     // strip off last comma and space from selector
     showSelector = showSelector.substring(0, showSelector.length-2);
     $('#add-ons .add-on').hide();
@@ -197,63 +197,53 @@ var MesaTest = {
 
 var Papers = {
   setup: function() {
-    alert('about to call get_papers');
     Papers.get_papers();
-    alert('about to call add_content');
-    Papers.add_content();
-    alert(Papers.papers[1]);
+    // alert('about to call add_content');
+    // Papers.add_content();
+    // alert(Papers.papers[1]);
   },
   papers: [],
   base_url: "https://api.adsabs.harvard.edu/v1/search/query",
-  search_query: {
-    q: ("citations:(bibcode:2011ApJS..192....3P)+OR+" +
-        "citations:(bibcode:2013ApJS..208....4P)+OR+" +
-        "citations:(bibcode:2015ApJS..220...15P)"),
-    fl: "title,author,bibcode",
-    fq: "property:refereed",
-    rows: "10",
-    sort: "pubdate"
-  },
-  // "q=" +
-  //   // papers that cite any of the instrument papers
-  //   "citations:(bibcode:2011ApJS..192....3P)" +
-  //   "+OR+citations:(bibcode:2013ApJS..208....4P)" +
-  //   "+OR+citations:(bibcode:2015ApJS..220...15P)" +
-  //   // get the titles, authors, and bibcodes of matching papers
-  //   "&fl=title,author,bibcode" + 
-  //   // restrict search to refereed articles
-  //   "&fq=property:refereed" +
-  //   // only get 10 articles
-  //   "&rows=10" + 
-  //   // sort by publication date
-  //   "&sort=pubdate",
+  // search_query: {
+  //   q: ("citations(bibcode:2011ApJS..192....3P)+OR+" +
+  //       "citations(bibcode:2013ApJS..208....4P)+OR+" +
+  //       "citations(bibcode:2015ApJS..220...15P)"),
+  //   fl: "title,author,bibcode",
+  //   fq: "property:refereed",
+  //   rows: "10",
+  //   sort: "pubdate+desc"
+  // },
+  search_query: "?q=" +
+    // papers that cite any of the instrument papers
+    "citations(bibcode:2011ApJS..192....3P)" +
+    "+OR+citations(bibcode:2013ApJS..208....4P)" +
+    "+OR+citations(bibcode:2015ApJS..220...15P)" +
+    // get the titles, authors, and bibcodes of matching papers
+    "&fl=title,author,bibcode" + 
+    // restrict search to refereed articles
+    "&fq=property:refereed" +
+    // only get 10 articles
+    "&rows=10" + 
+    // sort by publication date
+    "&sort=pubdate+desc",
   search_url: function() {
     return Papers.base_url + Papers.search_query;
   },
   get_papers: function() {
     $.ajax({
-      url: Papers.base_url, //Papers.search_url(),
-      data: Papers.search_query,
-      // type: 'GET',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader(
-          "Authorization", "Bearer UNWCzKzFZpUKPburKg5K7eK7N3djJoW6IMPC4w7j");
-        xhr.setRequestHeader("Access-Control-Allow-Origin", '*');
+      url: Papers.search_url(),
+      headers: {
+        Authorization: "Bearer UNWCzKzFZpUKPburKg5K7eK7N3djJoW6IMPC4w7j"
       },
-      success: Papers.organize_papers,
-      dataType: 'json'});
-  },
-  organize_papers: function(json) {
-    Papers.papers=[];
-    $(json).find("docs").each(function() {
-      Papers.papers.push({
-        title: $(this).find('title').text(),
-        authors: Papers.format_authors($(this).find('authors')),
-        bibcode: $(this).find('bibcode').text(),
-        url: 'https://ui.adsabs.harvard.edu/#abs/' + 
-          $(this).find('bibcode').text() + '/abstract'
-      });
+      success: function(json) { 
+        Papers.papers=json.response.docs;
+        Papers.add_content();
+      },
+      error: function(xhr, stat, err) {alert("Error getting papers: " + err);}
     });
+  },
+  url: function(paper) {
+    return "https://ui.adsabs.harvard.edu/#abs/" + paper.bibcode + '/abstract'
   },
   paper_html: function() {
     var content = '<div class="row" id="ads"><div class="col-sm-12">' +
@@ -263,8 +253,9 @@ var Papers = {
       '<ul class="list-group" id="papers-content">';
     for (var i = 0; i < Papers.papers.length; i++) {
       var paper = Papers.papers[i];
-      content += '<a href=' + url + ' class="list-group-item paper"><h4>' +
-        paper.title + '</h4>' + paper.authors + '</a>';
+      content += '<a href=' + Papers.url(paper) + 
+        ' class="list-group-item paper"><h4>' +
+        paper.title + '</h4>' + paper.author + '</a>';
     }
     content += '</ul></div><a href=#papers><div class="panel-footer ' +
       'text-center expandable"><span class="glyphicon glyphicon-chevron-down">'+
