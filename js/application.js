@@ -200,9 +200,6 @@ var Papers = {
     if ($('#publications')){
       Papers.get_papers();
     }
-    // alert('about to call add_content');
-    // Papers.add_content();
-    // alert(Papers.papers[1]);
   },
   papers: [],
   base_url: "https://api.adsabs.harvard.edu/v1/search/query",
