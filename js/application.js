@@ -247,6 +247,18 @@ var Papers = {
   url: function(paper) {
     return "https://ui.adsabs.harvard.edu/#abs/" + paper.bibcode + '/abstract'
   },
+  format_authors: function(paper) {
+    var authors = paper.author
+    if (authors.length == 1) {
+      return authors[0]
+    } else if (authors.length == 2) {
+      return authors[0] + ' and ' + authors[1]
+    } else if (authors.length == 3) {
+      return authors[0] + ', ' + authors[1] + ', and ' + authors[2]
+    } else {
+      return authors[0] + ', ' + authors[1] + ', ' + authors[2] + ' et al.'
+    }
+  },
   paper_html: function() {
     var content = '<div class="row" id="ads"><div class="col-sm-12">' +
       '<a id="papers"></a><div class="panel panel-primary no-height-fix">' +
@@ -257,7 +269,7 @@ var Papers = {
       var paper = Papers.papers[i];
       content += '<a href=' + Papers.url(paper) + 
         ' class="list-group-item paper"><h4>' +
-        paper.title + '</h4>' + paper.author + '</a>';
+        paper.title + '</h4>' + Papers.format_authors(paper) + '</a>';
     }
     content += '</ul></div><a href=#papers><div class="panel-footer ' +
       'text-center expandable"><span class="glyphicon glyphicon-chevron-down">'+
