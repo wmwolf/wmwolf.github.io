@@ -197,7 +197,9 @@ var MesaTest = {
 
 var Papers = {
   setup: function() {
-    Papers.get_papers();
+    if ($('#publications')){
+      Papers.get_papers();
+    }
     // alert('about to call add_content');
     // Papers.add_content();
     // alert(Papers.papers[1]);
