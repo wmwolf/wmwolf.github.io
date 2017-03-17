@@ -197,12 +197,16 @@ var MesaTest = {
 
 var Papers = {
   setup: function() {
-    if ($('#publications')){
+    if ($('#publications').length){
       Papers.get_papers();
     }
   },
   papers: [],
-  base_url: "http://cors-anywhere.herokuapp.com/https://api.adsabs.harvard.edu/v1/search/query",
+  // FOR DEVELOPMENT
+  // proxy_url: 'http://localhost:5000/',
+  // FOR DEPLOYMENT
+  proxy_url: 'http://mesa-ads.herokuapp.com/',
+  api_url: 'https://api.adsabs.harvard.edu/v1/search/query',
   // search_query: {
   //   q: ("citations(bibcode:2011ApJS..192....3P)+OR+" +
   //       "citations(bibcode:2013ApJS..208....4P)+OR+" +
@@ -226,14 +230,11 @@ var Papers = {
     // sort by publication date
     "&sort=pubdate+desc",
   search_url: function() {
-    return Papers.base_url + Papers.search_query;
+    return Papers.proxy_url + Papers.api_url + Papers.search_query;
   },
   get_papers: function() {
     $.ajax({
       url: Papers.search_url(),
-      headers: {
-        Authorization: "Bearer UNWCzKzFZpUKPburKg5K7eK7N3djJoW6IMPC4w7j"
-      },
       success: function(json) { 
         Papers.papers=json.response.docs;
         Papers.add_content();
