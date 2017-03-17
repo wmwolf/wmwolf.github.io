@@ -202,7 +202,7 @@ var Papers = {
     }
   },
   papers: [],
-  base_url: "https://api.adsabs.harvard.edu/v1/search/query",
+  base_url: "http://cors-anywhere.herokuapp.com/https://api.adsabs.harvard.edu/v1/search/query",
   // search_query: {
   //   q: ("citations(bibcode:2011ApJS..192....3P)+OR+" +
   //       "citations(bibcode:2013ApJS..208....4P)+OR+" +
