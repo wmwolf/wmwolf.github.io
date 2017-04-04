@@ -239,7 +239,8 @@ var Papers = {
         Papers.papers=json.response.docs;
         Papers.add_content();
       },
-      error: function(xhr, stat, err) {alert("Error getting papers: " + err);}
+      error: function(xhr, stat, err) {alert("Error getting papers: " + err);},
+      cache: false
     });
   },
   url: function(paper) {
