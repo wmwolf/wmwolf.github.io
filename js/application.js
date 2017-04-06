@@ -4,7 +4,7 @@ var img_dimensions = function(klass) {
       width,
       height,
       res;
-      
+
   // Remove url() or in case of Chrome url("")
   image_url = image_url.match(/^url\("?(.+?)"?\)$/);
 
@@ -14,13 +14,13 @@ var img_dimensions = function(klass) {
       // just in case it is not already loaded
       image.src = image_url;
       // res = $(image).load(function() {
-      width = image.width
-      height = image.height
+      width = image.width;
+      height = image.height;
       return([width, height]);
       // });
       // alert("res is " + res)
       // return res
-  };
+  }
 };
 
 var MesaTest = {
@@ -29,7 +29,7 @@ var MesaTest = {
     $('.add-on').popover({
       trigger: "hover",
       title: function() {
-        return $(this).find('td').first().text()
+        return $(this).find('td').first().text();
       },
       placement: 'bottom'
     });
@@ -198,8 +198,18 @@ var MesaTest = {
 var Papers = {
   setup: function() {
     if ($('#publications').length){
+      Papers.place_panel();
       Papers.get_papers();
     }
+  },
+  place_panel: function() {
+    var content = '<div class="row" id="ads"><div class="col-sm-12">' +
+      '<div class="panel panel-primary no-height-fix">' +
+      '<div class="panel-heading"><h3 class="panel-title">Recent Papers using '+
+      'MESA</h3></div><div class="panel-content" id="ads-content">' +
+      '<h3 class="text-center">Querying ADS for recent papers...</h3>' +
+      '</div></div></div></div>';
+    $(content).insertAfter('#publications');
   },
   papers: [],
   // FOR DEVELOPMENT
@@ -259,24 +269,26 @@ var Papers = {
     }
   },
   paper_html: function() {
-    var content = '<div class="row" id="ads"><div class="col-sm-12">' +
-      '<a id="papers"></a><div class="panel panel-primary no-height-fix">' +
-      '<div class="panel-heading"><h3 class="panel-title">Recent Papers using '+
-      'MESA</h3></div><div class="panel-content">' +
-      '<ul class="list-group" id="papers-content">';
+    // var content = '<div class="row" id="ads"><div class="col-sm-12">' +
+    //   '<a id="papers"></a><div class="panel panel-primary no-height-fix">' +
+    //   '<div class="panel-heading"><h3 class="panel-title">Recent Papers using '+
+    //   'MESA</h3></div><div class="panel-content">' +
+    var content = '<ul class="list-group" id="papers-content">';
     for (var i = 0; i < Papers.papers.length; i++) {
       var paper = Papers.papers[i];
       content += '<a href=' + Papers.url(paper) + 
         ' class="list-group-item paper"><h4>' +
         paper.title + '</h4>' + Papers.format_authors(paper) + '</a>';
     }
-    content += '</ul></div><a href=#papers><div class="panel-footer ' +
-      'text-center expandable"><span class="glyphicon glyphicon-chevron-down">'+
-      '</span></div></a></div></div></div>';
+    content += '</ul>';
+    // content += '<ul></div><a href=#papers><div class="panel-footer ' +
+    //   'text-center expandable"><span class="glyphicon glyphicon-chevron-down">'+
+    //   '</span></div></a></div></div></div>';
     return $(content)
   },
   add_content: function() {
-    $(Papers.paper_html()).insertAfter('#publications')
+    $('#ads-content').html(Papers.paper_html());
+    // $(Papers.paper_html()).insertAfter('#publications')
   }
 };
 
