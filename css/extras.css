@@ -119,7 +119,7 @@ p {
 
 .bckgrd-1{
 /*  position: absolute;*/
-  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2007-16-e-xlarge_web.jpg");  
+  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2007-16-e-large_web.jpg");  
 /*  background-size: 100%;*/
 /*  background-attachment: fixed;*/
 /*  background-position: ;*/
@@ -127,28 +127,28 @@ p {
 
 .bckgrd-2{
 /*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2012-10-a-xlarge_web.jpg');
+  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2012-10-a-large_web.jpg');
 /*  background-size: 100%;*/
 /*  background-attachment: fixed;*/
 }
 
 .bckgrd-3{
 /*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-25-i-xlarge_web.jpg');
+  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-25-i-large_web.jpg');
 /*  background-size: 100%;*/
 /*  background-attachment: fixed;*/
 }
 
 .bckgrd-4{
 /*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-xlarge_web.jpg');
+  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg');
 /*  background-size: 100%;*/
 /*  background-attachment: fixed;*/
 }
 
 .bckgrd-5{
 /*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-02-a-xlarge_web.jpg');
+  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-02-a-large_web.jpg');
 /*  background-size: 100%;*/
 /*  background-attachment: fixed;*/
 }
