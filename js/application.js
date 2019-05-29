@@ -23,6 +23,13 @@ var img_dimensions = function(klass) {
   }
 };
 
+var Home = {
+  setup: function() {
+    $('.splash .initially-hidden').fadeToggle(750);
+    $('.container .initially-hidden').slideUp().delay(250).fadeToggle(750);
+  }
+}
+
 var MesaTest = {
   setup: function() {
     MesaTest.make_checkboxes();
@@ -342,5 +349,6 @@ $( document ).ready(function() {
   // alert("width = " + background_width + "; height = " + background_height)
   MesaTest.setup();
   Papers.setup();
+  Home.setup();
 }); 
 

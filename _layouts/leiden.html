@@ -1,0 +1,21 @@
+---
+---
+<html lang="en">
+{% include header_leiden.html %}
+<body>
+  <div class="splash-leiden bckgrd">
+    <h1 class='display-2'>{{page.header}}</h1>
+  </div>
+  <div class="container">
+    <div class="row sticky-top">
+      <div class="col-md-3">
+        {% include navbar_leiden.html %}
+      </div>
+      <div class="col-md-9" data-spy="scroll" data-target="#side-nav" data-offset="0" id="leiden-instructions">
+        {{ content }}
+      </div>
+    </div>
+  </div>
+</body>
+{% include script.html %}
+</html>
