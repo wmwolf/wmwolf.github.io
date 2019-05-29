@@ -1,5 +1,5 @@
 (($) ->
-
+  
 ) jQuery
 
 f_dur = 400
@@ -271,11 +271,11 @@ class PepperGame
       "<td>#{team1ScoreString}</td>" +
       "<td>#{team2ScoreString}</td><td>#{bidString}</td></tr>")
     if wasSet
-      $( '#score tr:last' ).addClass('danger')
+      $( '#score tr:last' ).addClass('table-warning')
     if partialSet
-      $( '#score tr:last' ).addClass('warning')
+      $( '#score tr:last' ).addClass('table-info')
     if @passPlay() == 'pass'
-      $( '#score tr:last' ).addClass('success')
+      $( '#score tr:last' ).addClass('table-success')
     score_1 = "#{@team1.score()}"
     score_2 = "#{@team2.score()}"
     $( '#team1-score' ).fadeOut(f_dur/2.0, () ->
