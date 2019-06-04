@@ -102,14 +102,24 @@ table.classes {
   background-position: center;
 }
 
-#leiden-instructions {
-  overflow-y: scroll;
+#leiden-instructions .btn-block {
+  margin-bottom: 15px;
 }
 
-.sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0em;
+#leiden-instructions h2 {
+  margin-top: 50px;
+}
+
+#leiden-instructions h4 {
+  margin-top: 40px;
+}
+
+#side-nav {
+  padding: 20px;
+}
+
+h2#overview {
+  margin-top: 0px;
 }
 
 .teams {

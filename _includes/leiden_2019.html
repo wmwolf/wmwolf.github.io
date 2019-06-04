@@ -11,162 +11,121 @@
   at the
   <a href="www.leiden.edu" target=_blank>
     The University of Leiden
-  </a>. We'll leave this tutorial online for awhile afterwards in the hopes that it proves to be a helpful guide for getting started with bursts in <samp>MESA</samp>, but these instructions are aimed at participants going through the tutorial at the workshop.
-
+  </a> in June 2019. Here, we'll help new users of Modules for Experiments in Stellar Astrophysics (<samp>MESA</samp>) get started with the tool to model thermonuclear bursts on white dwarfs and neutron stars. We'll leave this tutorial online for at least awhile afterwards in the hopes that it proves to be a helpful guide for getting started with bursts in <samp>MESA</samp>, but these instructions are aimed at participants going through the tutorial at the workshop. It will likely fall out of date as the interface of <samp>MESA</samp> changes in its development and the hyperlinks on this page become outdated.
 </p>
 <p>
   You should complete Part 0 before the tutorial begins on Tuesday afternoon. If you have issues, reach out to Andrew on Monday to get set up in advance of the tutorial.
 </p>
 
-<h2 id='part0'>Part 0: Getting Started</h2>
+<h2 id='part0'>Part 0: Before You Arrive</h2>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  Installing <samp>MESA</samp> and its prerequisites is not particularly difficult for most users and systems, but it can take a little time to download and compile, so you should do this before the tutorial, and ideally early enough so that you can ask Andrew for help on Monday. 
 </p>
 <h4 id="part0a">Installing the SDK</h4>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  While <samp>MESA</samp> can be run on custom compilers and other tools with a fair amount of work, the <samp>MESA</samp> SDK is the easiest way to get started. Get the SDK with the link below, and follow the instructions for your particular system, noting the prerequsites.
 </p>
-<h4 id="part0b">Installing MESA</h4>
+  <a href="http://www.astro.wisc.edu/~townsend/static.php?ref=mesasdk" class="btn btn-block btn-primary" target=_blank>Get the MESA SDK</a>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  Your first step is to install the SDK and confirm that it works on your system by trying <code>which gfortran</code> in a terminal to confirm that the SDK version of gfortran is being used.
+</p>
+<div class="card border-warning mb-3 text-warning"">
+  <div class="card-header bg-warning text-white">Warning</div>
+  <div class="card-body">
+    <h5 class="card-title">Attention: macOS Mojave Users</h5>
+    <p class="card-text">
+      On OS X 10.14 (Mojave), you may also need to install the development header files. These ship as a standard part of Mojave, but must be installed by hand. To do so, run the command
+    </p>
+    <p class='card-text'>
+      <code>
+open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+      </code>
+    </p>
+    <p>
+      This step may need to be repeated whenever you upgrade to a new release of the Xcode command-line tools.
+    </p>
+  </div>
+</div>
+
+<h4 id="part0b">Installing <samp>MESA</samp></h4>
+<p>
+  Once the SDK is properly installed, it's time to install <samp>MESA</samp> on your machine. This amounts to downloading a zip file, moving it to where you want, and executing an install script.
+</p>
+<p>
+  <a href="http://mesa.sourceforge.net/prereqs.html#download-mesa" target=_blank class='btn btn-block btn-primary'>Get MESA</a>
 </p>
 <h4 id="part0c">Your First MESA Run</h4>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  With <samp>MESA</samp> and its SDK installed, it's time to do a first run to make sure eveything is working properly. Follow the official tutorial and feel free to play around a bit once you've gotten the hang of it!
 </p>
-<h2 id="part 1"> Type I X-Ray Bursts </h2>
+<a href="http://mesa.sourceforge.net/starting.html#how-do-you-get-started-using-mesa-star" target=_blank class="btn btn-primary btn-block">Getting Started with MESA</a>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  In this simple exercise, you learn how to create a new simulation in <samp>MESA</samp>. Always remember that, unless starting from an existing simulation, the best way to start fresh is to copy over the default work directory. We then go into this new work directory, compile it, and run it. We now summarize these steps:
+  <ol>
+    <li>Make new work directory: <code>cp -r $MESA_DIR/star/work tutorial</code></li>
+    <li>Enter that directory: <code>cd tutorial</code></li>
+    <li>Compile the work directory: <code>./mk</code></li>
+    <li>Start the simulation: <code>./rn</code></li>
+  </ol>
+  The default work directory evolves a 15 M<sub>⦿</sub> stellar model from the pre-main sequence through to hydrogen exhaustion. While that executes, you should see two windows open that show real-time plots of the temperature profile of the stellar model a track of the luminosity and effective temperature (an HR diagram evolution track). These should look something like the following two figures.
 </p>
+<div class='text-center'>
+  <figure class="figure">
+    <img src="images/tutorial_trho.png" alt="Temperature/Density Profile" class="figure-img img-fluid">
+    <figcaption class="figure-caption">Temperature-density profile of the stellar model from the tutorial. The surface of the star is at the lower left, while the center of the model is at the upper right. This model is still contracting, so it is almost entirely convective (light blue line) with a small radiative zone at the top (green line).</figcaption>
+  </figure>
+
+  <figure class="figure">
+    <img src="images/tutorial_hr.png" alt="HR Diagram" class="figure-img img-fluid">
+    <figcaption class="figure-caption"> Track of the tutorial stellar model through the HR diagram. It is just beginning its descent down the Hayashi track.
+    </figcaption>
+  </figure>
+</div>
+<h2 id="part1"> MESA Basics </h2>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  <samp>MESA</samp> is a <strong>modular</strong> code, so different parts of the code handle different tasks needed in modeling stars. Most often, you'll be using the <samp>star</samp> module, which uses the other modules to compute a stellar model and evolve it in time. The work directory you made and used in the <a href="#part0c">tutorial</a> is essentially a custom executable of the <samp>star</samp> module. We won't go over every module in detail, but we should at least go over the structure of a typical <samp>work</samp> directory.
 </p>
+<h4 id="part1a">Structure of a Work Directory</h4>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  Your tutorial work directory had the following files and directories:
 </p>
-<p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-</p>
-<p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-</p>
+<div class="row" id="workdir-files">
+  <div class="col-md-3">
+    <div class="list-group">
+      <a href="#part1a" class="list-group-item list-group-item-action active" data-name="inlist" data-description="Instructions for how to model the star, including models to load, timestep controls, microphysics options, and on-screen plots. Often this punts to other inlist files to separate different functionalities.">
+        inlist
+      </a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="inlist_project" data-description="Another inlist that <samp>inlist</samp> points to. The name isn't special; it just matches what extra inlist is loaded by <samp>inlist</samp>. This one controls all aspects of the model except on-screen plots.">inlist_project</a>
+      <a href="#part1a" class="list-group-item list-group-item-action"data-name="inlist_pgstar" data-description="Another inlist that <samp>inlist</samp> points to. The name isn't special; it just matches what extra inlist is loaded by <samp>inlist</samp>. This one only controls on-screen plots.">inlist_pgstar</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="mk" data-description="Executable script that recompiles the local copy of <samp>star</samp>. You only need to execute this if you make changes to files in the <samp>src</samp> directory.">mk</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="rn" data-description="Executable that, after compilation with <samp>mk</samp> starts the simulation defined by <samp>inlist</samp> and any custom code in <samp>src/run_star_extras.f</samp>.">rn</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="re" data-description="Executable that restarts an interrupted or completed run from an early photo. It takes one argument, which is a photo file found in the <samp>photos</samp> directory.">re</a>
+      
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="list-group">
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="clean" data-description="Executable that resets the compilation process done by <samp>mk</samp>. Typically only needed if you are running a simulation that was previously compiled by a different version of the SDK or from an older version of <samp>MESA</samp>">
+        clean
+      </a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="star" data-description="The actual executable that calls star. Usually this is wrapped by <samp>rn</samp> and <samp>re</samp>. You should almost never call it directly.">star</a>
+      <a href="#part1a" class="list-group-item list-group-item-action"data-name="LOGS" data-description="Directory that holds all data from a run in history and profile files. These are stored in plain text. The name of this directory, how often the data is recorded, and what data is recorded are all customizable in the inlists and other files.">LOGS</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="photos" data-description="Directory that holds snapshots of the simulation stored in binary. These are used to restart the simulation, but they are <strong>not</strong> for long-term storage of the model, as their format changes from version to version.">photos</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="src" data-description="Directory that contains source code for the executable built by <samp>mk</samp>. Most is just read in from the main <samp>MESA_DIR</samp>, but you can add your own code to <samp>run_star_extras.f</samp>.">src</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="make" data-description="Directory that contains the makefile and byproducts of the compilation process. You rarely need to fiddle with this.">make</a>
+      
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <samp id='file-name'>inlist</samp>
+      </div>
+      <div class="card-body">
+        <p class='card-text' id='file-description'>
+          Instructions for how to model the star, including models to load, timestep controls, microphysics options, and on-screen plots. Often this punts to other inlist files to separate different functionalities.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
