@@ -38,6 +38,11 @@ body {
   padding-bottom: 10rem;
 }
 
+#leiden-body {
+  padding-bottom: 0;
+
+}
+
 .main-body {
   margin: 0 auto;
 }
@@ -63,6 +68,17 @@ p {
   text-shadow: 5px 5px 5px #000;
   text-align: center;
   background-repeat: no-repeat;
+}
+
+.splash img.fadeIn {
+  position: absolute;
+  z-index: -1;
+  display: none;
+  width: 100%;
+  height: 20em;
+  top: 0;
+  left: 0;
+  clip: 0 100% 20em 0;
 }
 
 .classes td {
@@ -102,6 +118,13 @@ table.classes {
   background-position: center;
 }
 
+#leiden-instructions {
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
+
+
 #leiden-instructions .btn-block {
   margin-bottom: 15px;
 }
@@ -115,7 +138,7 @@ table.classes {
 }
 
 #side-nav {
-  padding: 20px;
+  height: 100%;
 }
 
 h2#overview {

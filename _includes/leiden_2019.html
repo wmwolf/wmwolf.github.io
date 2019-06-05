@@ -29,7 +29,7 @@
 <p>
   Your first step is to install the SDK and confirm that it works on your system by trying <code>which gfortran</code> in a terminal to confirm that the SDK version of gfortran is being used.
 </p>
-<div class="card border-warning mb-3 text-warning"">
+<div class="card border-warning mb-3 text-warning">
   <div class="card-header bg-warning text-white">Warning</div>
   <div class="card-body">
     <h5 class="card-title">Attention: macOS Mojave Users</h5>
@@ -61,12 +61,27 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 <a href="http://mesa.sourceforge.net/starting.html#how-do-you-get-started-using-mesa-star" target=_blank class="btn btn-primary btn-block">Getting Started with MESA</a>
 <p>
   In this simple exercise, you learn how to create a new simulation in <samp>MESA</samp>. Always remember that, unless starting from an existing simulation, the best way to start fresh is to copy over the default work directory. We then go into this new work directory, compile it, and run it. We now summarize these steps:
-  <ol>
-    <li>Make new work directory: <code>cp -r $MESA_DIR/star/work tutorial</code></li>
-    <li>Enter that directory: <code>cd tutorial</code></li>
-    <li>Compile the work directory: <code>./mk</code></li>
-    <li>Start the simulation: <code>./rn</code></li>
-  </ol>
+</p>
+<ol>
+  <li>Make new work directory: <code>cp -r $MESA_DIR/star/work tutorial</code></li>
+  <li>Enter that directory: <code>cd tutorial</code></li>
+  <li>Compile the work directory: <code>./mk</code></li>
+  <li>Start the simulation: <code>./rn</code></li>
+</ol>
+
+<div class="card border-success mb-3 text-success">
+  <div class="card-header bg-success text-white">
+    <samp>MESA</samp> Best Practice: Work Directories
+  </div>
+  <div class="card-body">
+    <p>
+      Never run simulations from within your local installation of <samp>MESA</samp>. Depending on the value of <code>$MESA_DIR</code> is, you may not actually be compiling against the installation you think you are, and in general it's best to not mess with the source code.
+    </p>
+    <p>
+      Instead, always make a copy of the standard work directory in <code>$MESA_DIR/star/work</code> or start from one of the test cases in <code>$MESA_DIR/star/test_suite</code> (though those require a bit of work to be truly customized).
+  </div>
+</div>
+<p>
   The default work directory evolves a 15 M<sub>⦿</sub> stellar model from the pre-main sequence through to hydrogen exhaustion. While that executes, you should see two windows open that show real-time plots of the temperature profile of the stellar model a track of the luminosity and effective temperature (an HR diagram evolution track). These should look something like the following two figures.
 </p>
 <div class='text-center'>
@@ -87,7 +102,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 <h4 id="part1a">Structure of a Work Directory</h4>
 <p>
-  Your tutorial work directory had the following files and directories:
+  Your tutorial work directory had the following files and directories. Click on each to learn about what each file or directory does.
 </p>
 <div class="row" id="workdir-files">
   <div class="col-md-3">
@@ -129,3 +144,70 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
     </div>
   </div>
 </div>
+
+<h4 id='part1b'>MESA Output</h4>
+<p>
+  Output from a <samp>MESA</samp> simulation is stored in the <samp>LOGS</samp> directory (though you can change the name of this directory in the inlist). There are two primary types of output files: histories and profiles. Each simulation has one history file, typically called <samp>history.data</samp>, that records how scalar quantites related to the model like age and luminosity change through time. There can be many profiles saved, and each file gives a snapshot of quantities that vary throughout the entire star, like density and temperature. There is one other file, called <samp>profiles.index</samp>. This file relates the names of profiles to their corresponding model number (timestep) in the history file.
+</p>
+
+<p>
+  How often profiles are written to disk, how many there are allowed to be before they start to get overwritten (they can get quite large!), how often a line is recorded in the history file, how the files are named, and many other output details can be customized in the inlist. The exact types of data that are recorded in the history and profiles are controlled in two other files that may or may not be in your work directory: <samp>history_columns.list</samp> and <samp>profile_columns.list</samp>. If these files do not exist in your work directory, they are read from their default location in <code>$MESA_DIR/star/defaults</code>.
+</p>
+
+<p>
+  To enable/disable different columns in the output files, open the corresponding columns file and uncomment the names of columns you want to output, and comment out those that you don't.
+</p>
+
+<div class="card border-success mb-3 text-success">
+  <div class="card-header bg-success text-white">
+    <samp>MESA</samp> Best Practice: Output Column Files
+  </div>
+  <div class="card-body">
+    <p>
+      Don't edit the default columns files so that you don't get unexpected behavior in other projects. Instead, copy them into your local work directory via
+
+      <pre><code>cp $MESA_DIR/star/defaults/history_columns.list PATH/TO/WORK_DIR/</code></pre>
+      <pre><code>cp $MESA_DIR/star/defaults/profile_columns.list PATH/TO/WORK_DIR/</code></pre>
+    </p>
+    <p>
+      Then, edit these files in your local work directory. <samp>MESA</samp> will always look for these files in the local directory before falling back to their default versions.
+  </div>
+</div>
+<p>
+  You can see a summary of each of the important files for <samp>MESA</samp> output by clicking on each of them below
+</p>
+<div class="row" id="output-files" style="min-height: 20em;">
+  <div class="col-md-4">
+    <h5>Files in <code>LOGS</code></h5>
+    <div class="list-group info-toggle" data-target='#output-description'>
+      <a href="#part1b" class="list-group-item list-group-item-action active" data-name="history.data" data-description="Data file with one line for each model number/timestep (or every <var>n</var> models. The columns used are determined by the uncommented lines in <code>history_columns.list</code>. You can set the frequency for outputting a line with the <code>history_interval</code> control in the <code>controls</code> namelist.">
+        history.data
+      </a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="profilexx.data" data-description="Data file with one line for each cell/zone in the stellar model at a particular timestep. The columns of data that are determined by the uncommented lines in <code>profile_columns.list</code>. You can set the frequency for outputting a new profile with the <code>profile_interval</code> control in the <code>controls</code> namelist. The number of profiles saved before overwriting older profiles is set by the <code>max_num_profile_models</code> command in the <code>controls</code> namelist.">profilexx.data</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="profiles.index" data-description="Contains columns that give the model numbers and priorities (higher priority means less likely to be overwritten) for each profile. This allows you to map profile numbers, <strong>which may be non-monotonic in model numbers</strong>, with model numbers, and thus is the key to relate profiles with lines in the history file.">profiles.index</a>
+    </div>
+    <h5 style="padding-top: 1em;">Optional in Work Dir</h5>
+    <div class="list-group info-toggle" data-target='#output-description'>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="history_columns.list" data-description="A list of quantities that can be output in <code>history.data</code>. If you don't have this file, the default version in <code>$MESA_DIR/star/defaults</code> will be read. Uncomment lines to enable reporting of quantities, and comment them out to disable it. This file also controls what quantities can be plotted in on-screen history plots.">
+        history_columns.list
+      </a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="profile_columns.list" data-description="A list of quantities that can be output in profile files. If you don't have this file, the default version in <code>$MESA_DIR/star/defaults</code> will be read. Uncomment lines to enable reporting of quantities, and comment them out to disable it.">
+        profile_columns.list
+      </a>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card" id='output-description'>
+      <div class="card-header bg-primary text-white">
+        <samp class='name'>history.data</samp>
+      </div>
+      <div class="card-body">
+        <p class='card-text description'>
+          Data file with one line for each model number/timestep (or every <var>n</var> models. The columns used are determined by the uncommented lines in <code>history_columns.list</code>. You can set the frequency for outputting a line with the <code>history_interval</code> control in the <code>controls</code> namelist.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 id='part1c'>Working with Inlists</h4>
