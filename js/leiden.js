@@ -1,24 +1,7 @@
-var fileInfo = {
-  setup: function() {
-    $("#workdir-files a").click(function() {
-      // file_link.preventDefault();
-      $('#workdir-files a.active').toggleClass('active');
-      $(this).toggleClass('active');
-      var name = $(this).data('name');
-      var description = $(this).data('description');
-      $("#file-name").fadeOut(function() {
-        $('#file-name').text(name);
-      }).fadeIn();
-      $("#file-description").fadeOut(function() {
-        $('#file-description').html(description);
-      }).fadeIn();
-    });
-  }
-};
-
 var infoToggle = {
   setup: function() {
-    $('.info-toggle a').click(function() {
+    $('.info-toggle a').click(function(link) {
+      link.preventDefault();
       var target = $(this).parent('.info-toggle').data('target');
       var name = $(this).data('name');
       var description = $(this).data('description');
@@ -44,8 +27,7 @@ var infoToggle = {
 //   }
 // }
 
-$( document ).ready(function() {
-  fileInfo.setup();
+$( document ).ready(function() {  
   infoToggle.setup();
   // sideNav.setup();
 });

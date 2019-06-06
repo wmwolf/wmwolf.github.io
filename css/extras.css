@@ -125,8 +125,8 @@ table.classes {
 }
 
 
-#leiden-instructions .btn-block {
-  margin-bottom: 15px;
+#leiden-instructions .btn-lg {
+  min-width: 300px;
 }
 
 #leiden-instructions h2 {
@@ -137,6 +137,15 @@ table.classes {
   margin-top: 40px;
 }
 
+.highlight pre {
+  white-space: pre;
+  border-radius: inherit;
+  display: inherit;
+  background-color:black;
+  border: inherit;
+  color: inherit;
+  padding: 15px;
+}
 #side-nav {
   height: 100%;
 }
