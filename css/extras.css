@@ -18,6 +18,10 @@
   height:100px;
 }
 
+.buffer-small {
+  height: 50px;
+}
+
 .contact-block{
   width:33%;
   display: inline-block;
@@ -59,6 +63,7 @@ p {
 }
 
 .splash {
+  /*height: 15.5em;*/
   height: 20em;
   padding-top: 9em;
   margin-bottom: 2em;
