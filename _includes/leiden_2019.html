@@ -85,7 +85,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
       Never run simulations from within your local installation of <samp>MESA</samp>. Depending on the value of <code>$MESA_DIR</code> is, you may not actually be compiling against the installation you think you are, and in general it's best to not mess with the source code.
     </p>
     <p>
-      Instead, always make a copy of the standard work directory in <code>$MESA_DIR/star/work</code> or start from one of the test cases in <code>$MESA_DIR/star/test_suite</code> (though those require a bit of work to be truly customized).
+      Instead, always make a copy of the standard work directory <code>$MESA_DIR/star/work</code> or start from one of the test cases in <code>$MESA_DIR/star/test_suite</code> (though those require a bit of work to be truly customized).
   </div>
 </div>
 <p> 
@@ -104,7 +104,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 <h2 id="part1"> Part 1: MESA Basics </h2>
 <p>
-  <samp>MESA</samp> is a <strong>modular</strong> code, so different parts of the code handle different tasks needed in modeling stars. Most often, you'll be using the <code>star</code> module, which uses the other modules to compute a stellar model and evolve it in time. The work directory you made and used in the <a href="#part0c">tutorial</a> is essentially a custom executable of the <code>star</code> module. We won't go over every module in detail, but we should at least go over the structure of a typical work directory.
+  <samp>MESA</samp> is a <strong>modular</strong> code, so different parts of the code handle different tasks needed in modeling stars. Most often, you'll be using the <code>star</code> module, which uses the other modules to compute a stellar model and evolve it in time. Let's take a look at the structure of a typical work directory.
 </p>
 <h4 id="part1a">Structure of a Work Directory</h4>
 <p>
@@ -118,9 +118,9 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
       </a>
       <a href="#part1a" class="list-group-item list-group-item-action" data-name="inlist_project" data-description="Another inlist that <code>inlist</code> points to. The name isn't special; it just matches what extra inlist is loaded by <code>inlist</code>. This one controls all aspects of the model except on-screen plots.">inlist_project</a>
       <a href="#part1a" class="list-group-item list-group-item-action"data-name="inlist_pgstar" data-description="Another inlist that <code>inlist</code> points to. The name isn't special; it just matches what extra inlist is loaded by <code>inlist</code>. This one only controls on-screen plots.">inlist_pgstar</a>
-      <a href="#part1a" class="list-group-item list-group-item-action" data-name="mk" data-description="Executable script that recompiles the local copy of <code>star</code>. You only need to execute this if you make changes to files in the <code>src</code> directory.">mk</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="mk" data-description="Executable script that recompiles the local copy of <code>star</code>. You only need to execute this if you make changes to files in the <code>src</code> directory or upgrade <samp>MESA</samp>.">mk</a>
       <a href="#part1a" class="list-group-item list-group-item-action" data-name="rn" data-description="Executable that, after compilation with <code>mk</code> starts the simulation defined by <code>inlist</code> and any custom code in <code>src/run_star_extras.f</code>.">rn</a>
-      <a href="#part1a" class="list-group-item list-group-item-action" data-name="re" data-description="Executable that restarts an interrupted or completed run from an early photo. It takes one argument, which is a photo file found in the <code>photos</code> directory.">re</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="re" data-description="Executable that restarts an interrupted or completed run from an earlier photo. It takes one argument, which is a photo file found in the <code>photos</code> directory.">re</a>
       
     </div>
   </div>
@@ -129,7 +129,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
       <a href="#part1a" class="list-group-item list-group-item-action" data-name="clean" data-description="Executable that resets the compilation process done by <code>mk</code>. Typically only needed if you are running a simulation that was previously compiled by a different version of the SDK or from an older version of <samp>MESA</samp>">
         clean
       </a>
-      <a href="#part1a" class="list-group-item list-group-item-action" data-name="star" data-description="The actual executable that calls star. Usually this is wrapped by <code>rn</code> and <code>re</code>. You should almost never call it directly.">star</a>
+      <a href="#part1a" class="list-group-item list-group-item-action" data-name="star" data-description="The actual executable that evolves the stellar model. Usually this is wrapped by <code>rn</code> and <code>re</code>. You should almost never call it directly.">star</a>
       <a href="#part1a" class="list-group-item list-group-item-action"data-name="LOGS" data-description="Directory that holds all data from a run in history and profile files. These are stored in plain text. The name of this directory, how often the data is recorded, and what data is recorded are all customizable in the inlists and other files.">LOGS</a>
       <a href="#part1a" class="list-group-item list-group-item-action" data-name="photos" data-description="Directory that holds snapshots of the simulation stored in binary. These are used to restart the simulation, but they are <strong>not</strong> for long-term storage of the model, as their format changes from version to version.">photos</a>
       <a href="#part1a" class="list-group-item list-group-item-action" data-name="src" data-description="Directory that contains source code for the executable built by <code>mk</code>. Most is just read in from the main <code>MESA_DIR</code>, but you can add your own code to <code>run_star_extras.f</code>.">src</a>
@@ -186,18 +186,18 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   <div class="col-md-4">
     <h5>Files in <code>LOGS</code></h5>
     <div class="list-group info-toggle" data-target='#output-description'>
-      <a href="#part1b" class="list-group-item list-group-item-action active" data-name="history.data" data-description="Data file with one line for each model number/timestep (or every <var>n</var> models. The columns used are determined by the uncommented lines in <code>history_columns.list</code>. You can set the frequency for outputting a line with the <code>history_interval</code> control in the <code>controls</code> namelist.">
+      <a href="#part1b" class="list-group-item list-group-item-action active" data-name="history.data" data-description="Data file with each line giving data for a model number/timestep. The columns used are determined by the uncommented lines in <code>history_columns.list</code>. You can set the frequency for outputting a line with the <code>history_interval</code> control in the <code>controls</code> namelist.">
         history.data
       </a>
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="profilexx.data" data-description="Data file with one line for each cell/zone in the stellar model at a particular timestep. The columns of data that are determined by the uncommented lines in <code>profile_columns.list</code>. You can set the frequency for outputting a new profile with the <code>profile_interval</code> control in the <code>controls</code> namelist. The number of profiles saved before overwriting older profiles is set by the <code>max_num_profile_models</code> command in the <code>controls</code> namelist.">profilexx.data</a>
-      <a href="#part1b" class="list-group-item list-group-item-action"data-name="profiles.index" data-description="Contains columns that give the model numbers and priorities (higher priority means less likely to be overwritten) for each profile. This allows you to map profile numbers, <strong>which may be non-monotonic in model numbers</strong>, with model numbers, and thus is the key to relate profiles with lines in the history file.">profiles.index</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="profiles.index" data-description="Contains columns that give the model numbers and priorities (higher priority means less likely to be overwritten) for each profile. This allows you to map profile numbers (the <var>xx</var> in file <code>profilexx.data</code>, <strong>which may be non-monotonic in time</strong>, with model numbers, and thus is the key to relate profiles with lines in the history file.">profiles.index</a>
     </div>
     <h5 style="padding-top: 1em;">Optional in Work Dir</h5>
     <div class="list-group info-toggle" data-target='#output-description'>
-      <a href="#part1b" class="list-group-item list-group-item-action" data-name="history_columns.list" data-description="A list of quantities that can be output in <code>history.data</code>. If you don't have this file, the default version in <code>$MESA_DIR/star/defaults</code> will be read. Uncomment lines to enable reporting of quantities, and comment them out to disable it. This file also controls what quantities can be plotted in on-screen history plots.">
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="history_columns.list" data-description="A list of quantities that can be output in <code>history.data</code>. If you don't have this file, the default version in <code>$MESA_DIR/star/defaults</code> will be read. Uncomment lines to enable reporting of quantities, and comment them out to disable them. This file also controls what quantities can be plotted in on-screen history plots.">
         history_columns.list
       </a>
-      <a href="#part1b" class="list-group-item list-group-item-action" data-name="profile_columns.list" data-description="A list of quantities that can be output in profile files. If you don't have this file, the default version in <code>$MESA_DIR/star/defaults</code> will be read. Uncomment lines to enable reporting of quantities, and comment them out to disable it.">
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="profile_columns.list" data-description="A list of quantities that can be output in profile files. If you don't have this file, the default version in <code>$MESA_DIR/star/defaults</code> will be read. Uncomment lines to enable reporting of quantities, and comment them out to disable them.">
         profile_columns.list
       </a>
     </div>
@@ -260,7 +260,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 / ! end of pgstar namelist
 {% endhighlight %}
 <p>
-  In <samp>MESA star</samp>, there are three types of namelists, and all are in this example inlist. Click through each namelist below to learn what each is used for.
+  In <samp>MESA star</samp>, there are three types of namelists, and all three are in this example inlist. Click through each namelist below to learn what each is used for. You can also find documentation for each namelist on the <a href="http://mesa.sourceforge.net" target=_blank><samp>MESA</samp> home page</a> that is automatically generated from the defaults files. 
 </p>
 <div class="row" id="namelists" style="min-height: 15em">
   <div class="col-md-3">
@@ -271,7 +271,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
       <a href="#part1c" class="list-group-item list-group-item-action" data-name="controls" data-description="Sets parameters relevant to the <samp>star</samp> module. These are more specific instructions on how the model should proceed. The initial mass, assumptions for how convection should work, how often profiles should be output, and when the program should stop are all set here. Default values and documentation for options are found in <code>$MESA_DIR/star/defaults/controls.defaults</samp>.">
         controls
       </a>
-      <a href="#part1c" class="list-group-item list-group-item-action"data-name="pgstar" data-description="Controls on-screen plots during the run of the program, including saving them as png files. We won't cover this here, but see the information in <code>pgstar.README</code> and <code>pgstar.defaults</code>, in <code>$MESA_DIR/star/defaults</code>. Also see the <a href='https://youtu.be/8vFfM2f46yw' target=_blank>tutorial from Frank Timmes</a>, which walks you through a rich example. Just be sure to use the <a href='http://cococubed.asu.edu/mesa_market/education.html' target=_blank>most updated work directory available</a>.">
+      <a href="#part1c" class="list-group-item list-group-item-action"data-name="pgstar" data-description="Controls on-screen plots during the run of the program, including saving them as png files. We won't cover this here, but see the information in <code>pgstar.README</code> and <code>pgstar.defaults</code>, in <code>$MESA_DIR/star/defaults</code>. Also see the <a href='https://youtu.be/8vFfM2f46yw' target=_blank>tutorial from Frank Timmes</a>, which walks you through a rich example. Just be sure to use the <a href='http://cococubed.asu.edu/mesa_market/education.html' target=_blank>most updated work directory available</a> if you play along.">
         pgstar
       </a>
     </div>
@@ -302,15 +302,18 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
       It may seem needlessly complicated to have inlists pointing to each other instead of putting all controls in one inlist, but this is often very convenient, since large inlists can become cumbersome.
     </p>
     <p>
-      A common convention is to have a "favorits" list in an inlist, named something like <code>inlist_common</code>. Here you have your preferred default settings. Then in another inlist, you put the truly unique quantities that differentiate this simulation from others.
+      A common convention is to have a "favorites" list in an inlist, named something like <code>inlist_common</code>. Here you have your preferred default settings. Then in another inlist, you put the truly unique quantities that differentiate this simulation from others.
     </p>
     <p>
-      pgstar namelists can also become quite lengthy, so it is extremely common to see them broke out into their own file, typically called <code>inlist_pgstar</code>. There's nothing stopping you from just having one giant inlist, though!
+      pgstar namelists can also become quite lengthy, so it is extremely common to see them broke out into their own file, typically called <code>inlist_pgstar</code>.
+    </p>
+    <p>
+      There's nothing stopping you from just having one giant inlist with all of your controls, though!
     </p>
   </div>
 </div>
 <p>
-  For completeness, let's look at the contents of <code>inlist_project</code> to see a more typical namelist.
+  For completeness, let's look at the contents of <code>inlist_project</code> to see some more typical namelists.
 </p>
 <h5>Contents of <code>inlist_project</code></h5>
 {% highlight fortran %}
@@ -383,6 +386,91 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   </div>
 </div>
 
+<h4 id=part1d>Compiling, Running, and Restarting</h4>
+<p>
+  So you have set up a new work directory, edited your inlists with controls found in <code>$MESA_DIR/star/defaults</code>, and you're ready to run your model. First, you need to compile!
+</p>
+<h5>Compiling and Troubleshooting</h5>
+<p>
+  To compile your code, execute <kbd>./mk</kbd>. You should see a few lines fly by on your terminal, and hopefully no errors. If you do have errors, check the following:
+</p>
+<ul>
+  <li>
+    Make sure you have <code>$MESASDK_ROOT</code> set up via <kbd>echo $MESASDK_ROOT</kbd>
+  </li>
+  <li>
+    Make sure the SDK is initialized. A quick indication that this is fine is to run <kbd>which gfortran</kbd> and making sure the resulting path points to the gfortran in the SDK.
+  </li>
+  <li>
+    If you've made edits to <code>src/run_star_extras.f</code> (more on this later), check the error output for indications that you have bugs in your code.
+  </li>
+  <li>
+    Try first running <kbd>./clean</kbd> and then do <kbd>./mk</kbd>
+  </li>
+  <li>
+    Finally, something may be wrong with your MESA installation, so try recompiling it with
+    <pre>
+<kbd>cd $MESA_DIR</kbd>
+<kbd>./clean</kbd>
+<kbd>./install</kbd></pre>
+  </li>
+  <li>
+    And if none of that works, try completely re-installing <samp>MESA</samp>
+  </li>
+</ul>
+<h5>Running and Real-time Output</h5>
+<p>
+  Assuming that you have successfully compiled your work directory, start the simulation with <kbd>./rn</kbd>. Soon, terminal output should indicate that models are being computed. Note that you will want your terminal to be wide enough to fit each step's data without wrapping. Your terminal should be at least 146 columns wide for proper viewing.
+</p>
+<figure class='figure'>
+  <img class='figure-image img img-fluid' src=./images/terminal_small.png alt="wrapped terminal output">
+  <figcaption class='figure-caption'>
+    Terminal output when the terminal is too small. The lines wrap and it becomes very difficult to interpret.
+  </figcaption>
+</figure>
+<figure class='figure'>
+  <img class='figure-image img img-fluid' src=./images/terminal_good.png alt="wrapped terminal output">
+  <figcaption class='figure-caption'>
+    Terminal output when the terminal is wide enough. Each chunk of three lines give summary data for each timestep. The headers are printed every few printed timesteps and guide you to the meaning of each number. In this figure, we indicated that the first row of the third column always gives the effective temperature in our stellar model.
+  </figcaption>
+</figure>
+
+<p>
+  These data can be helpful, but usually real-time plots from pgstar are a better way to understand how your stellar model is evolving. In order to see these plots, you'll need to properly configure your <code>pgstar</code> namelist (not covered here) and set <code>pgstar_flag = .true.</code> in your <code>star_job</code> namelist. If you have this set up, as in the standard work directory, plots (in this case a temperature-density profile as well as an HR diagram track) will appear in their own windows as the terminal output begins.
+</p>
+<h5>Restarting and Photos</h5>
+<p>
+  Sometimes you'll have to stop your simulation to adjust the inlist or because you need th computing power for some other task. You can do this by executing <kbd>ctrl-C</kbd>. But now do you have to restart the whole simulation? Fortunately, no! You can restart from a "photo". A photo is a snapshot of your stellar model dumped into a binary file.
+</p>
+<p>
+  By default <samp>MESA</samp> saves a photo to the <code>photos</code> directory every 50 timesteps. They are named such that the last three digits are the same as the last three digits of their corresponding timestep. To save disk space, they are overwritten every thousand timesteps. That is, step 1050 will be saved as the file <code>x050</code> in <code>photos</code> (where the x is literally there), and it will be overwritten when step 2050 does the same thing. To give longer-term access, every thousand timesteps will remain indefinitely, so timesteps 1000 and 2000 will save photos <code>1000</code> and <code>2000</code>, respectively.
+</p>
+<p>
+  To restart from photo <code>x050</code>, simply execute <kbd>./re x050</kbd>, assuming it exists in <code>photos</code>. <code>inlist</code> will be read again, so you can change commands on the fly, though in practice this is difficult to reproduce, so you should only use this workflow when you are prototyping a simulation.
+</p>
+<div class="card border-warning mb-3 text-warning">
+  <div class="card-header bg-warning text-white">Warning: Photo Pitfalls</div>
+  <div class="card-body">
+    <h5 class='card-text'><strong>Photos are not the same as saved models.</strong></h5>
+    <p class="card-text"> 
+      Photos are...
+      <ul>
+        <li>Binary (not readable by anything other than MESA)</li>
+        <li>Sensitive to changes in the MESA source, so they will <strong>not</strong> work reliably on other versions of MESA</li>
+        <li>A complete record of the star; it is the same as if the simulation had never been stopped</li>
+      </ul>
+      Saved models are...
+      <ul>
+        <li>Plain text and human-readable</li>
+        <li>Robust to changes in the MESA source, and may be used on different revisions</li>
+        <li>
+          A mostly complete record, but you may notice small differences between a model that is restarted from a photo compared to one loaded from a model saved at the same timestep with the same inlist.
+        </li>
+      </ul>
+    </p>
+  </div>
+</div>
+<div class='buffer-small'></div>
 <p>
   There's much more to learn about how to bend <samp>MESA</samp> to your will, including adding your own physics through code, but you know enough now to be dangerous. We'll touch on some more advanced techniques later.
 </p>

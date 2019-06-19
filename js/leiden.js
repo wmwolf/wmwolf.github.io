@@ -1,5 +1,6 @@
 var infoToggle = {
   setup: function() {
+    var fadeDuration = 200;
     $('.info-toggle a').click(function(link) {
       link.preventDefault();
       var target = $(this).parent('.info-toggle').data('target');
@@ -8,12 +9,12 @@ var infoToggle = {
       // alert('target: ' + target + '\nname: ' + name + '\ndescription: ' + description);
       $(`[data-target='${target}']` + ' a.active').removeClass('active');
       $(this).addClass('active');
-      $(target + " .name").fadeOut(function() {
+      $(target + " .name").fadeOut(fadeDuration, function() {
         $(this).text(name);
-      }).fadeIn();
-      $(target + " .description").fadeOut(function() {
+      }).fadeIn(fadeDuration);
+      $(target + " .description").fadeOut(fadeDuration, function() {
         $(this).html(description);
-      }).fadeIn();
+      }).fadeIn(fadeDuration);
     })
   }
 }
