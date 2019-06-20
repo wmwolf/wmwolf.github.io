@@ -22,6 +22,10 @@
   height: 50px;
 }
 
+.buffer-tiny {
+  height: 25px;
+}
+
 .contact-block{
   width:33%;
   display: inline-block;
@@ -152,11 +156,16 @@ table.classes {
   padding: 15px;
 }
 #side-nav {
+}
+
+#super-side-nav {
   height: 100%;
+  overflow-y: scroll;
 }
 
 h2#overview {
   margin-top: 0px;
+  position: relative;
 }
 
 .teams {

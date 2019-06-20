@@ -386,7 +386,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   </div>
 </div>
 
-<h4 id=part1d>Compiling, Running, and Restarting</h4>
+<h4 id="part1d">Compiling, Running, and Restarting</h4>
 <p>
   So you have set up a new work directory, edited your inlists with controls found in <code>$MESA_DIR/star/defaults</code>, and you're ready to run your model. First, you need to compile!
 </p>
@@ -474,3 +474,310 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 <p>
   There's much more to learn about how to bend <samp>MESA</samp> to your will, including adding your own physics through code, but you know enough now to be dangerous. We'll touch on some more advanced techniques later.
 </p>
+
+<h2 id="part2"> Part 3: Type I X-ray Bursts</h2>
+<p>This still needs to be worked on.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+<h2 id="part3">Part 4: Recurrent Novae</h2>
+<p>
+  In this section we'll learn a little about modeling recurrent novae in <samp>MESA</samp>. Along the way, we'll learn a few other useful skills and processes for working with <samp>MESA</samp>:
+</p>
+<ul>
+  <li>Starting work from a test case</li>
+  <li>Making movies from pgstar output</li>
+  <li>Performing a convergence study</li>
+  <li>Completing the implementation of an inlist control</li>
+</ul>
+<h4 id="part3a">Background</h4>
+<p>
+  Recurrent novae are thermonuclear flashes on the surfaces of rapidly-accreting massive white dwarfs. They are similar to classical novae, but they have been observed in outburst multiple times. In general, the more massive a white dwarf is, the shorter the recurrence time will be. Similarly, the higher the accretion rate M&#775;, the shorter the recurrence time will be.
+</p>
+
+<p>
+  There is a limit to how high M&#775; can be before the nova will find an equilibrium solution and burn material at the same rate it is accreted. There is some debate as to whether this could physically occur (perhaps the accretion doesn't return or is never stable enough over long enough timescales, etc.). For now, we will assume that accretion resumes immediately after the initial "explosion", and we will see that stable burning does occur for sufficiently high M&#775; in <samp>MESA</samp>. 
+</p>
+<p>
+  Our goal is to find the transition M&#775; where this occurs, and we'll see that we need to be careful with our simulation if we want a consistent result.
+</p>
+
+<h4 id="part3b">Starting from a Test Case</h4>
+<p>
+  The test suites in <samp>MESA star</samp> and <samp>MESA binary</samp> help detect bugs in development by checking that the behavior of a known application doesn't change substantially as commits are made. They are also useful as starting points. We'll be using the <code>nova</code> test case as a basis for this exercise. Make a copy of it in your working area with 
+</p>
+<pre>
+  <kbd>cp $MESA_DIR/star/test_suite/nova recurrent_nova</kbd>
+</pre>
+<p>
+  Because this is a test case, we have to make a special change that we didn't have to when using the plain work directory. Namely, open up <code>make/makefile</code> and delete the line that sets <code>MESA_DIR</code>. If you don't do this, compilation will look in the wrong place for your installation.
+</p>
+<div class="card border-warning mb-3 text-warning">
+  <div class="card-header bg-warning text-white">Warning: Test Suite Pitfalls</div>
+  <div class="card-body">
+    <p class="card-text">
+      When starting from a test case, <emph>always</emph> do the following:
+    </p>
+    <ul class="card-text">
+      <li>
+        Delete the <code>MESA_DIR = ../../../..</code> line in <code>make/makefile</code>
+      </li>
+      <li>
+        Delete any lines that set <code>mesa_dir</code> in any inlists (typically in the main <code>inlist</code> file)
+      </li>
+      <li>
+        Consider deleting the controls in inlists that limit the number of retries and backups, which are intended to help detect performance issues in testing.
+      </li>
+      <li>
+        Look over code in <code>src/run_star_extras.f</code>. Many test cases implement special physics hooks or stopping conditions that you should know about.
+      </li>
+    </ul>
+    <p class="card-text">
+      In our case we'll be replacing the inlists, and we will tweak the custom stopping condition and continue using it.
+    </p>
+  </div>
+</div>
+<p>
+  Next, open up <code>src/run_star_extras.f</code>. We won't analyze everything that's here (most is basically boilerplate code in every simulation). Note, though, the following lines near the top:
+
+{% highlight fortran %}
+integer :: num_bursts = 0
+logical :: waiting_for_burst = .true.
+real(dp) :: L_burst = 1d4, L_between = 1d3 ! Lsun units
+{% endhighlight %}
+
+  These variables are declared here and are used in <code>extras_check_model</code>:
+
+{% highlight fortran %}
+! returns either keep_going, retry, backup, or terminate.
+integer function extras_check_model(id, id_extra)
+   integer, intent(in) :: id, id_extra
+   integer :: ierr
+   type (star_info), pointer :: s
+   ierr = 0
+   call star_ptr(id, s, ierr)
+   if (ierr /= 0) return
+   include 'formats'
+   extras_check_model = keep_going
+   if (s% L_phot > L_burst) then
+      if (waiting_for_burst) then
+         num_bursts = num_bursts + 1
+         write(*,2) 'num_bursts', num_bursts
+         waiting_for_burst = .false.
+      end if
+   else if (s% L_phot < L_between) then
+      if (num_bursts >= 1) then
+         write(*,*) 'have finished burst'
+         extras_check_model = terminate
+         s% termination_code = t_extras_check_model
+      end if
+      waiting_for_burst = .true.
+   end if
+end function extras_check_model
+{% endhighlight %}
+wherever you see <code>s%</code>, that is accessing dat in the star. Basically these controls then say that if we are waiting for a burst and the photometric luminosity exceeds 10<sup>4</sup> L<sub>&#8857;</sub>, then we have entered a burst, and when it then goes below 10<sup>3</sup> L<sub>&#8857;</sub>, we have finished the burst. After one such burst, the simulation is ended.
+</p>
+
+<p>
+  We want to give the simulation two bursts to determine if it is "stable" rather than just one. Also, since the accretion rate is so rapid, sometimes the luminosity doesn't drop low enough between bursts to be counted as finishing the first burst, so we need to make some changes to this code.
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>extras_check_model</code> so the simulation ends after two bursts rather than one.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white" data-toggle="collapse" data-target="#num-burst-sol">Solution (click to reveal/hide)</div>
+  <div class="card-body collapse" id="num-burst-sol">
+    <p class="card-text">
+      Edit the line
+{% highlight fortran %}
+      if (num_bursts >= 1) then
+{% endhighlight %}      
+    to
+{% highlight fortran %}
+      if (num_bursts >= 2) then
+{% endhighlight %}
+    </p> 
+  </div>
+</div>
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>run_star_extras.f</code> so that a burst "ends" after the luminosity drops below 5 &#215; 10<sup>3</sup> L<sub>&#8857;</sub> instead of 1 &#215; 10<sup>3</sup> L<sub>&#8857;</sub>.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white" data-toggle="collapse" data-target="#burst-def-sol">Solution (click to reveal/hide)</div>
+  <div class="card-body collapse" id="burst-def-sol">
+    <p class="card-text">
+      Edit the line
+{% highlight fortran %}
+      real(dp) :: L_burst = 1d4, L_between = 1d3 ! Lsun units
+{% endhighlight %}      
+    to
+{% highlight fortran %}
+      real(dp) :: L_burst = 1d4, L_between = 5d3 ! Lsun units
+{% endhighlight %}
+    </p> 
+  </div>
+</div>
+
+<p>
+  Check that your solution still compiles by executing <kbd>./mk</kbd>.
+</p>
+
+<p>
+  With your code working, let's replace the stock inlists with some tweaked ones prepared for this activity.
+</p>
+
+<div class='text-center'>
+  <a href='/projects/leiden_2019/nova_tutorial.tar.gz' download>
+    <button class='btn btn-primary btn-lg' type='button'>
+      Download Files
+    </button>
+  </a>
+</div>
+
+<div class='buffer-tiny'></div>
+
+<p>
+  Untar these files into your work directory (<kbd>tar -xvzf ~/Downloads/nova_tutorial.tar.gz ./</kbd>). They include a main inlist, as well as an updated version of <code>inlist_nova</code> as well as a separate inlist for plots. Finally, a replacement for <code>history_columns.list</code> is there to make it so certain quantities can be plotted on the on-screen plots.
+</p>
+
+<h2 id="part3c">Finding the Stability Boundary</h2>
+<p>
+  In <code>inlist_nova</code>, you'll notice the following lines
+
+  {% highlight fortran %}
+&controls
+
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ! EDIT THIS SECTION FIRST !
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+   ! MASS GAIN AND LOSS
+      mass_change = ! your random value here!
+  {% endhighlight %}
+
+  Since we haven't set <code>mass_change</code> to any value, running the simulation will throw an ugly error. We need to pick a M&#775; to study. We'll crowd-source random values between 3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr and 3.5 &#215; M<sub>&#8857;</sub>/yr. Pick your with the tool below:
+</p>
+<div class='text-center'>
+  <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+    <button class="btn btn-primary" type="button" id="mdot-gen">Generate My M&#775;</button>
+    <button type="button" class="btn btn-secondary btn-lg" disabled>
+      <span class="text-dark">
+        M&#775; = <span class='mdot-base'>??? </span> &#215; 10<sup> -7 </sup> M<sub>&#8857;</sub>/yr
+      </span>
+    </button>
+  </div>
+</div>
+<div class='buffer-tiny'></div>
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>inlist_nova</code> so that the model accretes matter at the right M&#775; you chose.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white" data-toggle="collapse" data-target="#mass-change-sol">Solution (click to reveal/hide)</div>
+  <div class="card-body collapse" id="mass-change-sol">
+    <p class="card-text">
+      Change the line above in <code>inlist_nova</code> to <code> mass_change = <span class="mdot-base">???</span>d-7</code>
+    </p> 
+  </div>
+</div>
+
+<p>
+  With your M&#775; selected, you should be able to run your model. Compile with <kbd>./mk</kbd> if you haven't already, and then start the run with <kbd>./rn</kbd>. You should see some terminal output fly out, and then eventually a large pgstar dashboard should appear. If it's too large to fit on your screen, go into <code>inlist_pgstar</code> and reduce the value of <code>Grid1_win_width = 17</code> to something smaller.
+</p>
+
+<h4>Interpreting the pgstar Output</h4>
+<p>
+  There's a lot of data on your pgstar dashboard! In the upper left is a profile (snapshot of the entire star at one point) of the temperature and density of the star. Different colors indicate different mixing mechanisms or levels of nuclear burning as indicated by the legend. In the lower left is an HR diagram. The middle panel of plots show the last two years of history of various surface quantities, and the panel on the right shows profiles of the isotope abundances (top), nuclear energy generation (middle), and mixing mechanism diffusion coefficients (bottom). The very bottom shows text information that supplements the terminal output.
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Report whether or not your model was stable. If it was unstable, also report the following:
+  <ul>
+    <li>
+      <strong>Recurrence Time:</strong> duration between successive starts of bursts
+    </li>
+    <li>
+      <strong>SSS Duration</strong> duration in "supersoft phase" where hydrogen-burning luminosity is very close to the photospheric luminosity
+    </li>
+  </ul>
+</p>
+
+<div class="text-center">
+  <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
+    <button class='btn btn-lg btn-primary'>Record my Data</button>
+  </a>
+</div>
+
+<div class='buffer-tiny'></div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white" data-toggle="collapse" data-target="#stability-hint">Hint: Determining Stability (click to reveal/hide)</div>
+  <div class="card-body collapse" id="stability-hint">
+    <p class="card-text">
+      Here is a movie of a model that is clearly unstable (M&#775;=3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr):
+    </p> 
+    <div align="center" class='embed-responsive embed-responsive-16by9'>
+      <video controls>
+        <source src="3.1_se_lores.mp4" type="video/mp4">
+        Your browser does not support the video tag.      
+      </video>
+    </div>
+    <div class='buffer-tiny'></div>
+    <p class="card-text">
+      And here is a movie of a model that is clearly stable (M&#775;=3.5 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr):
+    </p> 
+    <div align="center" class='embed-responsive embed-responsive-16by9'>
+      <video controls>
+        <source src="3.5_se_lores.mp4" type="video/mp4">
+        Your browser does not support the video tag.      
+      </video>
+    </div>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white" data-toggle="collapse" data-target="#timescales-hint">Hint: Determining Timescales (click to reveal/hide)</div>
+  <div class="card-body collapse" id="timescales-hint">
+    <p class="card-text">
+      The beginnings of flashes are the easiest to identify, so estimate the time between the two subsequent sharp rises in the luminosity to get the recurrence time.
+    </p> 
+    <p>
+      The SSS phase duration is a little more nebulous. Estimate the the duration from the time when the effective temperature rises sharply after hydrogen burning luminosity (<code>LH</code>) first comes back down to the photospheric lumionsity (<code>L</code>) until those two luminosities precipitously depart from each other.
+    </p>
+    <div class='text-center'>
+    <figure class='figure'>
+      <img class="figure-img img-fluid rounded" alt='example timescales' src="timescales.png">
+      <figcaption class="figure-caption text-left">Example estimates for the recurrence time and SSS duration for the M&#775;=3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr case. Here we estimate t<sub>recur</sub>=1.08 years and t<sub>SSS</sub>=0.26 yr.</figcaption>
+    </figure>
+    </div>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white">Tool: Making Videos with <samp>images_to_movie</samp></div>
+  <div class="card-body text-success" id="timescales-hint">
+    <p class="card-text">
+      Did you check out the hint about determining stability? If not, do so. The videos there were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
+    </p> 
+    <p class='card-text'>
+      To make these into a movie, the SDK comes with a nifty script that does the heavy lifting for you: <code>images_to_movie</code>. To use it, do something like the following:
+    </p>
+    <p class='card-text text-center'>
+      <kbd>images_to_move 'png/grid*.png' my_movie.mp4</kbd>
+    </p>
+    <p class='card-text'>
+      This takes all files that match the pattern <code>nova_grid_*.png</code> in the png directory and then makes a movie by using each as a frame. The resulting movie is named <code>my_movie.mp4</code>.
+    </p>
+    <p class='card-text'>
+      You can control how often pgstar outputs pngs, what they are named, and what directory they go into in the pgstar namelist.
+    </p>
+  </div>
+</div>

@@ -15,9 +15,19 @@ var infoToggle = {
       $(target + " .description").fadeOut(fadeDuration, function() {
         $(this).html(description);
       }).fadeIn(fadeDuration);
-    })
+    });
   }
-}
+};
+
+var rng = {
+  setup: function() {
+    $('#mdot-gen').click(function() {
+      // alert('clicked');
+      var new_base = (3.1 + Math.random() * (3.5 - 3.1)).toPrecision(3);
+      $('span.mdot-base').text(new_base);
+    });
+  }
+};
 
 // var sideNav = {
 //   setup: function() {
@@ -30,5 +40,6 @@ var infoToggle = {
 
 $( document ).ready(function() {  
   infoToggle.setup();
+  rng.setup();
   // sideNav.setup();
 });
