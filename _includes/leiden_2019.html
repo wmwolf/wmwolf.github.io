@@ -475,7 +475,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   There's much more to learn about how to bend <samp>MESA</samp> to your will, including adding your own physics through code, but you know enough now to be dangerous. We'll touch on some more advanced techniques later.
 </p>
 
-<h2 id="part2"> Part 3: Type I X-ray Bursts</h2>
+<h2 id="part2"> Part 2: Type I X-ray Bursts</h2>
 <p>This still needs to be worked on.</p>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -484,7 +484,7 @@ consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-<h2 id="part3">Part 4: Recurrent Novae</h2>
+<h2 id="part3">Part 3: Recurrent Novae</h2>
 <p>
   In this section we'll learn a little about modeling recurrent novae in <samp>MESA</samp>. Along the way, we'll learn a few other useful skills and processes for working with <samp>MESA</samp>:
 </p>
@@ -593,7 +593,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#num-burst-sol" aria-expanded="true" aria-controls="num-burst-sol">
-          Solution (click to reveal/hide)
+      Solution (click to reveal/hide)
     </button>
   </div>
   <div class="card-body collapse" id="num-burst-sol">
@@ -689,7 +689,11 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 </p>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white" data-toggle="collapse" data-target="#mass-change-sol">Solution (click to reveal/hide)</div>
+  <div class="card-header bg-success text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#mass-change-sol" aria-expanded="true" aria-controls="mass-change-sol">
+      Solution (click to reveal/hide)
+    </button>
+  </div>
   <div class="card-body collapse" id="mass-change-sol">
     <p class="card-text">
       Change the line above in <code>inlist_nova</code> to <code> mass_change = <span class="mdot-base">???</span>d-7</code>
@@ -718,16 +722,18 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
   </ul>
 </p>
 
-<div class="text-center">
+<div class="text-center mb-2">
   <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
     <button class='btn btn-lg btn-primary'>Record my Data</button>
   </a>
 </div>
 
-<div class='buffer-tiny'></div>
-
 <div class="card border-primary mb-3">
-  <div class="card-header bg-primary text-white" data-toggle="collapse" data-target="#stability-hint">Hint: Determining Stability (click to reveal/hide)</div>
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#stability-hint" aria-expanded="true" aria-controls="stability-hint">
+      Hint: Determining Stability (click to reveal/hide)
+    </button>
+  </div>
   <div class="card-body collapse" id="stability-hint">
     <p class="card-text">
       Here is a movie of a model that is clearly unstable (M&#775;=3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr):
@@ -752,7 +758,11 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 </div>
 
 <div class="card border-primary mb-3">
-  <div class="card-header bg-primary text-white" data-toggle="collapse" data-target="#timescales-hint">Hint: Determining Timescales (click to reveal/hide)</div>
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#timescales-hint" aria-expanded="true" aria-controls="timescales-hint">
+      Hint: Determining Timescales (click to reveal/hide)
+    </button>
+  </div>
   <div class="card-body collapse" id="timescales-hint">
     <p class="card-text">
       The beginnings of flashes are the easiest to identify, so estimate the time between the two subsequent sharp rises in the luminosity to get the recurrence time.
@@ -773,7 +783,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
   <div class="card-header bg-success text-white">Tool: Making Videos with <samp>images_to_movie</samp></div>
   <div class="card-body text-success" id="timescales-hint">
     <p class="card-text">
-      Did you check out the hint about determining stability? If not, do so. The videos there were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
+      Did you check out the hint about determining stability? The videos there were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
     </p> 
     <p class='card-text'>
       To make these into a movie, the SDK comes with a nifty script that does the heavy lifting for you: <code>images_to_movie</code>. To use it, do something like the following:
@@ -788,4 +798,114 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
       You can control how often pgstar outputs pngs, what they are named, and what directory they go into in the pgstar namelist.
     </p>
   </div>
+</div>
+
+<h4 id='part3d'>Resolving the SSS Phase</h4>
+<p>
+  This simulation is tuned to run quickly, and as a result, the supersoft phase doesn't last many timesteps. If we ran through it too quickly, we might actually have missed stability, while shorter timesteps might catch it. Our goal now is to modify our simulation so that it takes shorter time steps, but only during the SSS phase.
+</p>
+<p>
+  Fortunately, <samp>MESA</samp> has just the controls we want: <code>delta_HR_limit</code> and <code>delta_HR_hard_limit</code>. Both of these adjust the timestep based on how much the quantity
+  \[\eta = \sqrt{\log (L/L_\odot)^2 + \log T_{\mathrm{eff}}^2}\]
+  changes over the timestep. If &#951; is greater than <code>delta_HR_limit</code>, then the next timestep will be reduced by a factor of <code>delta_HR_limit</code>/&#951;. If instead &#951; is greater than <code>delta_HR_hard_limit</code>, the current timestep will be retried with a shorter timestep. 
+</p>
+<p>
+  We could put these in our inlist, but they will make the entire run intolerably slow. We only want really high time resolution during the SSS phase, so we will implement this in <code>run_star_extras.f</code>, specifically, in <code>extras_check_model</code>, which is executed at the end of every timestep. We want to use these tight tolerances only when the hydrogen burning luminosity is similar to the photospheric luminosity. We also only really care when the effective temperature is large.
+</p>
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>extras_check_model</code> to add a conditional that sets <code>delta_HR_limit</code> to <code>5d-3</code> and <code>delta_HR_hard_limit</code> to <code>1d-2</code> whenever L<sub>H</sub>/L<sub>phot</sub> &lt; 1.1 <emph>and</emph> T<sub>eff</sub> &gt; 800,000 K <emph>and</emph> when the L<sub>phot</sub> is above the burst threshold set by <code>L_burst</code>. Otherwise both controls should be set to -1.
+</p>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#access-hint" aria-expanded="true" aria-controls="access-hint">
+      Hint: Accessing the luminosities and effective temperature
+    </button>
+  </div>
+  <div class="card-body collapse" id="access-hint">
+    <p class='card-text'>
+      You will want to use the following in your conditional:
+      <ul>
+        <li>
+          <code>s% power_h_burn</code>: total power in erg/s produced by hydrogen burning
+        </li>
+        <li>
+          <code>s% L_phot</code>: photospheric luminosity in erg/s
+        </li>
+        <li>
+          <code>s% Teff</code>: effective temperature in Kelvin
+        </li>
+      </ul>
+      Note that the <code>s%</code> means we are talking to the object that contains all the data about the stellar model, including physical quantities <emph>and</emph> inlist controls.
+    </p>    
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#setting-hint" aria-expanded="true" aria-controls="setting-hint">
+      Hint: Setting Parameters
+    </button>
+  </div>
+  <div class="card-body collapse" id="setting-hint">
+    <p class='card-text'>
+      Use the following to set the timestep controls to the stricter limits:
+    </p>
+    {% highlight fortran %}
+  s% delta_HR_limit = 5d-3
+  s% delta_HR_hard_limit = 1d-2{% endhighlight %}
+      <p>and the looser limits:</p>
+    {% highlight fortran %}
+  s% delta_HR_limit = -1
+  s% delta_HR_hard_limit = -1{% endhighlight %}
+  </div>
+</div>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#resolution-sol" aria-expanded="true" aria-controls="resolution-sol">
+      Solution (click to reveal/hide)
+    </button>
+  </div>
+  <div class="card-body collapse" id="resolution-sol">
+    <p class="card-text">
+      The main conditional in <code>extras_check_model</code> should now be something like this:
+    </p> 
+{% highlight fortran %}
+   if (s% L_phot > L_burst) then
+      if (waiting_for_burst) then
+         num_bursts = num_bursts + 1
+         write(*,2) 'num_bursts', num_bursts
+         waiting_for_burst = .false.
+      end if
+
+      if (s% power_h_burn / s% L_phot .LT. 1.1d0 .AND. s% Teff > 8d5) then
+         s% delta_HR_limit = 5d-3
+         s% delta_HR_hard_limit = 1d-2
+      else
+         s% delta_HR_limit = -1
+         s% delta_HR_hard_limit = -1
+      endif
+
+
+   else if (s% L_phot < L_between) then
+      if (num_bursts >= 2) then
+         write(*,*) 'have finished burst'
+         extras_check_model = terminate
+         s% termination_code = t_extras_check_model
+      end if
+      waiting_for_burst = .true.
+   end if
+{% endhighlight %}
+    <p class='card-text'>
+      Note that the outer conditional takes care of the luminosity condition automatically.
+    </p>
+  </div>
+</div>
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Recompile and rerun your model at the same M&#775;, but now with the increased time resolution. Report the same quantities as before, but now on the second tab of the google spreadsheet.
+</p>
+<div class="text-center mb-2">
+  <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
+    <button class='btn btn-lg btn-primary'>Record my Data (use second tab on bottom)</button>
+  </a>
 </div>
