@@ -780,8 +780,8 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 </div>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">Tool: Making Videos with <samp>images_to_movie</samp></div>
-  <div class="card-body text-success" id="timescales-hint">
+  <div class="card-header bg-success text-white">Tool: Making Movies with <samp>images_to_movie</samp></div>
+  <div class="card-body text-success">
     <p class="card-text">
       Did you check out the hint about determining stability? The videos there were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
     </p> 
@@ -797,6 +797,14 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
     <p class='card-text'>
       You can control how often pgstar outputs pngs, what they are named, and what directory they go into in the pgstar namelist.
     </p>
+    <div class="card border-danger mb-2">
+      <div class="card-header bg-danger text-white">Warning: Stale png Directory</div>
+      <div class="card-body text-danger">
+        <p class="card-text">
+          Before you start a new run, delete all files in <code>png</code> (<kbd>rm -f png/*.png</kbd>) or rename/move them. If you don't do this, you might end up with a mix of old and new files, and you won't know which is which.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
