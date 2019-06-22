@@ -138,14 +138,6 @@ table.classes {
   min-width: 300px;
 }
 
-#leiden-instructions h2 {
-  margin-top: 50px;
-}
-
-#leiden-instructions h4 {
-  margin-top: 40px;
-}
-
 .highlight pre {
   white-space: pre;
   border-radius: inherit;
@@ -155,12 +147,17 @@ table.classes {
   color: inherit;
   padding: 15px;
 }
-#side-nav {
-}
 
 #super-side-nav {
   height: 100%;
   overflow-y: scroll;
+}
+
+pre code {
+  white-space: pre;
+  overflow-x: auto;
+  display: inline-block;
+  min-width: 100%;
 }
 
 h2#overview {
