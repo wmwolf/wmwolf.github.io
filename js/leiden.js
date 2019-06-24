@@ -23,7 +23,9 @@ var rng = {
   setup: function() {
     $('#mdot-gen').click(function() {
       // alert('clicked');
-      var new_base = (3.1 + Math.random() * (3.5 - 3.1)).toPrecision(3);
+      var mdot_min = 3.2
+      var mdot_max = 3.7
+      var new_base = (mdot_min + Math.random() * (mdot_max - mdot_min)).toPrecision(3);
       $('span.mdot-base').text(new_base);
     });
   }
@@ -31,15 +33,18 @@ var rng = {
 
 // var sideNav = {
 //   setup: function() {
-//     $('#side-nav .nav-link').click(function() {
-//       $('#side-nav .nav-link').removeClass('active');
-//       $(this).addClass('active');
+//     $('.part-header').click(function() {
+//       window.location.href = $(this).attr('href');
+//       $(this).data('target').removeClass('active');
+//       $('#leiden-instructions').scrollspy('refresh');
 //     });
 //   }
-// }
+// };
+
 
 $( document ).ready(function() {  
   infoToggle.setup();
   rng.setup();
   // sideNav.setup();
+  // alert('done with sideNav setup');
 });

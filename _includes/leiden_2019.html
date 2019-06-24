@@ -35,18 +35,19 @@
   Your first step is to install the SDK and confirm that it works on your system by trying <code>which gfortran</code> in a terminal to confirm that the SDK version of gfortran is being used.
 </p>
 <div class="card border-warning mb-3 text-warning">
-  <div class="card-header bg-warning text-white">Warning</div>
+  <div class="card-header bg-warning text-white">
+    <h5 class='card-title mb-0'>Warning for macOS Mojave Users</h5>
+  </div>
   <div class="card-body">
-    <h5 class="card-title">Attention: macOS Mojave Users</h5>
     <p class="card-text">
-      On OS X 10.14 (Mojave), you may also need to install the development header files. These ship as a standard part of Mojave, but must be installed by hand. To do so, run the command
+      On macOS 10.14 (Mojave; and perhaps later versions, too), you may also need to install the development header files. These ship as a standard part of Mojave, but must be installed by hand. To do so, run the command
     </p>
     <p class='card-text'>
       <code>
 open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
       </code>
     </p>
-    <p>
+    <p class='card-text'>
       This step may need to be repeated whenever you upgrade to a new release of the Xcode command-line tools.
     </p>
   </div>
@@ -76,16 +77,17 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   <li>Start the simulation: <code>./rn</code></li>
 </ol>
 
-<div class="card border-success mb-3 text-success">
-  <div class="card-header bg-success text-white">
-    <samp>MESA</samp> Best Practice: Work Directories
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+    <h5 class='card-title mb-0'><samp>MESA</samp> Best Practice: Work Directories</h5>
   </div>
   <div class="card-body">
-    <p>
+    <p class='card-text'>
       Never run simulations from within your local installation of <samp>MESA</samp>. Depending on the value of <code>$MESA_DIR</code> is, you may not actually be compiling against the installation you think you are, and in general it's best to not mess with the source code.
     </p>
-    <p>
+    <p class='card-text'>
       Instead, always make a copy of the standard work directory <code>$MESA_DIR/star/work</code> or start from one of the test cases in <code>$MESA_DIR/star/test_suite</code> (though those require a bit of work to be truly customized).
+    </p>
   </div>
 </div>
 <p> 
@@ -164,9 +166,9 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   To enable/disable different columns in the output files, open the corresponding columns file and uncomment the names of columns you want to output, and comment out those that you don't.
 </p>
 
-<div class="card border-success mb-3 text-success">
-  <div class="card-header bg-success text-white">
-    <samp>MESA</samp> Best Practice: Output Column Files
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+    <h5 class='card-title mb-0'><samp>MESA</samp> Best Practice: Output Column Files</h5>
   </div>
   <div class="card-body">
     <p>
@@ -293,21 +295,21 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   In this case, each namelist only has two controls set. The first tells the namelist to read values from another file, which must also be set up in this way. The second tells it the name of the file to read in.
 </p>
 
-<div class="card border-success mb-3 text-success">
-  <div class="card-header bg-success text-white">
-    <samp>MESA</samp> Best Practice: Multiple Inlists
+<div class="card border-seconary mb-3">
+  <div class="card-header bg-seconary">
+    <h5 class='card-title mb-0'><samp>MESA</samp> Best Practice: Multiple Inlists</h5>
   </div>
   <div class="card-body">
-    <p>
+    <p class='card-text'>
       It may seem needlessly complicated to have inlists pointing to each other instead of putting all controls in one inlist, but this is often very convenient, since large inlists can become cumbersome.
     </p>
-    <p>
+    <p class='card-text'>
       A common convention is to have a "favorites" list in an inlist, named something like <code>inlist_common</code>. Here you have your preferred default settings. Then in another inlist, you put the truly unique quantities that differentiate this simulation from others.
     </p>
-    <p>
+    <p class='card-text'>
       pgstar namelists can also become quite lengthy, so it is extremely common to see them broke out into their own file, typically called <code>inlist_pgstar</code>.
     </p>
-    <p>
+    <p class='card-text'>
       There's nothing stopping you from just having one giant inlist with all of your controls, though!
     </p>
   </div>
@@ -362,7 +364,9 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 
 <div class="card border-warning mb-3 text-warning">
-  <div class="card-header bg-warning text-white">Warning: Inlist Pitfalls</div>
+  <div class="card-header bg-warning text-white">
+    <h5 class='card-title mb-0'>Warning: Inlist Pitfalls</h5>
+  </div>
   <div class="card-body">
     <p class="card-text">
       The syntax of inlists is somewhat strict. While whitespace doesn't matter, please observe the following rules to avoid sadness.
@@ -449,7 +453,9 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   To restart from photo <code>x050</code>, simply execute <kbd>./re x050</kbd>, assuming it exists in <code>photos</code>. <code>inlist</code> will be read again, so you can change commands on the fly, though in practice this is difficult to reproduce, so you should only use this workflow when you are prototyping a simulation.
 </p>
 <div class="card border-warning mb-3 text-warning">
-  <div class="card-header bg-warning text-white">Warning: Photo Pitfalls</div>
+  <div class="card-header bg-warning text-white">
+    <h5 class='card-title mb-0'>Warning: Photo Pitfalls</h5>
+  </div>
   <div class="card-body">
     <h5 class='card-text'><strong>Photos are not the same as saved models.</strong></h5>
     <p class="card-text"> 
@@ -476,13 +482,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 
 <h2 id="part2" class='mt-5'> Part 2: Type I X-ray Bursts</h2>
-<p>This still needs to be worked on.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>Content Coming Soon!</p>
 
 <h2 id="part3" class='mt-5'>Part 3: Recurrent Novae</h2>
 <p>
@@ -511,13 +511,15 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
   The test suites in <samp>MESA star</samp> and <samp>MESA binary</samp> help detect bugs in development by checking that the behavior of a known application doesn't change substantially as commits are made. They are also useful as starting points. We'll be using the <code>nova</code> test case as a basis for this exercise. Make a copy of it in your working area with 
 </p>
 <pre>
-  <kbd>cp $MESA_DIR/star/test_suite/nova recurrent_nova</kbd>
+  <kbd>cp -r $MESA_DIR/star/test_suite/nova recurrent_nova</kbd>
 </pre>
 <p>
   Because this is a test case, we have to make a special change that we didn't have to when using the plain work directory. Namely, open up <code>make/makefile</code> and delete the line that sets <code>MESA_DIR</code>. If you don't do this, compilation will look in the wrong place for your installation.
 </p>
 <div class="card border-warning mb-3 text-warning">
-  <div class="card-header bg-warning text-white">Warning: Test Suite Pitfalls</div>
+  <div class="card-header bg-warning text-white">
+    <h5 class='card-title mb-0'>Warning: Test Suite Pitfalls</h5>
+  </div>
   <div class="card-body">
     <p class="card-text">
       When starting from a test case, <em>always</em> do the following:
@@ -579,7 +581,7 @@ integer function extras_check_model(id, id_extra)
    end if
 end function extras_check_model
 {% endhighlight %}
-wherever you see <code>s%</code>, that is accessing dat in the star. Basically these controls then say that if we are waiting for a burst and the photometric luminosity exceeds 10<sup>4</sup> L<sub>&#8857;</sub>, then we have entered a burst, and when it then goes below 10<sup>3</sup> L<sub>&#8857;</sub>, we have finished the burst. After one such burst, the simulation is ended.
+Wherever you see <code>s%</code>, that is accessing data in the stellar model (<code>s</code> is called the "star info structure"; more on this later). Basically these controls then say that if we are waiting for a burst and the photometric luminosity exceeds 10<sup>4</sup> L<sub>&#8857;</sub>, <table></table>hen we have entered a burst, and when it then goes below 10<sup>3</sup> L<sub>&#8857;</sub>, we have finished the burst. After one such burst, the simulation is ended.
 </p>
 
 <p>
@@ -593,7 +595,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#num-burst-sol" aria-expanded="true" aria-controls="num-burst-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="num-burst-sol">
@@ -617,7 +619,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#burst-def-sol" aria-expanded="true" aria-controls="burst-def-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="burst-def-sol">
@@ -653,7 +655,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class='buffer-tiny'></div>
 
 <p>
-  Untar these files into your work directory (<kbd>tar -xvzf ~/Downloads/nova_tutorial.tar.gz ./</kbd>). They include a main inlist, as well as an updated version of <code>inlist_nova</code> as well as a separate inlist for plots. Finally, a replacement for <code>history_columns.list</code> is there to make it so certain quantities can be plotted on the on-screen plots.
+  Untar these files into your work directory (<kbd>tar -xvzf ~/Downloads/nova_tutorial.tar.gz</kbd>, assuming you are in the work directory). They include a main inlist, as well as an updated version of <code>inlist_nova</code> as well as a separate inlist for plots. Finally, a replacement for <code>history_columns.list</code> is there to make it so certain quantities can be plotted on the on-screen plots.
 </p>
 
 <h2 id="part3c">Finding the Stability Boundary</h2>
@@ -671,7 +673,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
       mass_change = ! your random value here!
   {% endhighlight %}
 
-  Since we haven't set <code>mass_change</code> to any value, running the simulation will throw an ugly error. We need to pick a M&#775; to study. We'll crowd-source random values between 3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr and 3.5 &#215; M<sub>&#8857;</sub>/yr. Pick your with the tool below:
+  Since we haven't set <code>mass_change</code> to any value, running the simulation will throw an ugly error. We need to pick a M&#775; to study. We'll crowd-source random values between 3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr and 3.7 &#215; M<sub>&#8857;</sub>/yr. Pick yours with the tool below:
 </p>
 <div class='text-center'>
   <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
@@ -691,7 +693,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#mass-change-sol" aria-expanded="true" aria-controls="mass-change-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="mass-change-sol">
@@ -731,26 +733,26 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#stability-hint" aria-expanded="true" aria-controls="stability-hint">
-      Hint: Determining Stability (click to reveal/hide)
+      Show Hint: Determining Stability
     </button>
   </div>
   <div class="card-body collapse" id="stability-hint">
     <p class="card-text">
-      Here is a movie of a model that is clearly unstable (M&#775;=3.1 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr):
+      Here is a movie of a model that is clearly unstable:
     </p> 
     <div align="center" class='embed-responsive embed-responsive-16by9'>
-      <video controls>
-        <source src="3.1_se_lores.mp4" type="video/mp4">
+      <video controls fullscreen>
+        <source src="first_run_3.1.mp4" type="video/mp4">
         Your browser does not support the video tag.      
       </video>
     </div>
     <div class='buffer-tiny'></div>
     <p class="card-text">
-      And here is a movie of a model that is clearly stable (M&#775;=3.5 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr):
+      And here is a movie of a model that is clearly stable:
     </p> 
     <div align="center" class='embed-responsive embed-responsive-16by9'>
-      <video controls>
-        <source src="3.5_se_lores.mp4" type="video/mp4">
+      <video controls fullscreen>
+        <source src="first_run_3.7.mp4" type="video/mp4">
         Your browser does not support the video tag.      
       </video>
     </div>
@@ -760,7 +762,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#timescales-hint" aria-expanded="true" aria-controls="timescales-hint">
-      Hint: Determining Timescales (click to reveal/hide)
+      Show Hint: Determining Timescales
     </button>
   </div>
   <div class="card-body collapse" id="timescales-hint">
@@ -768,7 +770,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
       The beginnings of flashes are the easiest to identify, so estimate the time between the two subsequent sharp rises in the luminosity to get the recurrence time.
     </p> 
     <p>
-      The SSS phase duration is a little more nebulous. Estimate the the duration from the time when the effective temperature rises sharply after hydrogen burning luminosity (<code>LH</code>) first comes back down to the photospheric lumionsity (<code>L</code>) until those two luminosities precipitously depart from each other.
+      The SSS phase duration is a little more nebulous. Estimate the the duration from the time of minimum effective temperature until the photospheric and hydrogen-burning luminosities precipitously depart from each other as they plummet.
     </p>
     <div class='text-center'>
     <figure class='figure'>
@@ -779,9 +781,11 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
   </div>
 </div>
 
-<div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">Tool: Making Movies with <samp>images_to_movie</samp></div>
-  <div class="card-body text-success">
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+    <h5 class='card-title mb-0'>Tool: Making Movies with <samp>images_to_movie</samp></h5>
+  </div>
+  <div class="card-body">
     <p class="card-text">
       Did you check out the hint about determining stability? The videos there were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
     </p> 
@@ -797,9 +801,11 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
     <p class='card-text'>
       You can control how often pgstar outputs pngs, what they are named, and what directory they go into in the pgstar namelist.
     </p>
-    <div class="card border-danger mb-2">
-      <div class="card-header bg-danger text-white">Warning: Stale png Directory</div>
-      <div class="card-body text-danger">
+    <div class="card border-warning mb-2">
+      <div class="card-header bg-warning text-white">
+        <h5 class='card-title mb-0'>Warning: Stale png Directory</h5>
+      </div>
+      <div class="card-body text-warning">
         <p class="card-text">
           Before you start a new run, delete all files in <code>png</code> (<kbd>rm -f png/*.png</kbd>) or rename/move them. If you don't do this, you might end up with a mix of old and new files, and you won't know which is which.
         </p>
@@ -820,13 +826,30 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <p>
   We could put these in our inlist, but they will make the entire run intolerably slow. We only want really high time resolution during the SSS phase, so we will implement this in <code>run_star_extras.f</code>, specifically, in <code>extras_check_model</code>, which is executed at the end of every timestep. We want to use these tight tolerances only when the hydrogen burning luminosity is similar to the photospheric luminosity. We also only really care when the effective temperature is large.
 </p>
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+      <h5 class='card-title mb-0'>Accessing the star info structure</h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      Within subroutines in <code>run_star_extras</code>, we can access the full data in the stellar model via the "star info structure", which is usually denoted as <code>s</code>. All the data you can access are listed in <code>$MESA_DIR/star/public/star_data.inc</code>. Additionally, inlist controls are members of the star info structute, so all controls in <code>$MESA_DIR/star/defaults/controls.defaults</code> are can be accessed and changed.
+    </p>    
+    <p class='card-text'>
+      Depending on when in the timestep you access the star info structure, some values will have already been set and/or any changes you make might be overwritten by another internal subroutine. Understanding what is set when and how often boils down to grepping around in <code>$MESA_DIR/star/private</code>. In <code>extras_check_model</code>, everything should already be set, so we don't yet need to worry about this detail (but anything we change won't affect this timestep!).
+    </p>
+    <p class='card-text'>
+      To access a member of the star info structure, we just append a <code>%</code> after <code>s</code>, followed by the name. For instance, <code>s% mstar</code> will return the baryonic mass of the stellar model in grams. Note that units in the star info structure are <em>usually</em> in cgs (unless otherwise indicated in <code>$MESA_DIR/star/public/star_data.inc</code>), while inlist controls are often given in solar units, so you may need to juggle conversions between the two.
+    </p>
+  </div>
+</div>
+
 <p class='lead'>
   <span class='font-weight-bold'>Challenge:</span> Edit <code>extras_check_model</code> to add a conditional that sets <code>delta_HR_limit</code> to <code>5d-3</code> and <code>delta_HR_hard_limit</code> to <code>1d-2</code> whenever L<sub>H</sub>/L<sub>phot</sub> &lt; 1.1 <em>and</em> T<sub>eff</sub> &gt; 800,000 K <em>and</em> when the L<sub>phot</sub> is above the burst threshold set by <code>L_burst</code>. Otherwise both controls should be set to -1.
 </p>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#access-hint" aria-expanded="true" aria-controls="access-hint">
-      Hint: Accessing the luminosities and effective temperature (click to reveal/hide)
+      Show Hint: Accessing the luminosities and effective temperature
     </button>
   </div>
   <div class="card-body collapse" id="access-hint">
@@ -834,10 +857,10 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
       You will want to use the following in your conditional:
       <ul>
         <li>
-          <code>s% power_h_burn</code>: total power in erg/s produced by hydrogen burning
+          <code>s% power_h_burn</code>: total power in L<sub>&#8857;</sub> produced by hydrogen burning
         </li>
         <li>
-          <code>s% L_phot</code>: photospheric luminosity in erg/s
+          <code>s% L_phot</code>: photospheric luminosity in L<sub>&#8857;</sub>
         </li>
         <li>
           <code>s% Teff</code>: effective temperature in Kelvin
@@ -851,26 +874,28 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#setting-hint" aria-expanded="true" aria-controls="setting-hint">
-      Hint: Setting Parameters on the Fly (click to reveal/hide)
+      Show Hint: Setting Parameters on the Fly
     </button>
   </div>
   <div class="card-body collapse" id="setting-hint">
     <p class='card-text'>
       Use the following to set the timestep controls to the stricter limits:
     </p>
-    {% highlight fortran %}
+{% highlight fortran %}
   s% delta_HR_limit = 5d-3
-  s% delta_HR_hard_limit = 1d-2{% endhighlight %}
+  s% delta_HR_hard_limit = 1d-2
+{% endhighlight %}
       <p>and the looser limits:</p>
-    {% highlight fortran %}
+{% highlight fortran %}
   s% delta_HR_limit = -1
-  s% delta_HR_hard_limit = -1{% endhighlight %}
+  s% delta_HR_hard_limit = -1
+{% endhighlight %}
   </div>
 </div>
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#resolution-sol" aria-expanded="true" aria-controls="resolution-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="resolution-sol">
@@ -878,30 +903,30 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
       The main conditional in <code>extras_check_model</code> should now be something like this:
     </p> 
 {% highlight fortran %}
-   if (s% L_phot > L_burst) then
-      if (waiting_for_burst) then
-         num_bursts = num_bursts + 1
-         write(*,2) 'num_bursts', num_bursts
-         waiting_for_burst = .false.
-      end if
+  ! set defaults (no extra resolution)
+  s% delta_HR_limit = -1
+  s% delta_HR_hard_limit = -1
 
-      if (s% power_h_burn / s% L_phot .LT. 1.1d0 .AND. s% Teff > 8d5) then
-         s% delta_HR_limit = 5d-3
-         s% delta_HR_hard_limit = 1d-2
-      else
-         s% delta_HR_limit = -1
-         s% delta_HR_hard_limit = -1
-      endif
+  if (s% L_phot > L_burst) then
+     if (waiting_for_burst) then
+        num_bursts = num_bursts + 1
+        write(*,2) 'num_bursts', num_bursts
+        waiting_for_burst = .false.
+     end if
+     ! if we are in SSS, add resolution
+     if (s% power_h_burn / s% L_phot .LT. 1.1d0 .AND. s% Teff > 8d5) then
+        s% delta_HR_limit = 5d-3
+        s% delta_HR_hard_limit = 1d-2
+     endif
 
-
-   else if (s% L_phot < L_between) then
-      if (num_bursts >= 2) then
-         write(*,*) 'have finished burst'
-         extras_check_model = terminate
-         s% termination_code = t_extras_check_model
-      end if
-      waiting_for_burst = .true.
-   end if
+  else if (s% L_phot < L_between) then
+     if (num_bursts >= 2) then
+        write(*,*) 'have finished burst'
+        extras_check_model = terminate
+        s% termination_code = t_extras_check_model
+     end if
+     waiting_for_burst = .true.
+  end if
 {% endhighlight %}
     <p class='card-text'>
       Note that the outer conditional takes care of the luminosity condition automatically.
@@ -984,12 +1009,12 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
   This is implemented in <samp>MESA</samp> as the "nova" wind option. You can find the related controls in <code>$MESA_DIR/star/defaults/controls.defaults</code>.
 </p>
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Edit <code>inlist_nova</code> [only] to deactivate the super eddington wind, and activate the nova wind. The nova wind should only be active for T<sub>eff</sub> &lt; 3 &#215; 10<sup>5</sup> K and L &gt; 10<sup>4</sup> L<sub>&#8857;</sub>. At a radius of 100 R<sub>&#8857;</sub>, set a roche lobe M&#775; of 10<sup>-3</sup> M<sub>&#8857;</sub>/yr.
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>inlist_nova</code> [only] to deactivate the super eddington wind, and activate the nova wind. The nova wind should only be active for T<sub>eff</sub> &lt; 3 &#215; 10<sup>5</sup> K and L &gt; 10<sup>4</sup> L<sub>&#8857;</sub>. At a radius of 100 R<sub>&#8857;</sub>, set a Roche lobe overflow M&#775; of 10<sup>-3</sup> M<sub>&#8857;</sub>/yr.
 </p>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#deact-sewind-hint" aria-expanded="true" aria-controls="deact-sewind-hint">
-      Hint: Deactivating the Super Eddington Wind (click to reveal/hide)
+      Show Hint: Deactivating the Super Eddington Wind
     </button>
   </div>
   <div class="card-body collapse" id="deact-sewind-hint">
@@ -1005,7 +1030,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#nova-wind-controls-hint" aria-expanded="true" aria-controls="nova-wind-controls-hint">
-      Hint: Nova Wind Controls (click to reveal/hide)
+      Show Hint: Nova Wind Controls
     </button>
   </div>
   <div class="card-body collapse" id="nova-wind-controls-hint">
@@ -1027,7 +1052,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#nova-wind-sol" aria-expanded="true" aria-controls="nova-wind-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="nova-wind-sol">
@@ -1043,10 +1068,10 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 
   nova_scaling_factor = 1 ! turn the wind on full blast
   nova_wind_b = 20.77 ! interpolated from table
-  nova_wind_max_Teff = 0 ! don't calculate wind if hotter than this
-  nova_wind_min_L = 0 ! don't calculate wind if less luminous than this
-  nova_roche_lobe_radius = 0 ! at radii above this, use `nova_RLO_mdot`
-  nova_RLO_mdot = 0 ! mdot to use if radius is larger than roche_lobe_radius
+  nova_wind_max_Teff = 3d5 ! don't calculate wind if hotter than this
+  nova_wind_min_L = 1d4 ! don't calculate wind if less luminous than this
+  nova_roche_lobe_radius = 1d2 ! at radii above this, use `nova_RLO_mdot`
+  nova_RLO_mdot = 1d-3 ! mdot to use if radius is larger than roche_lobe_radius
 {% endhighlight %}      
     You also could just delete the two lines about the super eddington wind.
     </p> 
@@ -1073,7 +1098,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#accretion-control-sol" aria-expanded="true" aria-controls="accretion-control-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="accretion-control-sol">
@@ -1098,7 +1123,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#grep-hint" aria-expanded="true" aria-controls="grep-hint">
-      Hint: Searching in star/private
+     Show Hint: Searching in star/private
     </button>
   </div>
   <div class="card-body collapse" id="grep-hint">
@@ -1114,7 +1139,7 @@ wherever you see <code>s%</code>, that is accessing dat in the star. Basically t
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#find-implementation-sol" aria-expanded="true" aria-controls="find-implementation-sol">
-      Solution (click to reveal/hide)
+      Show Solution
     </button>
   </div>
   <div class="card-body collapse" id="find-implementation-sol">
@@ -1157,16 +1182,16 @@ winds.f90:         !      T1 < s% nova_min_Teff_for_accretion .and. s% mass_chan
   So it looks like the original implementation of this control didn't really work as intended. (Aside: this was discovered, and the quick fix was to deactivate the control, but then the real fix has not yet been committed). So we're going to implement it!
 </p>
 <p>
-  To implement this control, we'll use one of <samp>MESA</samp>'s "other" hooks, prototyped in <code>$MESA_DIR/star/other</code>. These files each allow you to drop some code into your <code>run_star_extras.f</code> that are injected into the evolution at runtime. The proper one to use here is <code>other_adjust_mdot</code>, which gives us the last word on mass gain or loss in the star (by ultimately setting <code>s% star_mdot</code>).
+  To implement this control, we'll use one of <samp>MESA</samp>'s "other" hooks, prototyped in <code>$MESA_DIR/star/other</code>. These files each allow you to drop some code into your <code>run_star_extras.f</code> that are injected into the evolution at runtime. The proper one to use here is <code>other_adjust_mdot</code>, which gives us the last word on mass gain or loss in the star (by ultimately setting <code>s% mstar_dot</code>).
 </p>
 <h4>Setting Up A Null Hook</h4>
 <p>
-  Before we implement this control, let's set up a hook into <samp>MESA</samp> that does nothing but print a statement out to the terminal so we know it's being called. Copy the <code>null_other_adjust_mdot</code> subroutine into <code>src/run_star_extras</code> in your local nova directory, right below <code>end subroutine extras_controls</code>. Rename the subroutine something more descriptive, like <code>nova_adjust_mdot</code> (be sure to name at the beginning and the end of the subroutine).
+  Before we implement this control, let's set up a hook into <samp>MESA</samp> that does nothing but print a statement out to the terminal so we know it's being called. Copy the <code>null_other_adjust_mdot</code> subroutine from <code>$MESA_DIR/star/other/other_adjust_mdot.f90</code> into <code>src/run_star_extras</code> in your local nova directory, right below <code>end subroutine extras_controls</code>. Rename the subroutine something more descriptive, like <code>nova_adjust_mdot</code> (be sure to update the name at the beginning and the end of the subroutine).
 </p>
 <p>
   Just because the subroutine is there doesn't mean it will be called when <samp>MESA</samp> is checking for the <code>other_adjust_mdot</code> hook. We need to edit <code>extras_conrols</code> to tell it that our new subroutine should be injected at that stage of evolution by adding
 {% highlight fortran %}
-s% other_adjust_mdot => nova_adjust_mdot
+  s% other_adjust_mdot => nova_adjust_mdot
 {% endhighlight %}
 </p>
 <p>
@@ -1238,7 +1263,7 @@ s% other_adjust_mdot => nova_adjust_mdot
   Double check that your code compiles. If it does, now you're ready to actually implement this control!
 </p>
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Finish the implementation of <code>nova_adjust_mdot</code>. Set <code>s% star_mdot = 0d0</code> if <em>all</em> of the following conditions are met simultaneously:
+  <span class='font-weight-bold'>Challenge:</span> Finish the implementation of <code>nova_adjust_mdot</code>. Set <code>s% mstar_dot = 0d0</code> if <em>all</em> of the following conditions are met simultaneously:
 </p>
 <ul>
   <li class='lead'>
@@ -1253,4 +1278,98 @@ s% other_adjust_mdot => nova_adjust_mdot
 </ul>
 <p class='lead'>
   Otherwise, it should do nothing.
+</p>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#star-info-members-hint" aria-expanded="true" aria-controls="star-info-members-hint">
+      Show Hint: Useful Members of the Star Info Structure
+    </button>
+  </div>
+  <div class="card-body collapse" id="star-info-members-hint">
+    <p class="card-text">
+      You'll want to make use of the following members of the star info structure (that are just taken from the <code>controls</code> namelist):
+    </p>
+    <ul>
+      <li><code>nova_scaling_factor</code></li>
+      <li><code>nova_nova_wind_min_L</code> (note that this is in L<sub>&#8857;</sub>)</li>
+      <li><code>nova_wind_max_Teff</code></li>
+      <li><code>nova_min_Teff_for_accretion</code></li>
+    </ul>
+    <p>
+      and the following from the model's physical data (found in <code>$MESA_DIR/star/public/star_data.inc</code>):
+    </p>
+    <ul>
+      <li><code>mstar_dot</code></li>
+      <li><code>Teff</code></li>
+      <li><code>L_phot</code> (fortunately, this is <em>also</em> in L<sub>&#8857;</sub>, so we don't need to convert)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#control-accretion-sol" aria-expanded="true" aria-controls="control-accretion-sol">
+      Show Solution
+    </button>
+  </div>
+  <div class="card-body collapse" id="control-accretion-sol">
+    <p class="card-text">
+      Your full implementation of <code>nova_adjust_mdot</code> should look something like this:
+    </p>
+{% highlight fortran %}
+subroutine nova_adjust_mdot(id, ierr)
+   use star_def
+   integer, intent(in) :: id
+   integer, intent(out) :: ierr
+   type (star_info), pointer :: s
+
+   ierr = 0
+   call star_ptr(id, s, ierr)
+   if (ierr /= 0) return
+
+   if (s% nova_scaling_factor .GT. 0d0) then
+      if (s% L_phot .GT. s% nova_wind_min_L .AND. &
+         s% Teff > s% nova_wind_max_Teff .AND. &
+         s% Teff < s% nova_min_Teff_for_accretion) then
+         s% mstar_dot = 0d0
+      endif
+   endif
+end subroutine nova_adjust_mdot
+{% endhighlight %}
+  </div>
+</div>
+
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+      <h5 class='card-title mb-0'>Using Astrophysical Constants</h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      We didn't need to worry about this in this exercise, but often quantities are stored in the star info structure in cgs, but relevant controls (and indeed some of the internal values in the star info structure) are expressed in solar units. Converting between these (and many other tasks) are made easy by the <samp>const</samp> module, whidh is loaded at the top of your <code>run_star_extras.f</code> file:
+    </p>    
+{% highlight fortran %}
+      use star_lib
+      use star_def
+      use const_def ! loads all sorts of goodies
+{% endhighlight %}
+    <p class='card-text'>
+      Look in <code>$MESA_DIR/const/public/const_def.f90</code> to see what constants are already available. So long as the module is loaded, you don't need to declare these or anything before using them, and they aren't part of the star info structure, so you could just reference <code>Lsun</code> directly in any of the code, and it will evaluate to a solar luminosity in cgs.
+    </p>
+  </div>
+</div>
+
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Rerun your model at the same M&#775; as the first three times. Now it should use the nova wind prescription with the higher time resolution in the SSS phase <em>and</em> accretion should stop before mass loss begins (if it ever begins). Report the same quantities as before, but now on the fourth tab of the google spreadsheet.
+</p>
+<div class="text-center mb-2">
+  <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
+    <button class='btn btn-lg btn-primary'>Record my Data (use fourth tab on bottom)</button>
+  </a>
+</div>
+<h4> Discussion </h4>
+<p>You should find that mass loss doesn't even occur anymore; simply stopping accretion halts the redward surge before the nova wind can begin. As a result, recurrence times and SSS phase durations should increase. You could simulate different scenarios where accretion resumes at later and later times by increasing <code>nova_min_Teff_for_accretion</code>, perhaps even setting it to something ludicrously high, like 10<sup>7</sup> K, so that no accretion ever happens during the SSS phase. In this case, we wouldn't expect there to be <em>any</em> M&#775; with stable burning (what <a href="https://ui.adsabs.harvard.edu/abs/2016ApJ...824...22H/abstract" target=_blank>Kato & Hachisu call "enforced novae"</a>).
+</p>
+<p>
+  The super eddington wind prescription, in additon to being poorly resolved in time, suffered from mass loss continuing well into the SSS phase, which if we dug deeper, we would realize would not happen had we not set our surface boundary condition at &tau;=30. We still haven't touched on what changing the spatial resolution would do, or more importantly how convective boundary mixing during the runaway would change things. There are still many experiments to run!
 </p>
