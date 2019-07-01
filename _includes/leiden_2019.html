@@ -168,7 +168,9 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 <div class="card border-secondary mb-3">
   <div class="card-header bg-secondary">
-    <h5 class='card-title mb-0'><samp>MESA</samp> Best Practice: Output Column Files</h5>
+    <h5 class='card-title mb-0'>
+      <samp>MESA</samp> Best Practice: Output Column Files
+    </h5>
   </div>
   <div class="card-body">
     <p>
@@ -179,6 +181,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
     </p>
     <p>
       Then, edit these files in your local work directory. <samp>MESA</samp> will always look for these files in the local directory before falling back to their default versions.
+    </p>
   </div>
 </div>
 <p>
@@ -482,7 +485,270 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 
 <h2 id="part2" class='mt-5'> Part 2: Type I X-ray Bursts</h2>
-<p>Content Coming Soon!</p>
+<p>
+  In this section we'll get our hands dirty by running a <samp>MESA</samp> simulation of a Type I X-ray burst. We'll start from a provided inlist and model, and then we'll edit that inlist to reproduce different burning regimes of accreting neutron stars, and finally we'll edit the microphysics used to calculate opacities in the extreme regimes present in neutron stars.
+</p>
+<p>
+  You can find slides <a href="/projects/leiden_2019/xray_slides.pdf" download>here</a>, but the entire exercise is doable on this site alone.
+</p>
+
+<p>
+  <span class="lead text-danger">Disclaimer:</span>
+  The simulations you are going to do here in this part (and the next) are not resolved, use nuclear networks that are too small, and contain other shortcomings that make them quick to run, but not suitable for publication. 
+</p>
+
+<h4 id='part2a' class='mt-4'>A First X-ray Burst</h4>
+<p>
+  Rist, create a new <samp>MESA</samp> work directory somewhere in your local filesystem:
+</p>
+<p>
+  <kbd>cp -r $MESA_DIR/star/work burst</kbd>
+</p>
+<p>
+  and have a look inside. You should see the files described <a href="#part1a">above</a>. We will be replacing both <code>inlist_project</code> and <code>inlist_pgstar</code> to instead model an accreting netutron star and to display more pertinent on-screen plots than the defaults in the standard work directory's copy of <code>inlist_pgstar</code>. Additionally, we'll be adding in our own custom <code>history_columns.list</code> (review what that does <a href="#part1b">here</a>) to enable these plots, and a starting model, <code>ns_1.4M.mod</code>, which gives us just the outer regions of a neutron star above an iron substrate (the inner boundary condition is set to a fixed mass, radius, and luminosity).
+</p>
+
+<p>
+  Download the new files with the link below:
+</p>
+
+<p class='text-center'>
+  <a role=button class="btn btn-lg btn-primary" href='/projects/leiden_2019/burst.tgz' download>Get Burst Files</a>
+</p>
+
+<p>
+  After downloading the file, unpack it inside the work directory:
+</p>
+
+<p>
+  <kbd>tar -zxvf burst.tgz</kbd>
+</p>
+
+<p>
+  This should create the four files mentioned above:
+  <ul>
+    <li><code>inlist_project</code></li>
+    <li><code>inlist_pgstar</code></li>
+    <li><code>history_columns.list</code></li>
+    <li><code>ns_1.4.mod</code></li>
+  </ul>
+  You may be prompted to overwrite the two inlists. Go ahead and do that. Our custom <code>history_columns.list</code> will specifically allow us to track and plot the following contents:
+  <ul>
+    <li><code>star_age_hr</code>: this is the model's age in hours (the default is years, which is too long for our rapidly-bursting model</li>
+    <li><code>max_eps_he_lgT</code>: the log of the temperature at the location of peak helium burning</li>
+    <li><code>log_total_mass he4</code>: the log of the total mass of helium in the model (in M<sub>&#8857;</sub>)</li>
+  </ul>
+  Now you should compile and run the model:
+</p>
+
+<p>
+  <kbd>./mk</kbd><br>
+  <kbd>./rn</kbd>
+</p>
+
+<p>
+  After some initial terminal output, you should see a pgstar (the plotting side of <samp>MESA</samp>) window popping up with multiple panels. The entire pgstar output, when strung into a movie, can be seen below.
+</p>
+<div align="center" class='embed-responsive embed-responsive-16by9 my-2'>
+  <video controls fullscreen>
+    <source src="first_burst.mp4" type="video/mp4">
+    Your browser does not support the video tag.      
+  </video>
+</div>
+<p>
+  The upper left panel shows a density-temperature profile of the star, with the surface being on the lower-left (low temperature and density) and the inner-most part of the model in the upper right (high temperature and density). Note how regions of strong burning are indicated with background colors. In the lower left, we have the log of the surface luminosity (gold, left vertical axis) and the number of zones in the model (blue, right vertical axis) plotted as a function of time. Notice how the number of zones automatically increases during the first few bursts to better resolve the burning region. The upper right panel shows the elemental composition as a function of column depth, and the lower right panel shows how the temperature in the helium burning layer varies with the total mass of helium. 
+
+</p>
+<p>
+  You'll see that this plot spirals in on a fixed point, coincident with the luminosity plot coming to a constant value after a few initial bursts. Evidently, we have found a stable burning solution, where the rate that helium is burned is nearly balanced by the rate it is accreted (though if you look closely, you'll see that the total amount of helium present slowly increases).
+</p>
+<p>
+  If you let the simulation go to completion, it will stop after 3000 steps. What determines this? Try to figure out what controls this and other physical parameters in this simulation by studying <code>inlist_project.</code>
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Open <code>inlist_project</code> and identify the following pieces of information. 
+  <ul>
+    <li class='lead'>The stopping condition(s): there could be multiple, but at least one is after computing 3000 models</li>
+    <li class='lead'>The nuclear network in use</li>
+    <li class='lead'>The accretion rate</li>
+  </ul>
+</p>
+<p class='lead'>
+  You can learn more about available options in <code>$MESA_DIR/star/defaults/star_job.defaults</code> and <code>$MESA_DIR/star/defaults/star_job.defaults</code> or their online equivalanets for <a href="http://mesa.sourceforge.net/star_job_defaults.html" target=_blank>star_job</a> and <a href="http://mesa.sourceforge.net/controls_defaults.html" target=_blank>controls</a>.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#inlist_project-sol" aria-expanded="true" aria-controls="inlist_project-sol">
+      Show Solution
+    </button>
+  </div>
+  <div class="card-body collapse" id="inlist_project-sol">
+    <p class="card-text">
+      There is only one stopping condition, which we already identified as a maximum model number of 3000. The line that sets it is in the controls namelist:
+{% highlight fortran %}
+      max_model_number = 3000
+{% endhighlight %}
+    </p> 
+    <p>
+      The nuclear reaction network is set in the <code>star_job</code> namelist by these lines:
+{% highlight fortran %}
+      change_initial_net = .true.      
+      new_net_name = 'cno_extras_plus_fe56.net'
+{% endhighlight %}
+      The first line tells <samp>MESA</samp> that we want to change from the network in the starting model (even if we are "changing" to the same network), and the second line specifies what network to use. Premade networks can be found in <code>$MESA_DIR/data/net_data/nets</code>.
+    </p>
+    <p>
+      The accretion rate of this model is 3 &#215; 10<sup>-8</sup> M<sub>&#8857;</sub>/yr, as set by the following line:
+{% highlight fortran %}
+      mass_change = 3e-8  ! rate of accretion (Msun/year)      
+{% endhighlight %}
+    </p>
+    <p>
+      You are encouraged to further explore what some of the other commands in this inlist are doing.
+    </p>
+  </div>
+</div>
+
+<h4 id='part2b' class='mt-4'>Burning Regimes</h4>
+<p>
+  It appears that accreting solar composition material at 3 &#215; 10<sup>-8</sup> M<sub>&#8857;</sub>/yr results in stable burning (though incomplete hydrogen burning implies that we don't have a large enough nuclear network). <a href="https://ui.adsabs.harvard.edu/abs/2004NuPhS.132..435C/abstract" target=_blank>Cumming (2004)</a> calculated these burning regimes and found the following rough boundaries.
+</p>
+
+<table class='table table-striped table-responsive table-hover my-5' id='burning-regimes'>
+  <caption>
+    Approximate burning regimes for accreting neutron stars. Note that <a href="https://ui.adsabs.harvard.edu/abs/2016MNRAS.456L..11K/abstract" target=_blank>Keek & Heger (2016)</a> find a new stable burning regime involving Carbon burning in a region where Helium burning is incomplete.
+  </caption>
+  <thead class='thead-dark'>
+    <tr>
+      <th class='text-nowrap'>Label</th><th class='text-nowrap'>Description</th><th class='text-nowrap'>Typical M&#775;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class='text-nowrap'>Stable</td>
+      <td>Both H and He burning are thermally stable</td>
+      <td class='text-nowrap'>10<sup>-8</sup> M<sub>&#8857;</sub>/yr</td>
+    </tr>
+    <tr>
+      <td class='text-nowrap'>Mixed H/He</td>
+      <td>Stable H burning (hot CNO cycle) but unstable He burning. He ignites in a H-rich environment (-> rp process)</td>
+      <td class='text-nowrap'>10<sup>-9</sup> M<sub>&#8857;</sub>/yr</td>
+    </tr>
+    <tr>
+      <td class='text-nowrap'>Pure He</td>
+      <td>Stable H burning depletes all H before He ignites</td>
+      <td class='text-nowrap'>10<sup>-10</sup> M<sub>&#8857;</sub>/yr</td>
+    </tr>
+    <tr>
+      <td class='text-nowrap'>H-triggered</td>
+      <td>Unstable H burning</td>
+      <td class='text-nowrap'>10<sup>-11</sup> M<sub>&#8857;</sub>/yr</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class='text-center'>
+  <figure class='figure my-3'>
+    <img class='figure-img img-fluid rounded' src='stability.png' alt='burning regimes as a function of temperature and column depth'>
+    <figcaption class="figure-caption text-left">
+      Profiles of accreting neutron stars in the different burning regimes as described by  <a href="https://ui.adsabs.harvard.edu/abs/2004NuPhS.132..435C/abstract" target=_blank>Cumming (2004)</a>
+    </figcaption>
+  </figure>
+</div>
+<p>
+  Our goal is to try to reproduce these burning regime with our simple accreting neutron star model.
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>inlist_project</code> to change the accretion rate, save, and rerun your model (no need to compile unless you change an actual fortran file). Determine what burning regime you are in.
+</p>
+
+<p>
+  You may want to look at the last burst in your calculation in isolation. We provide a python script to do this, but it assumes you have numpy and matplotlib properply configured on your machine (should be the default with any reasonable scientific distribution of python like anaconda). To use it, <a href="/projects/leiden_2019/plot_lc.py" download>download it</a>, move it to your working directory, and execute <kbd>python plot_lc.py</kbd> after your run is over. Does your burst look like a Type I X-ray burst?
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#burning-regimes-sol" aria-expanded="true" aria-controls="burning-regimes-sol">
+      Show Solution
+    </button>
+  </div>
+  <div class="card-body collapse" id="burning-regimes-sol">
+    <p class="card-text">
+      Below are videos of four models run at the "typical M&#775;'s" from the table above.
+    </p><
+    <figure class='figure'>
+      <div align="center" class='embed-responsive embed-responsive-16by9 my-2'>
+        <video controls fullscreen>
+          <source src="movie_mdot1e-08.mp4" type="video/mp4">
+          Your browser does not support the video tag.      
+        </video>
+      </div>
+      <figcaption class='figure-caption'>
+        M&#775;=10<sup>-8</sup> M<sub>&#8857;</sub>/yr. Similar to our first burst, this goes through a few bursts that weaken until we reach a stable configuration.
+      </figcaption>
+    </figure>
+
+    <figure class='figure'>
+      <div align="center" class='embed-responsive embed-responsive-16by9 my-2'>
+        <video controls fullscreen>
+          <source src="movie_mdot1e-09.mp4" type="video/mp4">
+          Your browser does not support the video tag.      
+        </video>
+      </div>
+      <figcaption class='figure-caption'>
+        M&#775;=10<sup>-9</sup> M<sub>&#8857;</sub>/yr. We get multiple bursts that seem to fall into a pattern, but then stop as helium builds up, and the run crashes on a large helium flash. Something's fishy here... Tentatively in the "Mixed H/He" range, as Hydrogen appears to burn steadily while He is going through bursts.
+      </figcaption>
+    </figure>
+    <figure class='figure'>
+      <div align="center" class='embed-responsive embed-responsive-16by9 my-2'>
+        <video controls fullscreen>
+          <source src="movie_mdot1e-10.mp4" type="video/mp4">
+          Your browser does not support the video tag.      
+        </video>
+      </div>
+      <figcaption class='figure-caption'>
+        M&#775;=10<sup>-10</sup> M<sub>&#8857;</sub>/yr. Hydrogen burns steadily as a helium layer builds up. We don't actually get to the helium flash, but it is inevitable, so we are in the "Pure He" range.
+      </figcaption>
+    </figure>
+    <figure class='figure'>
+      <div align="center" class='embed-responsive embed-responsive-16by9 my-2'>
+        <video controls fullscreen>
+          <source src="movie_mdot1e-11.mp4" type="video/mp4">
+          Your browser does not support the video tag.      
+        </video>
+      </div>
+      <figcaption class='figure-caption'>
+        M&#775;=10<sup>-11</sup> M<sub>&#8857;</sub>/yr. Now even Hydrogen burns unstably, as the layer builds up and burns away in a cyclic fashion. No He flash occurs in this video, but it would eventually ahpen after a large number of Hydrogen bursts.
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
+<h5>Missing Physics</h5>
+<p>
+  As we said in the disclaimer, these models are all missing some important physics. Here are just a few: 
+</p>
+<dl class='row'>
+  <dt class='col-sm-3'>Mixed H/He Bursts</dt>
+  <dd class="col-sm-9">We need a large network to follow the rp-process. Our model has a lot of leftover hydrogen, and low peak luminosities</dd>
+
+  <dt class='col-sm-3'>Helium Flashes</dt>
+  <dd class='col-sm-9'>These flashes reach Eddington luminosity. We need to be able to follow the expansion and wind. You will find that the code has toruble for low hydrogen fractions when the luminoisty approaches Eddington.</dd>
+
+  <dt class='col-sm-3'>Hydrogen Flashes</dt>
+  <dd class='col-sm-9'>
+    These run smoothly, but at low accretion rates, we should include diffusion (there is a prescription in <samp>MESA</samp> for this).
+  </dd>
+</dl>
+
+<h4 id='part2c' class='mt-4'>Extending MESA</h4>
+Type I X-ray burst pose a challenge to opacity calculations because a complex mixture of elements is present that we cannot know in advance. <a href="https://ui.adsabs.harvard.edu/abs/1999ApJ...524.1014S/abstract" target=_blank>Schatz et al. (1999)</a> made an analytic fit to the free-free Gaunt factor from <a href="https://ui.adsabs.harvard.edu/abs/1991ApJ...382..636I/abstract" target=_blank>Itoh et al. (1991)</a>:
+
+\[\kappa_{\mathrm{ff}} = 0.753 \mathrm{\frac{cm^2}{g}} \frac{\rho_5}{\mu_e T_8^{7/2}}\sum\frac{Z_i^2X_i}{A_i}g_{\mathrm{ff}}(Z_i,T,n_e)\]
+
 
 <h2 id="part3" class='mt-5'>Part 3: Recurrent Novae</h2>
 <p>
@@ -584,7 +850,7 @@ integer function extras_check_model(id, id_extra)
    end if
 end function extras_check_model
 {% endhighlight %}
-Wherever you see <code>s%</code>, that is accessing data in the stellar model (<code>s</code> is called the "star info structure"; more on this later). Basically these controls then say that if we are waiting for a burst and the photometric luminosity exceeds 10<sup>4</sup> L<sub>&#8857;</sub>, <table></table>hen we have entered a burst, and when it then goes below 10<sup>3</sup> L<sub>&#8857;</sub>, we have finished the burst. After one such burst, the simulation is ended.
+Wherever you see <code>s%</code>, that is accessing data in the stellar model (<code>s</code> is called the "star info structure"; more on this later). Basically these controls then say that if we are waiting for a burst and the photometric luminosity exceeds 10<sup>4</sup> L<sub>&#8857;</sub>, then we have entered a burst, and when it then goes below 10<sup>3</sup> L<sub>&#8857;</sub>, we have finished the burst. After one such burst, the simulation is ended.
 </p>
 
 <p>
