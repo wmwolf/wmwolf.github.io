@@ -489,7 +489,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   In this section we'll get our hands dirty by running a <samp>MESA</samp> simulation of a Type I X-ray burst. We'll start from a provided inlist and model, and then we'll edit that inlist to reproduce different burning regimes of accreting neutron stars, and finally we'll edit the microphysics used to calculate opacities in the extreme regimes present in neutron stars.
 </p>
 <p>
-  You can find slides <a href="/projects/leiden_2019/xray_slides.pdf" download>here</a>, but the entire exercise is doable on this site alone.
+  You can find the original slides used for the tutorial <a href="/projects/leiden_2019/xray_slides.pdf" download>here</a>, but the entire exercise is doable on this site alone, and some of the naming conventions have been updated here.
 </p>
 
 <p>
@@ -499,7 +499,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 <h4 id='part2a' class='mt-4'>A First X-ray Burst</h4>
 <p>
-  Rist, create a new <samp>MESA</samp> work directory somewhere in your local filesystem:
+  First, create a new <samp>MESA</samp> work directory somewhere in your local filesystem:
 </p>
 <p>
   <kbd>cp -r $MESA_DIR/star/work burst</kbd>
@@ -560,7 +560,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 </p>
 <p>
-  You'll see that this plot spirals in on a fixed point, coincident with the luminosity plot coming to a constant value after a few initial bursts. Evidently, we have found a stable burning solution, where the rate that helium is burned is nearly balanced by the rate it is accreted (though if you look closely, you'll see that the total amount of helium present slowly increases).
+  You'll see that this last plot spirals in on a fixed point, coincident with the luminosity plot coming to a constant value after a few initial bursts. Evidently, we have found a stable burning solution, where the rate that helium is burned is nearly balanced by the rate it is accreted.
 </p>
 <p>
   If you let the simulation go to completion, it will stop after 3000 steps. What determines this? Try to figure out what controls this and other physical parameters in this simulation by studying <code>inlist_project.</code>
@@ -569,7 +569,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 <p class='lead'>
   <span class='font-weight-bold'>Challenge:</span> Open <code>inlist_project</code> and identify the following pieces of information. 
   <ul>
-    <li class='lead'>The stopping condition(s): there could be multiple, but at least one is after computing 3000 models</li>
+    <li class='lead'>The stopping condition(s): there could be multiple, but at least one is after computing 3000 models; what line controls this?</li>
     <li class='lead'>The nuclear network in use</li>
     <li class='lead'>The accretion rate</li>
   </ul>
@@ -676,6 +676,12 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
     </button>
   </div>
   <div class="card-body collapse" id="burning-regimes-sol">
+    <p class='card-text'>
+      To change your M&#775;, you need to adjust the following line:
+      {% highlight fortran %}
+      mass_change = 3d-8{% endhighlight %}
+      Specifically, change <code>3d-8</code> to a different value, like <code>1d-8</code> to set M&#775;=10<sup>-8</sup> M<sub>&#8857;</sub>/yr.
+    </p>
     <p class="card-text">
       Below are videos of four models run at the "typical M&#775;'s" from the table above.
     </p><
@@ -736,7 +742,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   <dd class="col-sm-9">We need a large network to follow the rp-process. Our model has a lot of leftover hydrogen, and low peak luminosities</dd>
 
   <dt class='col-sm-3'>Helium Flashes</dt>
-  <dd class='col-sm-9'>These flashes reach Eddington luminosity. We need to be able to follow the expansion and wind. You will find that the code has toruble for low hydrogen fractions when the luminoisty approaches Eddington.</dd>
+  <dd class='col-sm-9'>These flashes reach Eddington luminosity. We need to be able to follow the expansion and wind. You will find that the code has trouble for low hydrogen fractions when the luminoisty approaches Eddington.</dd>
 
   <dt class='col-sm-3'>Hydrogen Flashes</dt>
   <dd class='col-sm-9'>
@@ -751,7 +757,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   \[\kappa_{\mathrm{ff}} = 0.753 \mathrm{\frac{cm^2}{g}} \frac{\rho_5}{\mu_e T_8^{7/2}}\sum\frac{Z_i^2X_i}{A_i}g_{\mathrm{ff}}(Z_i,T,n_e)\]
 </p>
 <p>
-  We can actually provide our own subroutine for <samp>MESA</samp> to calculate opacities on the fly rather than relying on the tables and calculations provided by <samp>MESA</samp>. We can do this and <em>many</em> other extensions by making use of the <code>other</code> routines that are prototyped in <code>$MESA_DIR/star/other</code>. To see a list of all available "other" hooks, execute
+  We can actually provide our own subroutine for <samp>MESA</samp> to calculate opacities on the fly using this work rather than relying on the tables and calculations provided by <samp>MESA</samp>. We can use this and <em>many</em> other extensions by making use of the <code>other</code> routines that are prototyped in <code>$MESA_DIR/star/other</code>. To see a list of all available "other" hooks, execute
 </p>
 <p>
   <kbd>ls $MESA_DIR/star/other</kbd>
@@ -776,7 +782,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 
 <p>
-  If you open up <code>run_star_extras.f</code>, you'll note the following subroutines near the top of the file:
+  If you open up <code>run_star_extras.f</code>, you'll note the following subroutines near the top of the file (after the <code>extras_controls</code> subroutine):
 </p>
 <pre class='pre-y-scrollable'>
 {% highlight fortran %}
@@ -992,7 +998,10 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   From your working directory, compile with <kbd>./mk</kbd> to make sure your code is working. Before you run, though, we need to add the following line to the <code>controls</code> namelist in <code>inlist_project</code> to tell <samp>MESA</samp> that we indeed do want to use the "other" opacity routine:
   {% highlight fortran %}
   use_other_kap = .true.{% endhighlight %}
-  With that edit, you should be able to run (<kbd>./rn</kbd>), and now your pgstar dashboard will include a plot showing the profile of opacity in the model. Try running with <code>use_other_kap = .false.</code> and notice the difference in the opacity profile.
+  With that edit, you should be able to run (<kbd>./rn</kbd>), and now your pgstar dashboard will include a plot showing the profile of opacity in the model. Try running with <code>use_other_kap = .false.</code> and notice the difference in the opacity profile. You should see a sharp edge develop at the iron-helium boundary with our updated opacity routine that was not present before.
+</p>
+<p>
+  For a more detailed primer on customizing inlists and more fundamental <samp>MESA</samp> basics, we again recommend Josiah Schwab's <a href="https://jschwab.github.io/mesa-2018/" target=_blank>excellent tutorial from the 2018 MESA Summer School</a>. You'll also work through a more detailed example in the next part.
 </p>
 
 <h2 id="part3" class='mt-5'>Part 3: Recurrent Novae</h2>
