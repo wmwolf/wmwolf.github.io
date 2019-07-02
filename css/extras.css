@@ -298,6 +298,14 @@ h2#overview {
   white-space: pre;
 }
 
+.pre-y-scrollable {
+  overflow-y: auto;
+  word-wrap: normal;
+  white-space: pre;
+  height: 400px;
+}
+
+
 .initially-hidden {
   display: none;
 }

@@ -745,10 +745,255 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </dl>
 
 <h4 id='part2c' class='mt-4'>Extending MESA</h4>
-Type I X-ray burst pose a challenge to opacity calculations because a complex mixture of elements is present that we cannot know in advance. <a href="https://ui.adsabs.harvard.edu/abs/1999ApJ...524.1014S/abstract" target=_blank>Schatz et al. (1999)</a> made an analytic fit to the free-free Gaunt factor from <a href="https://ui.adsabs.harvard.edu/abs/1991ApJ...382..636I/abstract" target=_blank>Itoh et al. (1991)</a>:
+<p>
+  Type I X-ray burst pose a challenge to opacity calculations because a complex mixture of elements is present that we cannot know in advance. <a href="https://ui.adsabs.harvard.edu/abs/1999ApJ...524.1014S/abstract" target=_blank>Schatz et al. (1999)</a> made an analytic fit to the free-free Gaunt factor from <a href="https://ui.adsabs.harvard.edu/abs/1991ApJ...382..636I/abstract" target=_blank>Itoh et al. (1991)</a>:
 
-\[\kappa_{\mathrm{ff}} = 0.753 \mathrm{\frac{cm^2}{g}} \frac{\rho_5}{\mu_e T_8^{7/2}}\sum\frac{Z_i^2X_i}{A_i}g_{\mathrm{ff}}(Z_i,T,n_e)\]
+  \[\kappa_{\mathrm{ff}} = 0.753 \mathrm{\frac{cm^2}{g}} \frac{\rho_5}{\mu_e T_8^{7/2}}\sum\frac{Z_i^2X_i}{A_i}g_{\mathrm{ff}}(Z_i,T,n_e)\]
+</p>
+<p>
+  We can actually provide our own subroutine for <samp>MESA</samp> to calculate opacities on the fly rather than relying on the tables and calculations provided by <samp>MESA</samp>. We can do this and <em>many</em> other extensions by making use of the <code>other</code> routines that are prototyped in <code>$MESA_DIR/star/other</code>. To see a list of all available "other" hooks, execute
+</p>
+<p>
+  <kbd>ls $MESA_DIR/star/other</kbd>
+</p>
+<p>
+  Each of these represents points in the code that we can inject our own routines. We'll see a more detailed example of how to do this in <a href="#part3f">Part 3</a>, but for now, we'll just do a heavily-guided demonstration of this capability.
+</p>
+<p>
+  We provide two more files in the tarball below.
+</p>
+<p class='text-center'>
+  <a href="/projects/leiden_2019/extensions.tgz" class='btn btn-lg btn-primary' download>
+    Get Opacity Extension Files
+  </a>
+</p>
+<p>
+  Download those files, unpack them in your work directory, and move <code>run_star_extras.f</code> into your the <code>src</code> directory in your work directory:
+</p>
+<p>
+  <kbd>tar -zxvf extensions.tgz</kbd><br>
+  <kbd>mv run_star_extras.f src/</kbd>
+</p>
 
+<p>
+  If you open up <code>run_star_extras.f</code>, you'll note the following subroutines near the top of the file:
+</p>
+<pre class='pre-y-scrollable'>
+{% highlight fortran %}
+    subroutine my_other_kap_get( &
+            id, k, handle, zbar, X, Z, Zbase, XC, XN, XO, XNe, &
+            log10_rho, log10_T, species, chem_id, net_iso, xa, &
+            lnfree_e, d_lnfree_e_dlnRho, d_lnfree_e_dlnT, &
+            frac_Type2, kap, dln_kap_dlnRho, dln_kap_dlnT, ierr)
+ 
+        use chem_def
+        use kap_lib
+         ! INPUT
+         integer, intent(in) :: id ! star id if available; 0 otherwise
+         type (star_info), pointer :: s
+         integer, intent(in) :: k ! cell number or 0 if not for a particular cell         
+         integer, intent(in) :: handle ! from alloc_kap_handle
+         real(dp), intent(in) :: zbar ! average ion charge
+         real(dp), intent(in) :: X, Z, Zbase, XC, XN, XO, XNe ! composition    
+         real(dp), intent(in) :: log10_rho ! density
+         real(dp), intent(in) :: log10_T ! temperature
+         double precision, intent(in) :: lnfree_e, d_lnfree_e_dlnRho, d_lnfree_e_dlnT
+            ! free_e := total combined number per nucleon of free electrons and positrons
+
+         integer, intent(in) :: species
+         integer, pointer :: chem_id(:) ! maps species to chem id
+            ! index from 1 to species
+            ! value is between 1 and num_chem_isos         
+         integer, pointer :: net_iso(:) ! maps chem id to species number
+            ! index from 1 to num_chem_isos (defined in chem_def)
+            ! value is 0 if the iso is not in the current net
+            ! else is value between 1 and number of species in current net
+         real(dp), intent(in) :: xa(:) ! mass fractions
+         
+         ! OUTPUT
+         real(dp), intent(out) :: frac_Type2
+         real(dp), intent(out) :: kap ! opacity
+         real(dp), intent(out) :: dln_kap_dlnRho ! partial derivative at constant T
+         real(dp), intent(out) :: dln_kap_dlnT   ! partial derivative at constant Rho
+         integer, intent(out) :: ierr ! 0 means AOK.
+         integer i, Zi, Ai
+         real(dp) Ye, YZ2, rho, T, kap1, kap2, eps, kap_ec, dlnkap_ec_dlnRho, dlnkap_ec_dlnT, kap_rad
+         real(dp) dlnkap_rad_dlnRho, dlnkap_rad_dlnT
+ 
+     ierr = 0
+        call star_ptr(id, s, ierr)
+        if (ierr /= 0) return
+
+         ! these are the things we need to calculate:         
+         frac_Type2 = 1
+         kap = 0; dln_kap_dlnRho = 0; dln_kap_dlnT = 0
+         
+     ! Calculate Ye and YZ2
+     rho = 10.0**log10_rho
+     T = 10.0**log10_T
+         Ye = 0.0
+         YZ2 = 0.0
+         do i = 1,species
+          Zi = chem_isos%Z(chem_id(i))
+          Ai = chem_isos%N(chem_id(i)) + Zi
+          Ye = Ye + xa(i) * Zi / Ai
+          YZ2 = YZ2 + xa(i) * Zi * Zi / Ai          
+          !write (*,'(i5,i5,g12.5,i5,i5,i5,i5)') species,i,xa(i),chem_id(i),net_iso(chem_id(i)),chem_isos%Z(chem_id(i)),&
+          !   chem_isos%N(chem_id(i))+chem_isos%Z(chem_id(i))
+         end do
+         !write (*,'(a,g12.5,a,g12.5)') 'Ye=',Ye, ' YZ2=', YZ2
+         
+         ! radiative opacity
+     kap_rad = kappa_rad(rho, T, Ye, YZ2, zbar, species, chem_id, xa)
+     
+     ! calculate the derivatives of radiative opacity with respect
+     ! to density and temperature numerically
+     eps = 1e-6      ! small number to change T and rho by
+     kap1 = kap_rad
+     kap2 = kappa_rad(rho, T * (1.0 + eps), Ye, YZ2, zbar, species, chem_id, xa)
+     dlnkap_rad_dlnT = (kap2 - kap1) / (kap1*eps)
+     kap2 = kappa_rad(rho * (1.0 + eps), T, Ye, YZ2, zbar, species, chem_id, xa)
+     dlnkap_rad_dlnRho = (kap2 - kap1) / (kap1*eps)
+         
+    ! use the MESA electron conduction
+    call kap_get_elect_cond_opacity( &
+            zbar, log10_rho, log10_T, &
+            kap_ec, dlnkap_ec_dlnRho, dlnkap_ec_dlnT, ierr)
+         if (ierr /= 0) return
+    !write(*,*) 'kap_rad', kap_rad, ' kap_ec', kap_ec
+
+    ! combine radiative and conductive opacities
+    kap = 1d0 / (1d0/kap_rad + 1d0/kap_ec)
+    dln_kap_dlnRho =  (kap/kap_ec) * dlnkap_ec_dlnRho + (kap/kap_rad) * dlnkap_rad_dlnRho
+    dln_kap_dlnT =  (kap/kap_ec) * dlnkap_ec_dlnT + (kap/kap_rad) * dlnkap_rad_dlnT
+
+      end subroutine my_other_kap_get
+ 
+ 
+
+    real(dp) function kappa_rad(rho, T, Ye, YZ2, zbar, species, chem_id, xa)
+  
+          use chem_def
+      real(dp), intent(in) :: Ye
+      real(dp), intent(in) :: YZ2
+      real(dp), intent(in) :: zbar
+      real(dp), intent(in) :: rho ! density
+      real(dp), intent(in) :: T ! temperature
+      integer, intent(in) :: species
+      integer, pointer :: chem_id(:) ! maps species to chem id
+            real(dp), intent(in) :: xa(:) ! mass fractions
+            integer :: i, Zi, Ai
+      real(dp) :: kes, kff, AA, rat, gamsq, gaunt, gaunt_i
+            
+      ! electron scattering  (depends on rho, T, Ye)
+      kes = 0.4 * Ye
+      kes = kes / (1.0 + (T/4.5e8)**0.86)
+      kes = kes / (1.0 + 2.7e11 * rho * 2*Ye / T**2)
+                
+                ! free-free
+          kff = 0.753 * 1e-5*rho * Ye / (T*1e-8)**3.5
+          
+          gaunt = 0.0
+              do i = 1,species
+                Zi = chem_isos%Z(chem_id(i))
+                Ai = chem_isos%N(chem_id(i)) + Zi
+            if (Zi > 0) then
+              gaunt_i =  gff(rho, T, Ye, Zi)        
+                  gaunt = gaunt + xa(i) * Zi * Zi / Ai * gaunt_i
+                    !write (*,'(i5,i5,g12.5,i5,i5,i5,g12.5)') species,i,xa(i),chem_id(i),chem_isos%Z(chem_id(i)),&
+                    !    chem_isos%N(chem_id(i))+chem_isos%Z(chem_id(i)), gaunt_i
+                end if
+            end do
+          !gaunt = YZ2    ! set the gaunt factor to 1
+          kff = kff * gaunt
+                
+          ! total radiative opacity
+          !write (*,'(g12.5, g12.5, g12.5, g12.5, g12.5,g12.5,g12.5)') rho, T, Ye, YZ2, kes,kff,gaunt
+
+          ! non-additivity factor
+          rat = kff/(kff+kes)
+          gamsq = 1.58e-3 * zbar**2 / (1e-8*T)
+          AA = 1.0 + (1.097 * gamsq + 0.777)/(gamsq + 0.536) * rat**0.617 * (1.0-rat)**0.77
+          kappa_rad = (kes + kff) * AA
+  
+  
+  end function kappa_rad
+
+
+  real(dp) function gff(rho, T, Ye, Z)
+      real(dp), intent(in) :: rho
+      real(dp), intent(in) :: T
+      real(dp), intent(in) :: Ye
+      integer, intent(in) :: Z
+      real(dp) pp, gamsq, pi, gam, et, f
+
+      pi = 3.141592654
+      gamsq = 1.58e-3 * Z*Z / (1e-8*T)
+      gam = gamsq**0.5
+      et = eta(rho, T, Ye)
+      f = 0.0808 * (1e-8*T)**1.5 / (1e-5*rho*Ye)
+      pp = (1.0 + log(1.0 + exp(et)))**(2.0/3.0)
+      gff = 1.16 * f * log(1.0 + exp(et))
+      gff = gff * (1.0 - exp(-2.0*pi*gam/(pp+10.0)**0.5))/(1.0 - exp(-2.0*pi*gam/pp**0.5))
+      ! we exclude the high temperature correction factor from S99
+            
+  end function gff
+
+        
+    real(dp) function eta(rho, T, Ye)
+      real(dp), intent(in) :: Ye
+      real(dp), intent(in) :: rho ! density
+      real(dp), intent(in) :: T ! temperature
+      real(dp) q1, q2, q3, tau, theta, x, x2, y, y2, eta_NR, R1,R2, et, etu
+      
+      x = (Ye * rho * 1e-6)**(1.0/3.0)
+      x2 = (1.0+x*x)**0.5 - 1.0
+      tau = T/5.93e9
+      theta = tau / x2
+      
+      ! Inverse Fermi integral from Antia (1993)
+      y = 2.0/(3.0*theta**1.5)
+      if (y<4) then
+        y2 = y*y
+        R1 = (4.4593646e1 + 1.1288764e1*y + y2) / (3.9519346e1 - 5.7517464*y + 2.6594291e-1*y2)
+        eta_NR = log(y * R1)      
+      else
+        y = y**(-2.0/3.0)
+        y2 = y*y
+        R2 = (3.4873722e1 - 2.6922515e1*y + y2) / (2.6612832e1 - 2.0452930e1*y + 1.1808945e1*y2)
+        eta_NR = R2/y     
+      end if
+          
+      ! Chabrier and Potekhin (1998) eq. (24)
+      if (theta > 69.0) then
+        et = 1e30
+        etu = 1e-30
+      else
+        et = exp(theta)
+        etu = 1.0/et
+      end if      
+      q1 = 1.5 / (et - 1.0)
+      q2 = 12.0 + 8.0 / theta**1.5
+      q3 = 1.366 - (etu+1.612*et)/(6.192*theta**0.0944*etu + 5.535*theta**0.698*et)
+      eta = eta_NR - 1.5 * log( 1.0 + (tau / (1.0 + 0.5*tau/theta))*(1.0 + q1*tau**0.5+q2*q3*tau)/(1.0+q2*tau))
+            
+    end function eta{% endhighlight %}
+</pre>
+<p>
+  This is mostly of academic interest, as this implements the actual calculation of the opacities according to the <a href="https://ui.adsabs.harvard.edu/abs/1999ApJ...524.1014S/abstract" target=_blank>Schatz et al. (1999)</a> prescription. The main function is <code>my_other_kap_get</code>. <samp>MESA</samp> knows to call this when calculating opacities because of the following line in <code>extras_controls</code>:
+  {% highlight fortran %}
+    ! this is the place to set any procedure pointers you want to change
+    ! e.g., other_wind, other_mixing, other_energy  (see star_data.inc)
+
+            s% other_kap_get => my_other_kap_get{% endhighlight %}
+  Aside from this line and the subroutines above, the rest of this file is boilerplate code from <code>$MESA_DIR/include/standard_run_star_extras.inc</code>, so it's not as scary as it might look.
+</p>
+<p>
+  From your working directory, compile with <kbd>./mk</kbd> to make sure your code is working. Before you run, though, we need to add the following line to the <code>controls</code> namelist in <code>inlist_project</code> to tell <samp>MESA</samp> that we indeed do want to use the "other" opacity routine:
+  {% highlight fortran %}
+  use_other_kap = .true.{% endhighlight %}
+  With that edit, you should be able to run (<kbd>./rn</kbd>), and now your pgstar dashboard will include a plot showing the profile of opacity in the model. Try running with <code>use_other_kap = .false.</code> and notice the difference in the opacity profile.
+</p>
 
 <h2 id="part3" class='mt-5'>Part 3: Recurrent Novae</h2>
 <p>
