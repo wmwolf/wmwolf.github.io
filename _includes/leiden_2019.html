@@ -613,12 +613,12 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 <h4 id='part2b' class='mt-4'>Burning Regimes</h4>
 <p>
-  It appears that accreting solar composition material at 3 &#215; 10<sup>-8</sup> M<sub>&#8857;</sub>/yr results in stable burning (though incomplete hydrogen burning implies that we don't have a large enough nuclear network). <a href="https://ui.adsabs.harvard.edu/abs/2004NuPhS.132..435C/abstract" target=_blank>Cumming (2004)</a> calculated these burning regimes and found the following rough boundaries.
+  It appears that accreting solar composition material at 3 &#215; 10<sup>-8</sup> M<sub>&#8857;</sub>/yr results in stable burning (though incomplete hydrogen burning implies that we don't have a large enough nuclear network). <a href="https://ui.adsabs.harvard.edu/abs/2004NuPhS.132..435C/abstract" target=_blank>Cumming (2004)</a> reviewed these burning regimes and found the following rough boundaries.
 </p>
 
 <table class='table table-striped table-responsive table-hover my-5' id='burning-regimes'>
   <caption>
-    Approximate burning regimes for accreting neutron stars. Note that <a href="https://ui.adsabs.harvard.edu/abs/2016MNRAS.456L..11K/abstract" target=_blank>Keek & Heger (2016)</a> find a new stable burning regime involving Carbon burning in a region where Helium burning is incomplete.
+    Approximate burning regimes for accreting neutron stars. Note that <a href="https://ui.adsabs.harvard.edu/abs/2016MNRAS.456L..11K/abstract" target=_blank>Keek & Heger (2016)</a> find a new stable burning regime involving stable helium burning to carbon in a narrow range of accretion rates between the pure He and mixed H/He regimes. For simplicity, we neglect that here..
   </caption>
   <thead class='thead-dark'>
     <tr>
@@ -739,10 +739,10 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 <dl class='row'>
   <dt class='col-sm-3'>Mixed H/He Bursts</dt>
-  <dd class="col-sm-9">We need a large network to follow the rp-process. Our model has a lot of leftover hydrogen, and low peak luminosities</dd>
+  <dd class="col-sm-9">We need a large network to follow the rp-process. The small network we are using in our model limits the amount of hydrogen burning, so that there is a lot of leftover hydrogen and the bursts have low peak luminosities.</dd>
 
   <dt class='col-sm-3'>Helium Flashes</dt>
-  <dd class='col-sm-9'>These flashes reach Eddington luminosity. We need to be able to follow the expansion and wind. You will find that the code has trouble for low hydrogen fractions when the luminoisty approaches Eddington.</dd>
+  <dd class='col-sm-9'>These flashes reach Eddington luminosity. We need to be able to follow the expansion and wind. You will find that the code has trouble for low hydrogen fractions when the luminosity approaches Eddington.</dd>
 
   <dt class='col-sm-3'>Hydrogen Flashes</dt>
   <dd class='col-sm-9'>
@@ -752,7 +752,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 
 <h4 id='part2c' class='mt-4'>Extending MESA</h4>
 <p>
-  Type I X-ray burst pose a challenge to opacity calculations because a complex mixture of elements is present that we cannot know in advance. <a href="https://ui.adsabs.harvard.edu/abs/1999ApJ...524.1014S/abstract" target=_blank>Schatz et al. (1999)</a> made an analytic fit to the free-free Gaunt factor from <a href="https://ui.adsabs.harvard.edu/abs/1991ApJ...382..636I/abstract" target=_blank>Itoh et al. (1991)</a>:
+  Type I X-ray bursts pose a challenge to opacity calculations because a complex mixture of elements is present that we cannot know in advance. <a href="https://ui.adsabs.harvard.edu/abs/1999ApJ...524.1014S/abstract" target=_blank>Schatz et al. (1999)</a> made an analytic fit to the free-free Gaunt factor from <a href="https://ui.adsabs.harvard.edu/abs/1991ApJ...382..636I/abstract" target=_blank>Itoh et al. (1991)</a>:
 
   \[\kappa_{\mathrm{ff}} = 0.753 \mathrm{\frac{cm^2}{g}} \frac{\rho_5}{\mu_e T_8^{7/2}}\sum\frac{Z_i^2X_i}{A_i}g_{\mathrm{ff}}(Z_i,T,n_e)\]
 </p>
@@ -998,7 +998,10 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   From your working directory, compile with <kbd>./mk</kbd> to make sure your code is working. Before you run, though, we need to add the following line to the <code>controls</code> namelist in <code>inlist_project</code> to tell <samp>MESA</samp> that we indeed do want to use the "other" opacity routine:
   {% highlight fortran %}
   use_other_kap = .true.{% endhighlight %}
-  With that edit, you should be able to run (<kbd>./rn</kbd>), and now your pgstar dashboard will include a plot showing the profile of opacity in the model. Try running with <code>use_other_kap = .false.</code> and notice the difference in the opacity profile. You should see a sharp edge develop at the iron-helium boundary with our updated opacity routine that was not present before.
+  With that edit, you should be able to run (<kbd>./rn</kbd>), and now your pgstar dashboard will include a plot showing the profile of opacity in the model. Try running with <code>use_other_kap = .false.</code> and notice the difference in the opacity profile.
+</p>
+<p>
+  You should see a sharp edge develop at the iron-helium boundary with our updated opacity routine that was not present before. This is because the model now correctly includes the larger free-free opacities coming from heavy elements. The default OPAL opacities built into MESA assume that the heaviest elements present are carbon and oxygen, whereas much heavier elements can be created by the rp-process in Type I X-ray bursts.
 </p>
 <p>
   For a more detailed primer on customizing inlists and more fundamental <samp>MESA</samp> basics, we again recommend Josiah Schwab's <a href="https://jschwab.github.io/mesa-2018/" target=_blank>excellent tutorial from the 2018 MESA Summer School</a>. You'll also work through a more detailed example in the next part.
