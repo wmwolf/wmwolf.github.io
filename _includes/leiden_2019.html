@@ -14,8 +14,15 @@
   </a> in June 2019. Here, we'll help new users of Modules for Experiments in Stellar Astrophysics (<samp>MESA</samp>) get started with the tool to model thermonuclear bursts on white dwarfs and neutron stars. We'll leave this tutorial online for at least awhile afterwards in the hopes that it proves to be a helpful guide for getting started with bursts in <samp>MESA</samp>, but these instructions are aimed at participants going through the tutorial at the workshop. It will likely fall out of date as the interface of <samp>MESA</samp> changes in its development and the hyperlinks on this page become outdated.
 </p>
 <p>
-  You should complete Part 0 before the tutorial begins on Tuesday afternoon. If you have issues, reach out to Andrew on Monday to get set up in advance of the tutorial.
+  You should complete Part 0 before the tutorial begins on Tuesday afternoon. If you have issues, reach out to Andrew on Monday to get set up in advance of the tutorial. You should use the following versions of <samp>MESA</samp> and the SDK:
 </p>
+<dl class="row">
+  <dt class="col-4 col-sm-3 col-xl-2">MESA Version</dt>
+  <dd class="col-8 col-sm-9 col-xl-10">11701</dd>
+
+  <dt class="col-4 col-sm-3 col-xl-2">SDK Version</dt>
+  <dd class="col-8 col-sm-9 col-xl-10">20190503 (Mac <em>or</em> Linux)</dd>
+</dl>
 <p>
   Throughout this page, monospaced text on a black background, like this: <kbd>echo "Hello, World!"</kbd> represent commands you can type into your terminal and execute, while red monospaced text like this: <code>mass_change = 1d-9</code> represent file names or values that you might type into a file, but not something to be executed.
 </p>
@@ -91,7 +98,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   </div>
 </div>
 <p> 
-  You also should have learned a little about the inlist files that control the simulation as well as how to start a simulation (<kbd>./rn</kbd>) and restart from a photo (<kbd>./re <var>photo</var></kbd>, where <var>photo</var> is one of the files in the <code>photos</code> directory). Confirm that you know how to do all these things, and that you saw the terminal output and real-time plots indicated in the "gettings started" tutorial as you ran the simulation before moving on.
+  You also should have learned a little about the inlist files that control the simulation as well as how to start a simulation (<kbd>./rn</kbd>) and restart from a photo (<kbd>./re <var>photo</var></kbd>, where <var>photo</var> is one of the files in the <code>photos</code> directory). Confirm that you know how to do all these things, and that you saw the terminal output and real-time plots indicated in the "getting started" tutorial as you ran the simulation before moving on.
 </p>
 
 <p>
@@ -382,10 +389,10 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
         Don't use control statements like <code>if</code> or <code>while</code>
       </li>
       <li>
-        Always use double precision numbers for floats, as in <code>1d3</code> rather than <code>1000.0</code> or <code>1e3</code>
+        Put controls in their correct namelists. Capitalizaition is not important, but spelling is.
       </li>
       <li>
-        Put controls in their correct namelists. Capitalizaition is not important, but spelling is.
+        Always use double precision numbers for floats, as in <code>1d3</code> rather than <code>1000.0</code> or <code>1e3</code> (technically not mandatory, but this will give more consistent and reproducible results)
       </li>
     </ul>
     <p class="card-text">Some of these shortcomings can be mitigated by using a third-party tool, <a href="http://wmwolf.github.io/MesaScript/" target=_blank>MesaScript</a>, but this is beyond the scope of this tutorial.
@@ -447,7 +454,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 <h5>Restarting and Photos</h5>
 <p>
-  Sometimes you'll have to stop your simulation to adjust the inlist or because you need th computing power for some other task. You can do this by executing <kbd>ctrl-C</kbd>. But now do you have to restart the whole simulation? Fortunately, no! You can restart from a "photo". A photo is a snapshot of your stellar model dumped into a binary file.
+  Sometimes you'll have to stop your simulation to adjust the inlist or because you need the computing power for some other task. You can do this by executing <kbd>ctrl-C</kbd>. But now do you have to restart the whole simulation? Fortunately, no! You can restart from a "photo". A photo is a snapshot of your stellar model dumped into a binary file.
 </p>
 <p>
   By default <samp>MESA</samp> saves a photo to the <code>photos</code> directory every 50 timesteps. They are named such that the last three digits are the same as the last three digits of their corresponding timestep. To save disk space, they are overwritten every thousand timesteps. That is, step 1050 will be saved as the file <code>x050</code> in <code>photos</code> (where the x is literally there), and it will be overwritten when step 2050 does the same thing. To give longer-term access, every thousand timesteps will remain indefinitely, so timesteps 1000 and 2000 will save photos <code>1000</code> and <code>2000</code>, respectively.
@@ -534,7 +541,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
   </ul>
   You may be prompted to overwrite the two inlists. Go ahead and do that. Our custom <code>history_columns.list</code> will specifically allow us to track and plot the following contents:
   <ul>
-    <li><code>star_age_hr</code>: this is the model's age in hours (the default is years, which is too long for our rapidly-bursting model</li>
+    <li><code>star_age_hr</code>: this is the model's age in hours (the default <code>star_age</code> is in years, which is too long for our model)</li>
     <li><code>max_eps_he_lgT</code>: the log of the temperature at the location of peak helium burning</li>
     <li><code>log_total_mass he4</code>: the log of the total mass of helium in the model (in M<sub>&#8857;</sub>)</li>
   </ul>
@@ -666,7 +673,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
 </p>
 
 <p>
-  You may want to look at the last burst in your calculation in isolation. We provide a python script to do this, but it assumes you have numpy and matplotlib properply configured on your machine (should be the default with any reasonable scientific distribution of python like anaconda). To use it, <a href="/projects/leiden_2019/plot_lc.py" download>download it</a>, move it to your working directory, and execute <kbd>python plot_lc.py</kbd> after your run is over. Does your burst look like a Type I X-ray burst?
+  You may want to look at the last burst in your calculation in isolation. We provide a python script to do this, but it assumes you have numpy and matplotlib properly configured on your machine (should be the default with any reasonable scientific distribution of python like anaconda). To use it, <a href="/projects/leiden_2019/plot_lc.py" download>download it</a>, move it to your working directory, and execute <kbd>python plot_lc.py</kbd> after your run is over. Does your burst look like a Type I X-ray burst?
 </p>
 
 <div class="card border-success mb-3">
@@ -684,7 +691,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
     </p>
     <p class="card-text">
       Below are videos of four models run at the "typical M&#775;'s" from the table above.
-    </p><
+    </p>
     <figure class='figure'>
       <div align="center" class='embed-responsive embed-responsive-16by9 my-2'>
         <video controls fullscreen>
@@ -705,7 +712,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
         </video>
       </div>
       <figcaption class='figure-caption'>
-        M&#775;=10<sup>-9</sup> M<sub>&#8857;</sub>/yr. We get multiple bursts that seem to fall into a pattern, but then stop as helium builds up, and the run crashes on a large helium flash. Something's fishy here... Tentatively in the "Mixed H/He" range, as Hydrogen appears to burn steadily while He is going through bursts.
+        M&#775;=10<sup>-9</sup> M<sub>&#8857;</sub>/yr. We get multiple bursts that seem to fall into a pattern, but then ease into a different regime where helium burns more slowly to Carbon. We'll put this in the "Mixed H/He" range, as Hydrogen appears to burn steadily while He is going through bursts.
       </figcaption>
     </figure>
     <figure class='figure'>
@@ -727,7 +734,7 @@ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10
         </video>
       </div>
       <figcaption class='figure-caption'>
-        M&#775;=10<sup>-11</sup> M<sub>&#8857;</sub>/yr. Now even Hydrogen burns unstably, as the layer builds up and burns away in a cyclic fashion. No He flash occurs in this video, but it would eventually ahpen after a large number of Hydrogen bursts.
+        M&#775;=10<sup>-11</sup> M<sub>&#8857;</sub>/yr. Now even Hydrogen burns unstably, as the layer builds up and burns away in a cyclic fashion. No He flash occurs in this video, but it would eventually happen after a large number of Hydrogen bursts.
       </figcaption>
     </figure>
   </div>
@@ -1119,8 +1126,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
 </p>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#num-burst-sol" aria-expanded="true" aria-controls="num-burst-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#num-burst-sol" aria-expanded="true" aria-controls="num-burst-sol">
       Show Solution
     </button>
   </div>
@@ -1143,8 +1150,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
 </p>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#burst-def-sol" aria-expanded="true" aria-controls="burst-def-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#burst-def-sol" aria-expanded="true" aria-controls="burst-def-sol">
       Show Solution
     </button>
   </div>
@@ -1217,8 +1224,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
 </p>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#mass-change-sol" aria-expanded="true" aria-controls="mass-change-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#mass-change-sol" aria-expanded="true" aria-controls="mass-change-sol">
       Show Solution
     </button>
   </div>
@@ -1347,7 +1354,7 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
 <p>
   Fortunately, <samp>MESA</samp> has just the controls we want: <code>delta_HR_limit</code> and <code>delta_HR_hard_limit</code>. Both of these adjust the timestep based on how much the quantity
   \[\eta = \sqrt{\left[\log (L/L_\odot)\right]^2 + \left[\log T_{\mathrm{eff}}\right]^2}\]
-  changes over the timestep. If &#951; is greater than <code>delta_HR_limit</code>, then the next timestep will be reduced by a factor of <code>delta_HR_limit</code>/&#951;. If instead &#951; is greater than <code>delta_HR_hard_limit</code>, the current timestep will be retried with a shorter timestep. 
+  changes over the timestep. If &#951; is greater than <code>delta_HR_limit</code>, then the next timestep will be reduced by a factor of <code>delta_HR_limit</code>/&#951;. If instead &#951; is greater than <code>delta_HR_hard_limit</code>, the <em>current</em> timestep will be retried with a shorter timestep. 
 </p>
 <p>
   We could put these in our inlist, but they will make the entire run intolerably slow. We only want really high time resolution during the SSS phase, so we will implement this in <code>run_star_extras.f</code>, specifically, in <code>extras_check_model</code>, which is executed at the end of every timestep. We want to use these tight tolerances only when the hydrogen burning luminosity is similar to the photospheric luminosity. We also only really care when the effective temperature is large.
@@ -1370,7 +1377,7 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
 </div>
 
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Edit <code>extras_check_model</code> to add a conditional that sets <code>delta_HR_limit</code> to <code>5d-3</code> and <code>delta_HR_hard_limit</code> to <code>1d-2</code> whenever L<sub>H</sub>/L<sub>phot</sub> &lt; 1.1 <em>and</em> T<sub>eff</sub> &gt; 800,000 K <em>and</em> when the L<sub>phot</sub> is above the burst threshold set by <code>L_burst</code>. Otherwise both controls should be set to -1.
+  <span class='font-weight-bold'>Challenge:</span> Edit <code>extras_check_model</code> to add a conditional that sets <code>delta_HR_limit</code> to <code>5d-3</code> and <code>delta_HR_hard_limit</code> to <code>1d-2</code> whenever L<sub>H</sub>/L<sub>phot</sub> &lt; 1.1 <em>and</em> T<sub>eff</sub> &gt; 800,000 K <em>and</em> when L<sub>phot</sub> is above the burst threshold set by <code>L_burst</code>. Otherwise both controls should be set to -1.
 </p>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
@@ -1419,8 +1426,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
   </div>
 </div>
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#resolution-sol" aria-expanded="true" aria-controls="resolution-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#resolution-sol" aria-expanded="true" aria-controls="resolution-sol">
       Show Solution
     </button>
   </div>
@@ -1576,8 +1583,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
 </div>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#nova-wind-sol" aria-expanded="true" aria-controls="nova-wind-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#nova-wind-sol" aria-expanded="true" aria-controls="nova-wind-sol">
       Show Solution
     </button>
   </div>
@@ -1622,8 +1629,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
   <span class='font-weight-bold'>Challenge:</span> Use the <code>nova_min_Teff_for_accretion</code> control to shut off accretion when T<sub>eff</sub> &lt; 6 &#215; 10<sup>5</sup> K. Run the model and confirm that this worked by watching the history of M&#775; and T<sub>eff</sub> on the pgstar dashboard.
 </p>
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#accretion-control-sol" aria-expanded="true" aria-controls="accretion-control-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#accretion-control-sol" aria-expanded="true" aria-controls="accretion-control-sol">
       Show Solution
     </button>
   </div>
@@ -1663,8 +1670,8 @@ Wherever you see <code>s%</code>, that is accessing data in the stellar model (<
   </div>
 </div>
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#find-implementation-sol" aria-expanded="true" aria-controls="find-implementation-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#find-implementation-sol" aria-expanded="true" aria-controls="find-implementation-sol">
       Show Solution
     </button>
   </div>
@@ -1765,7 +1772,7 @@ winds.f90:         !      T1 < s% nova_min_Teff_for_accretion .and. s% mass_chan
 {% endhighlight %}
 </p>
 <p>
-  Compile your code to make sure there aren't any syntax errors with <kbd>./mk</kbd>. Assuming things compiled fine, there's one last step you need to do to make <samp>MESA</samp> actually call our subroutine: add the line <code>use_other_adjust_mdot</code> to the <code>controls</code> namelist. After you've done that, run the simulation to see if your friendly message shows up at every timestep.
+  Compile your code to make sure there aren't any syntax errors with <kbd>./mk</kbd>. Assuming things compiled fine, there's one last step you need to do to make <samp>MESA</samp> actually call our subroutine: add the line <code>use_other_adjust_mdot = .true.</code> to the <code>controls</code> namelist. After you've done that, run the simulation to see if your friendly message shows up at every timestep.
 </p>
 <figure class='figure'>
   <img src="hello_adjust.png" class='figure-img img-fluid rounded' alt='terminal output with adjust_mdot message'>
@@ -1779,7 +1786,7 @@ winds.f90:         !      T1 < s% nova_min_Teff_for_accretion .and. s% mass_chan
 </p>
 <ol>
   <li>
-    <code>type (star_info), pointer :: s</code>: put this line before the <code>ierr = 0</code> line, since all declarations must come at the beginning of a subroutine; this line allocates space for the star info structure and names it <code>s</code>, which is a commong convention throughout <samp>MESA</samp>
+    <code>type (star_info), pointer :: s</code>: put this line before the <code>ierr = 0</code> line, since all declarations must come at the beginning of a subroutine; this line allocates space for the star info structure and names it <code>s</code>, which is a common convention throughout <samp>MESA</samp>
   </li>
   <li>
     <code>call star_ptr(id, s, ierr)</code>: this conjures up the star info structure into <code>s</code> from the <code>id</code> provided in the signature to our subroutine. Now we can use <code>s</code> as a handle into our stellar model. Put it after <code>ierr = 0</code>
@@ -1833,8 +1840,8 @@ winds.f90:         !      T1 < s% nova_min_Teff_for_accretion .and. s% mass_chan
 </div>
 
 <div class="card border-success mb-3">
-  <div class="card-header bg-success text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#control-accretion-sol" aria-expanded="true" aria-controls="control-accretion-sol">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#control-accretion-sol" aria-expanded="true" aria-controls="control-accretion-sol">
       Show Solution
     </button>
   </div>
@@ -1897,5 +1904,5 @@ end subroutine nova_adjust_mdot
 <p>You should find that mass loss doesn't even occur anymore; simply stopping accretion halts the redward surge before the nova wind can begin. As a result, recurrence times and SSS phase durations should increase. You could simulate different scenarios where accretion resumes at later and later times by increasing <code>nova_min_Teff_for_accretion</code>, perhaps even setting it to something ludicrously high, like 10<sup>7</sup> K, so that no accretion ever happens during the SSS phase. In this case, we wouldn't expect there to be <em>any</em> M&#775; with stable burning (what <a href="https://ui.adsabs.harvard.edu/abs/2016ApJ...824...22H/abstract" target=_blank>Kato & Hachisu call "enforced novae"</a>).
 </p>
 <p>
-  The super eddington wind prescription, in additon to being poorly resolved in time, suffered from mass loss continuing well into the SSS phase, which if we dug deeper, we would realize would not happen had we not set our surface boundary condition at &tau;=30. We still haven't touched on what changing the spatial resolution would do, or more importantly how convective boundary mixing during the runaway would change things. There are still many experiments to run!
+  The super eddington wind prescription, in additon to being poorly resolved in time, suffered from mass loss continuing well into the SSS phase, which if we dug deeper, we would realize would not happen had we not set our surface boundary condition at &tau;=20. We still haven't touched on what changing the spatial resolution would do, or more importantly how convective boundary mixing during the runaway would change things. There are still many experiments to run!
 </p>
