@@ -47,40 +47,48 @@ def authors_html(names):
 def make_html(paper, indent=''):
     res = []
     res.append(indent + '<a href="{}" '.format(make_url(paper)) +
-              'class="list-group-item list-group-item-action" target=_blank>')
+        'class="list-group-item list-group-item-action" target=_blank>')
     res.append(indent + '  <div class="d-flex w-100 justify-content-between">')
     res.append(indent + '    <h5 class="mb-1">{}</h5>'.format(paper.title[0]))
     res.append(indent + '    <small>{}</small>'.format(paper.year))
     res.append(indent + '  </div>')
-    res.append(indent + '  <p class="mb-1">{}</p>'.format(authors_html(paper.author)))
+    res.append(indent + '  <p class="mb-1">{}</p>'.format(authors_html(
+        paper.author)))
     res.append(indent + '  <small>{}</small>'.format(paper.pub))
     res.append(indent + '</a>')
     return '\n'.join(res)
+
 
 def update_paper_html(filename, papers):
     with open(filename, 'w') as f:
         for paper in papers:
             f.write(make_html(paper))
 
+
 def update_first_author_papers(papers):
     filename = join('..', '_includes', 'first_author_papers.html')
     update_paper_html(filename, papers)
+
 
 def update_other_papers(papers):
     filename = join('..', '_includes', 'other_papers.html')
     update_paper_html(filename, papers)
 
+
 def is_not_thesis(paper):
     return not (paper.pub == "Ph.D. Thesis")
 
+
 def is_not_erratum(paper):
     return not ('Erratum' in paper.title[0])
+
 
 def repeated_filter(filters, iterable):
     res = iterable
     for filt in filters:
         res = filter(filt, res)
     return res
+
 
 ORC_ID = "0000-0002-6828-0630"
 NAME = "Wolf, William M."
@@ -117,6 +125,3 @@ if __name__ == '__main__':
     # output files
     update_first_author_papers(first_author_papers)
     update_other_papers(all_papers)
-
-    
-
