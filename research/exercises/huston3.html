@@ -1,0 +1,55 @@
+---
+layout: default
+title: Bill Wolf
+realm: "research"
+header: "Huston Wilhite Exercise 3"
+---
+<h2> Background: Mean Free Path </h2>
+<div class='row'>
+  <div class='col-md-6'>
+    <p>
+      The mean free path of a particle traveling through a medium with many scattering opportunities (eg. a photon traveling through opaque material, having many interactions) can be expressed as
+      \[\ell = \frac{1}{n\sigma}\]
+      where <var>n</var> is the number density of scattering particles, and <var>&sigma;</var> is the average effective cross section of those scattering particles (what the cross-sectional area would be if the scattering particles only interacted via hard-sphere scattering rather than ranged forces to get the same effect).
+    </p>
+    <p>
+      This makes some intuitive sense, since higer number densities (more particles per unit volume) makes it increasingly likely a photon will bounce into one of them over a shorter distance. Similarly, if those scatterers have a larger effective cross sectional area, then again, our photon will bounce into them much more frequently.
+    </p>
+  </div>  
+  <div class='col-md-6'>
+    <h4>1-D Random Walks</h4>
+    <p>
+      The path a particle takes through a series of scatterings is called a "random walk", since we usually can't model exactly how it will move in detail. Instead, we take a statistical approach.
+    </p>
+    <p>
+      For now, let's assume our photon has only two choices: move backwards, and move forwards. Furthermore, let's assume that it has a uniform mean free path, \(\ell\). Then we have only two choices for each "step": \(\mathbf{d} = \pm\ell\,\hat{i}\). Then after a number <var>N</var> steps, the net displacement will be
+      \[\mathbf{D}(N) = \mathbf{d}_1+\mathbf{d}_2+\cdots+\mathbf{d}_N\]
+      Each individual \(\mathbf{d}_i\) isn't known, but we can make informed assumptions to learn about the typical behavior of random walks in 1-D.
+    </p>    
+  </div>
+</div>
+
+<h2>Prompt</h2>
+<p>
+  <ol>
+    <li>
+      Show, assuming 1-D random walk behavior, that the total distance traveled by a photon as it escapes a star of radius <var>R</var> is given by
+      \[L\approx\frac{R^2}{\ell_{\rm photon}}\]
+      In this scenario, the total distance since the beginning of the random walk is <var>R</var>, while the total distance traveled (the number of steps <var>N</var> multiplied by the mean free path) is <var>L</var>. <em>Hint: Use a dot product to find the magnitude squared of the total displacement after N steps as a starting point.</em>
+    </li>
+    <li>
+      Since photons travel at the speed of light, <var>c</var>, give an estimate for the amount of time the photons take to escape from the center of a star, \(\tau_{\rm phot}\), in terms of the star's radius <var>R</var> and the mean free path \(\ell\).
+    </li>
+    <li>
+      Read Wikipedia's page on <a href="https://en.wikipedia.org/wiki/Thomson_scattering" target=_blank>Thomson Scattering</a> (don't worry about being able to reproduce the main results, but get a general understanding of what it is). While many scattering processes exist for photons inside a star, Thomson scattering is an important one. Assume it is the only scattering process active in stars. Furthermore, assume stars have a composition of <var>X</var>=0.7 and <var>Y</var>=0.3 (negligible metallicity). Use these assumptions to calculate an estimate for the mean free path of a star in terms of \(M/M_\odot\) and \(R/R_\odot\). That is, your answer should be in the form of
+      \[\ell = (\textrm{some distance})\left(\frac{M}{M_\odot}\right)^a\left(\frac{R}{R_\odot}\right)^b\]
+      for some powers <var>a</var> and <var>b</var>.
+    </li>
+    <li>
+      Use the approximate mean free path from part 3 and the photon escape timescale formula from part 2 to estimate the timescale for photons to travel from a stellar core to its surface, again in terms of \(M/M_\odot\) and \(R/R_\odot\).
+    </li>
+    <!-- <li>
+      <strong>Bonus:</strong> (we'll do this together, but you're free to give it a try now with help from my notes). Compare the energy density of the radiation field \(E_{\rm rad} = aT^4\) to that in the gas \(E_{\rm gas} = \frac{3}{2}nkT\) and find how the photon diffusion time compares to the Kelvin-Helmholtz time as a function of \(M/M_\odot\). Is there a mass when they are the same?
+    </li> -->
+  </ol>
+</p>
