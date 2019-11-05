@@ -23,6 +23,15 @@ var img_dimensions = function(klass) {
   }
 };
 
+var Home = {
+  setup: function() {
+    // $('.splash img.fadeIn').fadeIn(500, function() {
+    $('.splash .initially-hidden').delay(200).fadeToggle(400);
+    // });
+    $('.container .initially-hidden').delay(500).fadeToggle(400);
+  }
+}
+
 var MesaTest = {
   setup: function() {
     MesaTest.make_checkboxes();
@@ -293,13 +302,13 @@ var Papers = {
 };
 
 $( document ).ready(function() {
-  var bckgrd_options = ['bckgrd-1', 'bckgrd-2', 'bckgrd-3', 'bckgrd-4',
-                        'bckgrd-5'];
-  var bckgrd_number = Math.floor(Math.random() * bckgrd_options.length);
-  var bckgrd_class;
-	var splash = $(".splash");
-  bckgrd_class = bckgrd_options[bckgrd_number];
-  splash.toggleClass(bckgrd_class);
+ //  var bckgrd_options = ['bckgrd-1', 'bckgrd-2', 'bckgrd-3', 'bckgrd-4',
+ //                        'bckgrd-5'];
+ //  var bckgrd_number = Math.floor(Math.random() * bckgrd_options.length);
+ //  var bckgrd_class;
+	// var splash = $(".splash");
+ //  bckgrd_class = bckgrd_options[bckgrd_number];
+ //  splash.toggleClass(bckgrd_class);
   
   // var image_url = $('.' + bckgrd_class).css('background-image'),
   //     image,
@@ -342,5 +351,6 @@ $( document ).ready(function() {
   // alert("width = " + background_width + "; height = " + background_height)
   MesaTest.setup();
   Papers.setup();
+  Home.setup();
 }); 
 

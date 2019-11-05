@@ -1,7 +1,7 @@
 .vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 .rotate20 {
   .rotate(20deg);
@@ -18,6 +18,14 @@
   height:100px;
 }
 
+.buffer-small {
+  height: 50px;
+}
+
+.buffer-tiny {
+  height: 25px;
+}
+
 .contact-block{
   width:33%;
   display: inline-block;
@@ -25,20 +33,42 @@
 /*  margin-left: 5px;*/
   margin-right: 5px;
 }
-  
+ 
+html{
+  height: 100%;
+  box-sizing: border-box;
+}
+
 body {
   font-weight: 300;
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 10rem;
+}
+
+#leiden-body {
+  padding-bottom: 0;
+
+}
+
+.main-body {
+  margin: 0 auto;
+}
+
+.push {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 p {
-  margin-top: 2em;
-  margin-bottom: 2em;
   line-height: 1.6em;
-/*  font-size: 20px;*/
 }
 
 .splash {
-  height: 25em;
+  /*height: 15.5em;*/
+  height: 20em;
   padding-top: 9em;
   margin-bottom: 2em;
   background-size: cover;
@@ -47,6 +77,25 @@ p {
   text-shadow: 5px 5px 5px #000;
   text-align: center;
   background-repeat: no-repeat;
+}
+
+.splash img.fadeIn {
+  position: absolute;
+  z-index: -1;
+  display: none;
+  width: 100%;
+  height: 20em;
+  top: 0;
+  left: 0;
+  clip: 0 100% 20em 0;
+}
+
+.classes td {
+  text-align: center;
+}
+
+table.classes {
+  margin-top: 2em;
 }
 
 .splash-scorer {
@@ -60,6 +109,73 @@ p {
   text-align: center;
   background-repeat: no-repeat;
   background-image: url("../images/card_suits.jpg");
+  background-position: center;
+}
+
+.splash-leiden {
+  height: 30em;
+  padding-top: 10em;
+  margin-bottom: 3em;
+  background-size: auto;
+  color: #fff;
+  vertical-align: middle;
+  text-shadow: 4px 4px 4px #000;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-color: #000000;
+  background-image: url("/images/bubbles.png");
+  background-position: center;
+}
+
+#leiden-instructions {
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
+
+#leiden-instructions code {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.make-clickable {
+  transform: rotate(0);
+}
+
+#burning-regimes td {
+  vertical-align:  middle;
+}
+
+#leiden-instructions .btn-lg {
+  min-width: 300px;
+}
+
+.highlight pre {
+  white-space: pre;
+  border-radius: inherit;
+  display: inherit;
+  background-color:black;
+  border: inherit;
+  color: inherit;
+  padding: 15px;
+}
+
+#super-side-nav {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+pre code {
+  white-space: pre;
+  overflow-x: auto;
+  display: inline-block;
+  min-width: 100%;
+}
+
+h2#overview {
+  margin-top: 0px;
+  position: relative;
 }
 
 .teams {
@@ -68,6 +184,10 @@ p {
 
 .game {
   display: none;
+}
+
+#score td {
+  text-align: center;
 }
 
 .btn-player {
@@ -134,7 +254,8 @@ p {
 
 .bckgrd-3{
 /*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-25-i-large_web.jpg');
+  /*background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-25-i-large_web.jpg');*/
+  background-image: url('/images/hs-2009-25-i-large_web.jpg');
 /*  background-size: 100%;*/
 /*  background-attachment: fixed;*/
 }
@@ -153,24 +274,23 @@ p {
 /*  background-attachment: fixed;*/
 }
 
-.navbar-default {
+#main-nav {
   position: absolute;
-  background-color: transparent;
-  top: 10px;
-  text-shadow: 2px 2px 2px #000;
+  background-color: rgba(0,0,0,0.33);
+  /*margin-top: 10px;*/
+  text-shadow: 1.5px 1.5px 1.5px #000;
   width: 100%;
 }
 
-.navbar-default .navbar-brand {
-  font-size: 20px;
+#main-nav li.nav-item a.nav-link {
+  font-size: 18px;
 }
 
-.navbar-default .navbar-brand,
-.navbar-default .navbar-nav > li > a {
-  font-weight: 400;
+#main-nav .navbar-brand {
+  font-size: 24px;
 }
 
-.navbar-default .navbar-nav > li > a:hover {
+#main-nav .navbar-default .navbar-nav > li > a:hover {
   background-color: transparent;
 }
 
@@ -182,4 +302,16 @@ p {
   overflow: auto;
   word-wrap: normal;
   white-space: pre;
+}
+
+.pre-y-scrollable {
+  overflow-y: auto;
+  word-wrap: normal;
+  white-space: pre;
+  height: 400px;
+}
+
+
+.initially-hidden {
+  display: none;
 }

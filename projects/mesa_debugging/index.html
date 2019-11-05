@@ -32,6 +32,7 @@ the first nova goes off and the envelope expands to large sizes.</p>
 allowed. In <code>controls.defaults</code>, one finds</p>
 
 <pre class='prettify pre-x-scrollable'>
+{% highlight fortran %}
 ! limits based on iterations required by various solvers and op-splitting
 
      !### newton_iterations_limit
@@ -39,6 +40,7 @@ allowed. In <code>controls.defaults</code>, one finds</p>
      ! If newton solve uses more `newton_iterations` than this, reduce the next timestep.
 
   newton_iterations_limit = 7
+{% endhighlight %}
 </pre>
 
 <p>We could simply add something like <code>newton_iterations_limit = 7</code>
@@ -55,6 +57,7 @@ struggle that the solver is going through. They are stored in the aptly-named
 The full list of commands there is</p>
 
 <pre class='prettify pre-scrollable pre-x-scrollable'>
+{% highlight fortran %}  
 ! FOR DEBUGGING
 
 !report_hydro_solver_progress = .true. ! set true to see info about newton iterations
@@ -99,6 +102,7 @@ The full list of commands there is</p>
 !trace_newton_bcyclic_jhi = 100 ! last var to trace; if < 0, then use nvar as jhi
 
 !trace_k = 0
+{% endhighlight %}
 </pre>
 <p> I personally don't know what most of these do, but we can get a lot done
 with just three of these commands. First, you should copy all of the contents of 
@@ -106,7 +110,9 @@ with just three of these commands. First, you should copy all of the contents of
 of your inlist. Then, you should uncomment the first line:</p>
 
 <pre class='prettify pre-x-scrollable'>
+{% highlight fortran %}
 report_hydro_solver_progress = .true. ! set true to see info about newton iterations
+{% endhighlight %}
 </pre>
 
 <p> Running your model again will now produce a <strong>lot</strong> more output,
