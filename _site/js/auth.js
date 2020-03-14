@@ -24,7 +24,7 @@ var auth = {
     });
   },
   username: 'student',
-  password: 'passw0rd',
+  password: 'Blu1sMyHomeboy',
   prefix: 'covid-19'  
 }
 
