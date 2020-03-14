@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
-/usr/bin/env ruby ~/Repositories/tutoring/_bin/gen_resources.rb vega huygens1 keck
-bundle exec jekyll build --destination docs
+/usr/bin/env ruby ~/Repositories/wmwolf.github.io/_bin/gen_resources.rb student Blu1sMyHomeboy
+bundle exec jekyll build --destination _site
 git add --all
 git commit -am "Update resources, username, password, and code."
 git push
