@@ -1,0 +1,29 @@
+---
+title: Bill Wolf
+---
+<!DOCTYPE html>
+<html lang="en">
+{% include header.html %}
+<body>
+  {% include navbar.html %}
+  <div class="splash bckgrd bckgrd-3">
+    <noscript>
+      <!-- <img src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
+      <h1>{{page.header}}</h1>
+      }
+    </noscript>
+    <!-- <img class='fadeIn' src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
+    <h1 class='initially-hidden'>{{page.header}}</h1>
+  </div>
+  <div class="container">
+    <div class="row buffer hidden-xs"></div>    
+    {{ content }}
+  </div>
+  <div class="push">
+    {% include footer.html %}
+  </div>
+
+</body>
+</html>
+{% include script.html %}
+<script src="/js/auth.js"></script>

@@ -1,0 +1,72 @@
+---
+title: Quiz
+---
+<!DOCTYPE html>
+<html lang="en">
+{% include quiz_header.html %}
+<body>
+  <div class='wrapper'>
+    {% include navbar_quiz.html %}
+    <div class="splash bckgrd bckgrd-3">
+      <noscript>
+        <!-- <img src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
+        <h1>{{page.field}}: {{page.subfield}}</h1>
+        }
+      </noscript>
+      <!-- <img class='fadeIn' src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
+      <h1 class='initially-hidden'>{{page.field}}: {{page.subfield}}</h1>
+    </div>
+    <div class="container">
+      <div class='row'>
+        <div class='col-md-4'>
+          <h1>{{page.quiz_title}}</h1>
+          <div class='list-group mb-3', id='questions-nav'></div>
+        </div>
+        <div class='col-md-8'>
+          {{ content }}
+          <div id="quiz-global">
+            <div class="row">
+              <div class="col">
+                <h2 id="q_title"></h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <p id="question"></p>
+              </div>
+            </div>
+            <div class="quiz-body">
+              <div class="row mb-3">
+                <div class="col-sm-6 mb-3">
+                  <div class='btn-group-vertical' id="options" aria-label="options"></div>
+                </div>
+                <div class="col-sm-6 mb-3" id="result">
+                  <div class="card initially-hidden">
+                    <div class="card-header bg-primary text-white">
+                      <h5 class="font-weight-bold mb-0" id="outcome"></h5>
+                    </div>
+                    <div class="card-body">
+                      <!-- <h5 class="card-title">Special title treatment</h5> -->
+                      <p class="card-text" id="explanation"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" id='next', style='display: none;'>
+                <a href="#" class="btn btn-lg btn-primary btn-block">
+                  Next Question
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='push'>
+        {% include footer.html %}
+      </div>
+    </div>
+  </div> 
+</body>
+</html>
+{% include script.html %}
+{% include quiz.html %}
