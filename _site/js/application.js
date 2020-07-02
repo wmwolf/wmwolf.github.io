@@ -323,7 +323,7 @@ var KITPPapers = {
   // FOR DEVELOPMENT
   // proxy_url: 'http://localhost:5000/',
   // FOR DEPLOYMENT
-  proxy_url: 'http://mesa-ads.herokuapp.com/',
+  proxy_url: 'https://mesa-ads.herokuapp.com/',
   api_url: 'https://api.adsabs.harvard.edu/v1/search/query',
   // search_query: {
   //   q: ("citations(bibcode:2011ApJS..192....3P)+OR+" +
