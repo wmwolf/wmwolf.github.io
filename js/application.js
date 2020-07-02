@@ -314,7 +314,7 @@ var KITPPapers = {
     var content = '<div class="row" id="ads"><div class="col-sm-12">' +
       '<div class="card card-primary no-height-fix">' +
       '<div class="card-header bg-primary text-white my-0"><h3 class="my-0">Recent Papers from '+
-      'the KITP</h3></div><div class="card-text" id="ads-content">' +
+      'the KITP <small class="text-light font-italic">(Powered by ADS)</small></h3></div><div class="card-text" id="ads-content">' +
       '<h3 class="text-center">Querying ADS for recent papers...</h3>' +
       '</div></div></div></div>';
     $(content).insertAfter('#kitp-publications');
@@ -430,7 +430,7 @@ var KITPPapers = {
         default:
           month = month;
       }
-      content += '        <small>' + month + ' ' + year + '</small>\n';
+      content += '        <small class="text-right">' + month + ' ' + year + '</small>\n';
       content += '      </div>\n';
       content += '      <p class="mb-1">' + KITPPapers.format_authors(paper) + '</p>\n';
       content += '      <small>\n'
