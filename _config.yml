@@ -1,5 +1,0 @@
-name: Bill Wolf
-markdown: kramdown
-highlighter: rouge
-plugins:
-  - replace_regex

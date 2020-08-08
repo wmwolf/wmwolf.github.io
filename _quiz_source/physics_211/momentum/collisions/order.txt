@@ -1,5 +1,0 @@
-inelastic_collisions_i
-inelastic_collisions_ii
-crash_cars_i
-crash_cars_ii
-elastic_collisions_i
