@@ -214,9 +214,9 @@ var Papers = {
   },
   place_panel: function() {
     var content = '<div class="row" id="ads"><div class="col-sm-12">' +
-      '<div class="card card-primary no-height-fix">' +
-      '<div class="card-heading"><h3 class="card-title">Recent Papers using '+
-      'MESA</h3></div><div class="card-content" id="ads-content">' +
+      '<div class="card">' +
+      '<div class="card-header bg-primary text-white"><h3 class="card-title">Recent Papers using '+
+      'MESA</h3></div><div id="ads-content">' +
       '<h3 class="text-center">Querying ADS for recent papers...</h3>' +
       '</div></div></div></div>';
     $(content).insertAfter('#publications');
@@ -244,15 +244,16 @@ var Papers = {
     // get the titles, authors, and bibcodes of matching papers
     "&fl=title,author,bibcode" + 
     // restrict search to refereed articles
-    "&fq=property:refereed" +
+    // "&fq=property:refereed" +
     // only get 10 articles
     "&rows=10" + 
     // sort by publication date
-    "&sort=pubdate+desc",
+    "&sort=entry_date+desc",
   search_url: function() {
     return Papers.proxy_url + Papers.api_url + Papers.search_query;
   },
   get_papers: function() {
+    console.log(Papers.search_url());
     $.ajax({
       url: Papers.search_url(),
       success: function(json) { 
