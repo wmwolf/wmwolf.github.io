@@ -271,7 +271,9 @@ Bid =
       $('span#num-cards').text("#{hand_size} cards")
 
     # possibly hide text about revealing trump card
-    unless (Main.game.half_game) or ((2 * Main.game.hand()) <= Main.game.num_hands)
+    console.log("is half game? #{Main.game.half_game}")
+    console.log("in first half? #{(2 * hand) <= Main.game.num_hands()}")
+    unless (Main.game.half_game) or ((2 * hand) <= Main.game.num_hands())
       $('span#reveal-trump').hide()
 
     # nuke bid buttons from previous bidding round
@@ -319,11 +321,13 @@ Bid =
 
       # update sum of the current bids, and disable the "perfect fit" button
       # for dealer, if necessary
+      Bid.bid_sum = 0
+      Bid.non_dealer_bid_sum = 0
       for player in Main.game.players
         do (player) ->
-          Bid.bid_sum = Bid.bid_sum + player.get_bid(hand)
+          Bid.bid_sum += player.get_bid(hand)
           if player != Main.game.dealer()
-            Bid.non_dealer_bid_sum += Bid.non_dealer_bid_sum + player.get_bid(hand)
+            Bid.non_dealer_bid_sum += player.get_bid(hand)
       perfect_bid = hand_size - Bid.non_dealer_bid_sum
 
       Bid.update_dealer_buttons(perfect_bid)

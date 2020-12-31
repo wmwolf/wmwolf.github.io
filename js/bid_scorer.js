@@ -340,8 +340,9 @@
         $('span#num-cards').text(`${hand_size} cards`);
       }
       // possibly hide text about revealing trump card
-      if (!(Main.game.half_game || ((2 * Main.game.hand()) <= Main.game.num_hands))) {
-        console.log('hiding trump statement');
+      console.log(`is half game? ${Main.game.half_game}`);
+      console.log(`in first half? ${(2 * hand) <= Main.game.num_hands()}`);
+      if (!(Main.game.half_game || ((2 * hand) <= Main.game.num_hands()))) {
         $('span#reveal-trump').hide();
       }
       // nuke bid buttons from previous bidding round
@@ -388,15 +389,17 @@
         $(`[data-player-i=${i}]`).removeClass('active');
         $(self).addClass('active');
         player.set_bid(hand, bid);
-        ref2 = Main.game.players;
         // update sum of the current bids, and disable the "perfect fit" button
         // for dealer, if necessary
+        Bid.bid_sum = 0;
+        Bid.non_dealer_bid_sum = 0;
+        ref2 = Main.game.players;
         for (m = 0, len = ref2.length; m < len; m++) {
           player = ref2[m];
           (function(player) {
-            Bid.bid_sum = Bid.bid_sum + player.get_bid(hand);
+            Bid.bid_sum += player.get_bid(hand);
             if (player !== Main.game.dealer()) {
-              return Bid.non_dealer_bid_sum += Bid.non_dealer_bid_sum + player.get_bid(hand);
+              return Bid.non_dealer_bid_sum += player.get_bid(hand);
             }
           })(player);
         }
