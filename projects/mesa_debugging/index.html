@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="/css/syntax2.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/css/extras.css" media="screen">
+</head>
+
+  <meta name="keywords" content="UCSB, university, California, Santa Barbara,
+  astrophysics, astronomy, astro, Bill, William, Wolf, research, theory,
+  nova, novae, supernova"/>
+  <title>Bill Wolf</title>
+</head>
+
+<body>
+  <div class='wrapper'>
+    <!-- <div class="container"> -->
+<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" id='main-nav'>
+  <div class="container">   
+    <a class="navbar-brand text-white" href="/">Bill Wolf</a>
+    <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon text-white"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/about_bill">About Bill</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/research">Research</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/teaching">Teaching</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/projects">Projects</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- </div> -->
+
+    <div class="splash bckgrd bckgrd-3">
+      <noscript>
+        <!-- <img src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
+        <h1>MESA Hydro Debugging</h1>
+        }
+      </noscript>
+      <!-- <img class='fadeIn' src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
+      <h1 class='initially-hidden'>MESA Hydro Debugging</h1>
+    </div>
+    <div class="container">
+      <h2> The Situation </h2>
+<p>In certain circumstances, you will run into situations where the issue
+limiting the timesteps is the mysterious <code>newton_iters</code>. To demonstrate this, I'll be using the <code>wd2</code> test case from MESA version
+7624 with a few minor changes:</p>
+
+<ul>
+  <li> Lowered accretion rate to 5e-8. </li>
+  <li> Shut off super-Eddington wind. </li>
+</ul>
+
+<p>These are sufficient to make things really difficult for the solver when
+the first nova goes off and the envelope expands to large sizes.</p>
+
+<a href="images/terminal.png">
+  <img src="images/terminal.png"
+  class="img-thumbnail center-block img-responsive" width=90%
+  alt="Terminal output of newton_iters-limited run.">
+</a>
+<div class="my-cap">
+  You don't want to be seeing this. Terminal output from the example case when
+  the solver starts struggling.
+</div>
+
+<p>The simple solution would be to raise the maximum number of iterations
+allowed. In <code>controls.defaults</code>, one finds</p>
+
+<pre class='prettify pre-x-scrollable'>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! limits based on iterations required by various solvers and op-splitting</span><span class="w">
+
+     </span><span class="c1">!### newton_iterations_limit</span><span class="w">
+
+     </span><span class="c1">! If newton solve uses more `newton_iterations` than this, reduce the next timestep.</span><span class="w">
+
+  </span><span class="n">newton_iterations_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span></code></pre></figure>
+</pre>
+
+<p>We could simply add something like <code>newton_iterations_limit = 7</code>
+to our inlist to "solve" the problem. However, this doesn't really address the
+problem that MESA is struggling to converge because of your model (there are
+times for adjusting the above setting, but I'm not overly familiar with
+them). Rather, there is probably (hopefully?) something you can do to just
+make the number of iterations required to go down.</p>
+
+<h2> Finding out more information </h2>
+<p>There are inlist commands available to you that can tell you more about the 
+struggle that the solver is going through. They are stored in the aptly-named
+<code>debugging_stuff_for_inlists</code> which lives in the test suite directory.
+The full list of commands there is</p>
+
+<pre class='prettify pre-scrollable pre-x-scrollable'>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  
+</span><span class="c1">! FOR DEBUGGING</span><span class="w">
+
+</span><span class="c1">!report_hydro_solver_progress = .true. ! set true to see info about newton iterations</span><span class="w">
+</span><span class="c1">!report_ierr = .true. ! if true, produce terminal output when have some internal error</span><span class="w">
+</span><span class="c1">!hydro_show_correction_info = .true.</span><span class="w">
+
+</span><span class="c1">!max_years_for_timestep = 3.67628942044319d-05</span><span class="w">
+
+</span><span class="c1">!report_why_dt_limits = .true.</span><span class="w">
+</span><span class="c1">!report_all_dt_limits = .true.</span><span class="w">
+</span><span class="c1">!report_hydro_dt_info = .true.</span><span class="w">
+
+</span><span class="c1">!show_mesh_changes = .true.</span><span class="w">
+</span><span class="c1">!mesh_dump_call_number = 5189</span><span class="w">
+</span><span class="c1">!okay_to_remesh = .false.</span><span class="w">
+
+</span><span class="c1">!trace_evolve = .true.</span><span class="w">
+      
+
+</span><span class="c1">! hydro debugging</span><span class="w">
+</span><span class="c1">!hydro_check_everything = .true.</span><span class="w">
+</span><span class="c1">!hydro_inspectB_flag = .true.</span><span class="w">
+
+</span><span class="c1">!hydro_numerical_jacobian = .true.</span><span class="w">
+</span><span class="c1">!hydro_save_numjac_plot_data = .true.</span><span class="w">
+</span><span class="c1">!hydro_dump_call_number = 195</span><span class="w">
+</span><span class="c1">!hydro_dump_iter_number = 5</span><span class="w">
+
+</span><span class="c1">!trace_newton_bcyclic_solve_input = .true. ! input is "B" j k iter B(j,k)</span><span class="w">
+</span><span class="c1">!trace_newton_bcyclic_solve_output = .true. ! output is "X" j k iter X(j,k)</span><span class="w">
+
+</span><span class="c1">!trace_newton_bcyclic_steplo = 1 ! 1st model number to trace</span><span class="w">
+</span><span class="c1">!trace_newton_bcyclic_stephi = 1 ! last model number to trace</span><span class="w">
+
+</span><span class="c1">!trace_newton_bcyclic_iterlo = 2 ! 1st newton iter to trace</span><span class="w">
+</span><span class="c1">!trace_newton_bcyclic_iterhi = 2 ! last newton iter to trace</span><span class="w">
+
+</span><span class="c1">!trace_newton_bcyclic_nzlo = 1 ! 1st cell to trace</span><span class="w">
+</span><span class="c1">!trace_newton_bcyclic_nzhi = 10000 ! last cell to trace; if &lt; 0, then use nz as nzhi</span><span class="w">
+
+</span><span class="c1">!trace_newton_bcyclic_jlo = 1 ! 1st var to trace</span><span class="w">
+</span><span class="c1">!trace_newton_bcyclic_jhi = 100 ! last var to trace; if &lt; 0, then use nvar as jhi</span><span class="w">
+
+</span><span class="c1">!trace_k = 0</span></code></pre></figure>
+</pre>
+<p> I personally don't know what most of these do, but we can get a lot done
+with just three of these commands. First, you should copy all of the contents of 
+<code>debugging_stuff_for_inlists</code> to the <code>controls</code> section
+of your inlist. Then, you should uncomment the first line:</p>
+
+<pre class='prettify pre-x-scrollable'>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="n">report_hydro_solver_progress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w"> </span><span class="c1">! set true to see info about newton iterations</span></code></pre></figure>
+</pre>
+
+<p> Running your model again will now produce a <strong>lot</strong> more output,
+giving information about each and every call to the solver:</p>
+
+<a href="images/hydro_info.png">
+  <img src="images/hydro_info.png" class="img-thumbnail img-responsive 
+  center-block" width=90% alt="Information from showing hydro solver.">
+</a>
+<div class='my-cap'>
+  Terminal output when displaying hydro solver progress.
+</div>
+<p>The above screenshot shows the output after turning on the reporting of
+hydro solver information. You can see there is an initial line that gives
+some general information about the call to the solver:</p>
+<pre class='prettify pre-x-scrollable'>
+hydro_call_number, s% dt, dt, dt/secyer, log dt/yr           1    2.8844841852876043D+05    2.8844841852876043D+05    9.1402195209479616D-03   -2.0390433736762885D+00
+</pre>
+<p> In particular, the value for <code>hydro_call_number</code> will be of
+interest to us (in this case it's 1). Then, there is a series six lines that
+give step by step summaries of what the solver did. The last column is the 
+simplest to understand. It tells us that for the first four steps, the solution
+was rejected because the correction from the last guess was too deviant. In 
+those cases, the average correction over the whole model was too large, and the
+largest correction in any one location was also too large. By the fourth
+iteration, the neither of these corrections were too large, and after being
+"fine" on the fifth iteration, it decided the solution was good enough.</p>
+
+<p> You'll note that in the timestep, the number of steps (6) is also recorded in
+the normal terminal output (second to last column, second row). Normally this is
+the only information you get about the hydro solver unless a retry or backup
+is required.</p>
+
+<p> Now that we can track the progress of the solver, we should get to a time
+when things are really bad:</p>
+<a href="images/hydro_bad_terminal.png">
+  <img src="images/hydro_bad_terminal.png" class="img-thumbnail img-responsive
+  center-block" width=90% alt="Terminal output from timestep with bad
+  convergence">
+</a>
+
+<p> Ouch! Fourteen steps is way over our default tolerance of 7. You can bet
+the next step will have a reduced timestep with a reason of "newton_iters". We
+see now that the last problem to "give" is the max coorection (steps 9-12). So
+there's probably a troublesome location within the star that is the real issue
+here, rather than generally poor temporal or spatial resolution. Now let's
+really dig into the guts!</p>
+
+<h2>Pinpointing the Problem</h2>
+<p>Now we make a directory in our work directory called "plot_data" and another
+directory inside of that one called "solve_logs". We're going to instruct MESA
+to dump all the solver data into this directory (solve_logs) for the one 
+problematic timestep.</p>
+
+<p> To do this, we uncomment two more lines of the debugging material we added
+to our inlist. The first is <code>hydro_inspectB_flag = .true.</code>. 
+<code>B</code> is the name of the vector of corrections in the hydro solver, so
+we are telling MESA to actually look at that stuff. The second line is
+<code>hydro_dump_call_number = 195</code>. The number 195 here is really just
+random. We'll be replacing it with the <code>hydro_call_number</code> from
+the timestep we want to investigate. The reason we can't use a model number is
+because due to retries and backups, any given timestep could have an arbitrary
+number of calls to the hydro solver, so the solver call number is a unique
+identifier. In this case, for the model shown above, we'll want to put in a
+value of 3 (see the first line before all of the iterations).</p>
+
+<p>Now if we rerun the model, it will crash once it has completed it's call to
+the hydro solver at the call number we specified. Our new plot_data/solve_logs
+directory will be chock full of data files.</p>
+
+<p> These new files aren't as user-friendly as the profiles and history files
+you're used to. The data for most files is two-dimensional, giving values of
+various quantities (like the log of the density, or the corrections thereof) 
+at each grid point <emph>and at each iteration</emph>. So for a model with
+<var>N</var> zones and <var>M</var> iterations, each of these data files will
+have <var>N</var> &times; <var>M</var> entries. They are not arranged in a grid,
+so using the data requires a little manipulation.</p>
+
+<h3> The Tioga Way </h3>
+
+<p>The simplest solution to this problem is to use Bill Paxton's nifty Tioga
+script <code>solve_log.rb</code> found in many test suite cases (for example,
+<code>wd2</code> has it in its plotters directory as of version 7624).
+Dropping this file in your plot_data directory and replacing the various
+instances of "../../../.." with an explicit path to your <code>$MESA_DIR</code>
+gives you quick access to some informative plots. For instance, running</p>
+
+<pre class='prettify pre-x-scrollable'>
+tioga solve_log -s 0
+</pre>
+<p>produces a nice image plot of the correction to density as a function of the 
+iteration (y-axis) and the grid point (x-axis), as shown below.</p>
+
+<a href="images/corr_lnd_tioga.pdf">
+  <img src="images/corr_lnd_tioga.png" class="img-responsive img-thumbnail
+  center-block" width=90% alt="Plot of corrections to the log of density made in
+  Tioga.">
+</a>
+<div class='my-cap'>
+Image plot of corrections to the log of density as made by Bill Paxton's Tioga 
+script. Bright colors indicate large corrections.
+</div>
+
+<p> Varying the values of <code>first_row</code> and <code>last_row</code> let
+you hone in on particular iterations, and changing <code>first_col</code> and
+<code>last_col</code> lets you hone in on particular grid points (this is the
+useful one). We'll get to interpreting the data in a moment, but first...</p>
+
+<h3> The Python Way </h3>
+
+<p> Word on the street is that the cool kids these days use Python to make
+plots, so I coded up a file that emulates what Bill Paxton's tioga scripts do.
+You can find a version of it <a href="files/solve_log.py">here</a> (requires
+numpy and matplotlib). An updated (and possibly better) version should also be
+available on <a href="http://mesastar.org"> MesaStar.org</a>. You can either run
+it interactively in iPython (or just the regular python shell if that's your
+thing) or run it straight from the shell via <code>python solve_log.py</code>
+which will produce the default plot, which shows the corrections in the log of
+the density over all grid points and all iterations, making a pdf called
+corr_lnd.pdf:</p>
+
+<a href="images/corr_lnd_python.pdf">
+  <img src="images/corr_lnd_python.png" class="img-responsive img-thumbnail
+  center-block" width=90% alt="Plot of corrections to the log of density made in
+  Python">
+</a>
+<div class='my-cap'>
+Image plot of corrections to the log of density as made by my Python 
+script. Bright colors indicate large corrections.
+</div>
+
+<p> Or you could code your own thing up.</p>
+
+<p> Anyway, it looks like there's a problem that persists for many iterations
+near zone 1700. Let's adjust the x-axis to zoom in on that issue. To do this, 
+we alter the <code>first_col</code> and <code>last_col</code> to 1600 and 1800,
+respectively (in the Tioga case)</p>
+
+<a href="images/corr_lnd_zoom.pdf">
+  <img src="images/corr_lnd_zoom.png" class="img-responsive img_thumbnail
+  center-block" alt="Zoomed plot of log density corrections." width=90%>
+</a>
+<div class="my-cap">
+  Zoom of previous plot... yep, the issue around point 1700 is definitly the
+  cause of the problem.
+</div>
+
+<p>So indeed, it is this area that is causing convergence difficulties. Let's
+look at what might be causing this.</p>
+
+<h3> Comparing to the model </h3>
+<p>My suspicion is that due to the large envelope, opacity problems may be the
+source of the issue, so I went back and re-ran things with a maximum model
+number of 304, being sure to save the last profile. The opacity then looks like
+</p>
+
+<a href="images/opacity_profile.pdf">
+  <img src="images/opacity_profile.png" class="img-responsive img-thumbnail
+  center-block" alt="Plot of opacity profile in troublesome model." width=90%>
+</a>
+<div class="my-cap">
+  Well lookee here... A spike around zone 1700!
+</div>
+<p>
+  So it looks like the convergence errors are related to the extreme bump in 
+  opacity.
+</p>
+<h3>Solving the Problem</h3>
+<p>
+  Now that we know something about the problem, we might look at related 
+  quantities (perhaps the opacity bump causes a density inversion? Maybe there
+  are supersonic velocities here? Is it even convectively unstable? What does
+  the pressure profile look like?).
+
+  When you identify what is physically going on, the first question is "Do I 
+  even care about this region of the star?" If the answer is no, the easiest
+  solution is to cut this part out. If it's in the core, try removing the
+  core from the model (like in the ccsn test case or the neutron star test
+  cases). If it's near the surface, you might move the outer boundary condition
+  inwards, likely using the tau_factor controls.
+</p>
+
+<p>
+  If however, you <emph>do</emph> care about what's going on in the troublesome
+  region, you'll need to think hard about a solution that eases the numerical
+  convergence without doing an unaccepatable amount of damage to the 
+  believability of the model. For this case, turning on MLT++ (via <code>okay_to_reduce_gradT_excess = .true.</code> and friends) is probably a 
+  good first step towards easing the convergence. There is, however no
+  silver bullet.
+</p>
+      <div class="push">
+        <hr>
+<footer class="footer"> 
+  <p class="text-center">
+    Contact <a
+    href="mailto:wolfwm@uwec.ucsb.edu">Webmaster</a> &bull; Last modified  December 2020 
+  </p>
+</footer>
+
+      </div>
+    </div>
+  </div>
+</body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/application.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script type="text/javascript" async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML'></script>
+
+</html>
