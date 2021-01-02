@@ -204,15 +204,16 @@
         Main.num_players = parseInt($('#num_players').val(), 10);
         return Main.update_players();
       });
-      $('input.player-name').off('change');
-      $('input.player-name').change(function() {
+      $('input.player-name').off('focusout');
+      $('input.player-name').focusout(function() {
         if ($(this).val().length > 0) {
-          $(this).removeClass('is-invalid');
+          return $(this).removeClass('is-invalid');
         } else {
-          $(this).addClass('is-invalid');
+          return $(this).addClass('is-invalid');
         }
-        return Main.check_setup();
       });
+      $('input.player-name').off('keyup');
+      $('input.player-name').keyup(Main.check_setup);
       $('#max_cards_slider').off('change');
       $('#max_cards_slider').change(function() {
         Main.max_cards = parseInt($('#max_cards_slider').val(), 10);

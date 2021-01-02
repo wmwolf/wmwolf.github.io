@@ -156,13 +156,15 @@ Main =
       Main.num_players = parseInt($('#num_players').val(), 10)
       Main.update_players()
 
-    $('input.player-name').off('change')
-    $('input.player-name').change ->
+    $('input.player-name').off('focusout')
+    $('input.player-name').focusout ->
       if $(this).val().length > 0
         $(this).removeClass('is-invalid')
       else
         $(this).addClass('is-invalid')
-      Main.check_setup()
+
+    $('input.player-name').off('keyup')
+    $('input.player-name').keyup Main.check_setup
 
     $('#max_cards_slider').off('change')
     $('#max_cards_slider').change ->
