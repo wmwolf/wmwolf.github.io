@@ -306,7 +306,7 @@
           </div>
           <div class="col-lg-10 col-md-9 col-sm-8 vcenter">
             <p>
-              Play a game with <span id='summary-players'>5</span> players from one card per hand up to <span class='summary-max-cards'>7</span> cards per hand with trump<span id='summary-full-game'>, and then from <span class='summary-max-cards'>7</span> cards per hand back down to 1 card per hand without trump</span>.
+              Play a game with <span id='summary-players'>5</span> players from one card per hand up to <span class='summary-max-cards'>7</span> cards per hand<span id='summary-full-game'>, and then from <span class='summary-max-cards'>7</span> cards per hand back down to 1 card per hand</span>.
             </p>
           </div>
         </div>
@@ -323,7 +323,7 @@
         <div class='col-md-6'>
           <div id='bid'>
             <h3>
-              <b id='dealer'>DEALER</b> deals <span id='num-cards'>NUMBER OF CARDS</span> to each player<span id='reveal-trump'> and reveals a trump card</span>.
+              <b id='dealer'>DEALER</b> deals <span id='num-cards'>NUMBER OF CARDS</span> to each player and <span id='reveal-trump'>reveals</span> <span id='no-trump' class='font-weight-bold text-danger'>does not reveal</span> a trump card.
             </h3>
             <div id='bid-players'>
             </div>
@@ -359,6 +359,10 @@
             <button type='button' class='btn btn-primary btn-lg btn-block' id='again'>
               Play Another Game
             </button>
+            <div id='donate' class='my-5'>
+              <p> Enjoying Bid Scorer in the Cloud? Consider chipping in for future development or just making me fatter!</p>
+              <a href="https://www.buymeacoffee.com/billwolf"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a piece of pizza&emoji=🍕&slug=billwolf&button_colour=FFDD00&font_colour=000000&font_family=Lato&outline_colour=000000&coffee_colour=ffffff"></a>
+            </div>
           </div>
         </div>
         <div class='col-md-6' id='scoreboard'>
@@ -367,275 +371,84 @@
       </div>
     </div>
 
-
-
-    <!-- Next: Get team names, becomes visible when previous button pushed, 
-    invisible when next button is pushed-->
-    <div class="teams">
-      <div class="row">
-        <div class="col vcenter">
-          <h2>Cool, and what are your team names?</h2>
-        </div>
-      </div>
-      <form class="names-form">
-        <div class="form-group row">
-          <label class="col-lg-2 col-md-3 col-sm-4 col-form-label col-form-label-lg" for="team-1-name"
-          id="team-1-prompt">
-            Team 1
-          </label>
-          <div class="col-lg-10 col-md-9 col-sm-8">
-            <input class="form-control form-control-lg" type="text" id="team-1-name" placeholder="Team Edward">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-lg-2 col-md-3 col-sm-4 col-form-label col-form-label-lg" for="team-2-name"
-          id="team-2-prompt">
-            Team 2
-          </label>
-          <div class="col-lg-10 col-md-9 col-sm-8">
-            <input class="form-control form-control-lg" type="text" id="team-2-name" placeholder="Team Jacob">         
-          </div>
-    <!-- this button should hide all content above and reveal first chunk below !-->
-        </div>
-        <button type="button" class="btn btn-primary btn-lg btn-block"
-        id="team-submit">
-          Super, my team names are right!
-        </button>
-      </form>
-    </div>
-
-    <!-- Finally: Play the game! Becomes visible when previous button is hit, becomes
-    invisible when winner is determined.-->
-    <div class="game">
-      <div class="row">
-        <div class="col-12 col-md-6">
-          <table class="table">
-            <tr>
-              <td><h2 class="team-1">Team 1</h2></td>
-              <td><h2 class="text-right" id="team1-score">0</h2></td>
-            </tr>
-              <td><h2 class="team-2">Team 2</h2></td>
-              <td><h2 class="text-right" id="team2-score">0</h2></td>
-            </tr>
-          </table>    
-          <h3 class="instruct"> Instructions should go here </h3>
-          <div class='text-center'>
-            <span class="btn-player">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <span area-hidden="true" aria-label="back">
-                  <i class="fas fa-chevron-left"></i>
-                </span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id="player-1">
-                Player 1
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id="player-2">
-                Player 2
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id="player-3">
-                Player 3
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id="player-4">
-                Player 4
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id="player-no">
-                No one
-              </button>
-            </span>
-
-            <span class="btn-bid">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <span><i class="fas fa-chevron-left"></i></span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='bid-4'>
-                4
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='bid-5'>
-                5
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='bid-6'>
-                6
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='bid-7'>
-                &#x1F319;
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='bid-14'>
-                &#x1F319;&#x1F319;
-              </button>
-            </span>
-
-            <span class="btn-suit">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='clubs'>
-                <span>&#9827;</span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='diamonds'>
-                <span style="color: red;">&#9830;</span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='spades'>
-                <span>&#9824;</span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='hearts'>
-                <span style="color: red;">&#9829;</span>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='no-trump'>
-                <span>&#8709;</span>
-              </button>
-            </span>
-
-            <span class="btn-decision4">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <i class="fas fa-chevron-left"></i>
-              </button>      
-              <button type="button" class="btn btn-secondary btn-lg pass">
-                Pass
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg pass1">
-                Pass (+1)
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg pass2">
-                Pass (+2)
-              </button>
-              <button type="button" class="btn btn-success btn-lg play">
-                Play
-              </button>
-            </span>
-
-            <span class="btn-decision5">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg pass">
-                Pass
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg pass1">
-                Pass (+1)
-              </button>
-              <button type="button" class="btn btn-success btn-lg play">
-                Play
-              </button>
-            </span>
-
-            <span class="btn-decision-other">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg pass">
-                Pass
-              </button>
-              <button type="button" class="btn btn-success btn-lg play">
-                Play
-              </button>
-            </span>
-
-
-            <span class="btn-tricks">
-              <button type="button" class="btn btn-info btn-sm btn-back">
-                <i class="fas fa-chevron-left"></i>
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='0-tricks'>
-                0
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='1-tricks'>
-                1
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='2-tricks'>
-                2
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='3-tricks'>
-                3
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='4-tricks'>
-                4
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='5-tricks'>
-                5
-              </button>
-              <button type="button" class="btn btn-secondary btn-lg" id='6-tricks'>
-                6
-              </button>
-            </span>
-
-            <button type="button" class="btn btn-primary btn-lg" id='btn-restart'>
-              Let's play again!
-            </button> 
-          </div>
-          <div class="d-md-none" style="height:20px;"></div>       
-        </div>
-        <div class="col-12 col-md-6">
-          <table class="table table-hover table-sm" id="score">
-            <tr>
-              <th>Hand</th><th>Dealer</th><th class="team-1">Team 1</th>
-              <th class="team-2">Team 2</th><th>Bid</th>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
     <div class="row buffer"></div>
-    <div class="modal fade" id="help-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
+    <div class="modal fade" id="screw-the-dealer" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
+          <div class="modal-header bg-danger text-white vcenter">
+            <h3 class="modal-title" id="screw-title">Screw the Dealer</h3><button type="button" class="close text-white" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title" id="help-title">How to Use Pepper Scorer</h3>
           </div>
           <div class="modal-body">
-            <h4>Welcome to Pepper Scorer in the Cloud!</h4>
-            <p>This tool is meant to assist you in keeping score of your game of
-            Pepper. Everything should be self-explanatory, but brief explainers
-            follow.</p>
-            <h4>Entering Player Names</h4>
-            <p>You enter in the names
-            of the the four people playing, starting with the first dealer and 
-            then continuing in clockwise order. Press return or click the 
-            "Awesome, my player names are right!" button when you are done with
-            player names.</p>
-            <h4>Entering Team Names</h4>
-            <p>Similarly, you will then be asked to enter in team names. Do this
-            and press enter or click on the "Super, my team names are right!"
-            button to proceed to the game.</p>
-            <h4>Gameplay</h4>
-            <p>Then the game begins with the pepper round. The current scores 
-            should always be in the top (smaller screens) or top left (larger 
-            screens), and instructions for what you should do next are right
-            below that, along with a series of buttons indicating the next actions
-            you might take. Simply press the appropriate button after players have 
-            made their decision to move the game along.</p>
-            <p> As the game progresses, a more detailed hand-by-hand score sheet
-            is maintained below the instructions (smaller screens) or to the right
-            (larger screens) that indicates the hand number of the most recent
-            hand, who dealt it, the scores after that hand, and the bidder, bid 
-            value, and suit of the bid.</p>
-            <p> After one team has won, a button should appear allowing you to 
-            restart the game. If you press it, the scores will be rezeroed, the 
-            score sheet will be emptied, and a new pepper round starts with the
-            same person as in the first game.</p>
-            <h4>Things to Note</h4>
-            This is all happening in <em>one</em> web page. So, if you press the
-            back button, you will lose <em>everything</em>. <strong>In short, never push
-            the back button</strong>. Instead, if you make a mistake, use the left-most 
-            back-looking button in the gameplay area to go back one or more steps.
+            <p>The dealer's bid cannot cause the sum of the bids to be equal to the number of cards in the hand.</p>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer text-center">
             <button type="button" class="btn btn-primary" data-dismiss="modal">
-              Okay, I got it!
+              Grr... Fine.
             </button>
           </div>
         </div>
       </div>
-    </div>    <!-- <hr>
-<footer class="footer"> 
-  <p class="text-center">
-    Contact <a
-    href="mailto:wolfwm@uwec.ucsb.edu">Webmaster</a> &bull; Last modified  January 2021 
-  </p>
-</footer>
- -->
+    </div>
+    <div class="modal fade" id="bid-error" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-white vcenter">
+            <h3 class="modal-title" id="screw-title">Incorrect/Incomplete Bids</h3><button type="button" class="close text-white" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Make sure all players have recorded bids and that the total "+
+              "sum of the bids does not equal <span id='hand-size'>HAND SIZE</span>.</p>
+          </div>
+          <div class="modal-footer text-center">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">
+              Whoops! Thanks.
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="tricks-error" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-white vcenter">
+            <h3 class="modal-title" id="screw-title">Incorrect/Incomplete Outcomes</h3><button type="button" class="close text-white" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Make sure all players have recorded outcomes of the hand.</p>
+          </div>
+          <div class="modal-footer text-center">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">
+              Whoops! Thanks.
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="setup-error" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-white vcenter">
+            <h3 class="modal-title" id="screw-title">Invalid Setup</h3><button type="button" class="close text-white" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Make sure you have names for all of your players, and that there are enough cards in a 52-card deck for that number of players with the maximum number of cards dealt.</p>
+          </div>
+          <div class="modal-footer text-center">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">
+              Whoops! Thanks.
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> 
   </div>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

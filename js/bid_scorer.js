@@ -157,6 +157,14 @@
       }
     }
 
+    trump() {
+      if (this.hand() === this.max_cards + 1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
     over() {
       return this.hand() > this.num_hands();
     }
@@ -256,7 +264,8 @@
             return Bid.setup();
           });
         } else {
-          return Main.mark_invalid();
+          Main.mark_invalid();
+          return $('div#setup-error').modal();
         }
       });
     },
@@ -341,10 +350,12 @@
         $('span#num-cards').text(`${hand_size} cards`);
       }
       // possibly hide text about revealing trump card
-      console.log(`is half game? ${Main.game.half_game}`);
-      console.log(`in first half? ${(2 * hand) <= Main.game.num_hands()}`);
-      if (!(Main.game.half_game || ((2 * hand) <= Main.game.num_hands()))) {
+      if (Main.game.trump()) {
+        $('span#reveal-trump').show();
+        $('span#no-trump').hide();
+      } else {
         $('span#reveal-trump').hide();
+        $('span#no-trump').show();
       }
       // nuke bid buttons from previous bidding round
       $('#bid-players').html('');
@@ -383,7 +394,7 @@
         // screw the dealer. They can't make a bid that causes the total bid to
         // be equal to the total number of cards
         if ((player === Main.game.dealer()) && (bid === perfect_bid)) {
-          alert('nice try!');
+          $('#screw-the-dealer').modal();
           return;
         }
         // mark button as active and actually set bid in player object
@@ -437,11 +448,13 @@
         evt.stopPropagation();
         evt.preventDefault();
         if (Bid.bids_valid) {
-          ScoreSheet.add_bids(hand);
+          // stop showing bids; makes score sheet too long
+          // ScoreSheet.add_bids(hand)
           Main.game.phase += 1;
           return $('div#bid').fadeOut(f_dur / 2, Tricks.setup);
         } else {
-          return alert("Make sure all players have recorded bids and that the total " + `sum of the bids does not equal ${hand_size}.`);
+          $('span#hand-size').text(hand_size);
+          return $('div#bid-error').modal();
         }
       });
       $('div#play-area').fadeIn();
@@ -453,10 +466,12 @@
       // make all buttons have normal primary color outlines
       $(`button[data-player-i=${dealer_i}]`).addClass('btn-outline-primary');
       $(`button[data-player-i=${dealer_i}]`).removeClass('btn-outline-danger');
+      $(`button[data-player-i=${dealer_i}]`).removeClass('disabled');
       // make the perfect bid button, if it exists, be inactive and red
       $(`button[data-player-i=${dealer_i}][data-bid=${perfect_bid}]`).removeClass('btn-outline-primary');
       $(`button[data-player-i=${dealer_i}][data-bid=${perfect_bid}]`).removeClass('active');
-      return $(`button[data-player-i=${dealer_i}][data-bid=${perfect_bid}]`).addClass('btn-outline-danger');
+      $(`button[data-player-i=${dealer_i}][data-bid=${perfect_bid}]`).addClass('btn-outline-danger');
+      return $(`button[data-player-i=${dealer_i}][data-bid=${perfect_bid}]`).addClass('disabled');
     },
     go_back: function(hand) {
       var l, len, player, ref;
@@ -584,8 +599,8 @@
         evt.stopPropagation();
         evt.preventDefault();
         if (Tricks.tricks_valid) {
+          ScoreSheet.add_scores(hand, Main.game.hand_size());
           Main.game.phase += 1;
-          ScoreSheet.add_scores(hand);
           // account for if we just played the last hand (game over)
           if (Main.game.over()) {
             // determine the winner or winners and display correct text on
@@ -594,7 +609,7 @@
             if (winners.length === 1) {
               $('span#winner').text(winners[0].name);
             } else if (winners.length === 2) {
-              $('span#winner').text(`${winners[0]} and ${winners[1]}`);
+              $('span#winner').text(`${winners[0].name} and ${winners[1].name}`);
             } else {
               res = "";
               for (i = n = 0, ref4 = winners.length - 2; (0 <= ref4 ? n <= ref4 : n >= ref4); i = 0 <= ref4 ? ++n : --n) {
@@ -611,6 +626,12 @@
               $('div#endscreen').fadeOut(f_dur / 2);
               return $('div#play-area').fadeOut(f_dur / 2, Main.setup);
             });
+            // show the donate button one in four times
+            if (Math.random() > 0.75) {
+              $('div#donate').show();
+            } else {
+              $('div#donate').hide();
+            }
             // actually show victory screen
             return $('div#tricks').fadeOut(f_dur / 2, function() {
               return $('div#endscreen').fadeIn(f_dur / 2);
@@ -620,7 +641,7 @@
             return $('div#tricks').fadeOut(f_dur / 2, Bid.setup);
           }
         } else {
-          return alert("Make sure all players have recorded outcomes of the hand.");
+          return $('div#tricks-error').modal();
         }
       });
       return $('#tricks').fadeIn(f_dur / 2);
@@ -638,7 +659,8 @@
           return player.remove_bid(hand);
         })(player);
       }
-      ScoreSheet.remove_bids(hand);
+      // we don't show bids any more
+      // ScoreSheet.remove_bids(hand)
       Main.game.phase -= 1;
       return $('div#tricks').fadeOut(f_dur / 2, Bid.setup);
     }
@@ -649,7 +671,7 @@
       var html, l, len, player, ref;
       html = '<table class="table table-sm table-striped">';
       html += '<thead><tr>';
-      html += '<th scope="col" class="text-center">Hand</th>';
+      html += '<th scope="col" class="text-center">#</th>';
       ref = Main.game.players;
       for (l = 0, len = ref.length; l < len; l++) {
         player = ref[l];
@@ -676,11 +698,11 @@
       }
       return $(`tr.bid-row[data-hand=${hand}]`).fadeIn(f_dur / 2);
     },
-    add_scores: function(hand) {
+    add_scores: function(hand, hand_size) {
       var i, l, len, player, ref, row;
       row = `<tr data-hand=${hand} class='score-row'></tr>`;
       $(row).hide().appendTo('tbody#scores');
-      $("<td></td>").appendTo(`tr.score-row[data-hand=${hand}]`);
+      $(`<th scope='row' class='text-center'>${hand_size}</td>`).appendTo(`tr.score-row[data-hand=${hand}]`);
       ref = Main.game.players;
       for (i = l = 0, len = ref.length; l < len; i = ++l) {
         player = ref[i];
