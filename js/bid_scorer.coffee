@@ -117,7 +117,7 @@ class Game
 
   hand_size: () ->
     if @half_game
-      @hand
+      @hand()
     else
       Math.min(@hand(), @num_hands() - @hand() + 1)
 

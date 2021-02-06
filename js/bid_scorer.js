@@ -151,7 +151,7 @@
 
     hand_size() {
       if (this.half_game) {
-        return this.hand;
+        return this.hand();
       } else {
         return Math.min(this.hand(), this.num_hands() - this.hand() + 1);
       }
