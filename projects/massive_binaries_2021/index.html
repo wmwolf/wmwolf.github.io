@@ -1,0 +1,1071 @@
+<html lang="en">
+<head>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="/css/syntax2.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/css/extras.css" media="screen">
+</head>
+
+  <meta name="keywords" content="MESA, Summer School, Binary, Massive Star, simulation"/>
+  <title>Massive Binaries</title>
+</head>
+
+<body id='binaries-body'>
+  <div class="splash-binaries">
+    <h1 class='d-none d-md-block display-2'>Interacting Massive Binaries</h1>
+    <h1 class='d-none d-sm-block d-md-none display-3'>Interacting Massive Binaries</h1>
+    <h1 class='d-xs-block d-sm-none display-4'>Interacting Massive Binaries</h1>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 sticky-top align-self-start d-none d-md-block" id="super-side-nav">
+        <nav class="nav nav-pills flex-column" id='side-nav'>
+  <a class="nav-link" href="#overview">Overview</a>
+  <a class="nav-link part-header" href="#part1">Part 1: MESA Basics</a>
+  <nav class="nav nav-pills flex-column" id='part1-subparts'>
+    <a class="nav-link ml-3 my-1" href="#part1a">Objectives</a>
+    <a class="nav-link ml-3 my-1" href="#part1b">Structure of Binary Directory</a>
+    <a class="nav-link ml-3 my-1" href="#part1c">Envelope Stripping</a>
+    <a class="nav-link ml-3 my-1" href="#part1d">Ionizing Radiation</a>
+    <a class="nav-link ml-3 my-1" href="#part1e">Limiting Growth</a>
+  </nav>
+</nav>
+
+      </div>
+      <div class="col-12 col-md-9" data-spy="scroll" data-target="#side-nav" data-offset="0" id="binaries-instructions">
+        <noscript>
+  <h2 id='overview'> Overview </h2>
+<p>
+  This guide accompanies the final set of exercises for the 
+  <a href="http://cococubed.asu.edu/mesa_summer_school_2021/" target=_blank>
+    2021 MESA Summer School
+  </a>
+  led by lecturer 
+  <a href="https://users.obs.carnegiescience.edu/ygoetberg/" target=_blank>
+    Ylva Goetberg
+  </a>
+  and TAs
+  <a href="https://billwolf.space" target=_blank>
+    Bill Wolf
+  </a>
+  and Eb Farag.
+</p>
+<p>
+  These lab exercises will have you exploring the topic of massive star binaries using the <samp>binary</samp> module of <samp>MESA</samp>. This page will likely fall out of date as the interface of <samp>MESA</samp> changes in its development and the hyperlinks on this page become outdated.
+  For greatest compatibility, you should use the following versions of <samp>MESA</samp> and the SDK:
+</p>
+<dl class="row">
+  <dt class="col-4 col-sm-3 col-xl-2">MESA Version</dt>
+  <dd class="col-8 col-sm-9 col-xl-10">
+    <a href="https://github.com/MESAHub/mesa/releases/tag/r15140" target=_blank>15104</a>
+  </dd>
+
+  <dt class="col-4 col-sm-3 col-xl-2">SDK Version</dt>
+  <dd class="col-8 col-sm-9 col-xl-10">21.4.1 (Mac <em>or</em> Linux)</dd>
+</dl>
+<p>
+  Throughout this page, monospaced text on a black background, like this: <kbd>echo "Hello, World!"</kbd> represent commands you can type into your terminal and execute, while red monospaced text like this: <code>mass_change = 1d-9</code> represent file names or values that you might type into a file, but not something to be executed.
+</p>
+
+<p>
+  This page guides you through three labs. In <a href="#part1">Minilab 1</a>, we'll familiarize ourselves with the <samp>MESA binary</samp> module by modeling the evolution of a star that loses its fluffy, hydrogen-rich envelope via mass transfer to a point-mass companion star. Then, in <a href="part2">Minilab 2</a>, we'll explore adding a custom mass loss mechanism to a star to see how that affects its evolution within the binary. And finally, in the <a href='#part3'>Maxilab</a>, we'll make an exploratory model of a binary star by tracking two stellar models. These two models will merge, so we'll try to combine them into a new merger product and evolve that new model.
+</p>
+
+<h2 id="part1" class='mt-5'> Minilab 1: Simple Mass Transfer in Binaries </h2>
+<h4 id="part1a" class='mt-4'> Objectives</h4>
+<p>In this lab you will learn&#8230;</p>
+<ul>
+  <li>The structure of a <code>binary</code> work directory</li>
+  <li>How to roche lobe overflow from a stellar model to a point mass</li>
+  <li>Several scenarios that can cause roche lobe overflow in massive star binaries</li>
+</ul>
+<hr>
+<h4 id="part1b" class='mt-4'>Structure of a Binary Directory</h4>
+<p>
+  The first minilab directory is not very different from the standard <code>binary</code> work directory located at <code>$MESA_DIR/binary/work</code>, much like its cousin from <code>star</code>. It has a very similar structure with a few key differences stemming from the fact that <code>binary</code> can model two stars simultaneously, which we'll call star 1 and star 2. While it models the two stars in sync, it also tracks data about the binary itself, such as orbital separation, orbital period, and mass transfer rates.
+</p>
+<p>
+  Click through on some of the file names below. Most that look familiar from <code>star</code> have similar or identical functions in <code>binary</code>, but in some cases, like the multiple inlists and LOGS directories, are more nuanced.
+</p>
+<div class="row" id="workdir-files">
+  <div class="col-md-3">
+    <div class="list-group info-toggle" data-target="#file-description">
+      <a href="#part1b" class="list-group-item list-group-item-action active" data-name="inlist" data-description="Similar to the same file in star work directories, but this inlist controls the three <code>binary</code> namelists (<code>binary_job</code>, <code>binary_controls</code>, and <code>binary_pgstar</code>). Often this punts to other inlist files to separate different functionalities, like <code>inlist_project</code>.">
+        inlist
+      </a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="inlist_project" data-description="Another <code>binary</code> inlist that <code>inlist</code> points to. The name isn't special; it just matches what extra inlist is loaded by <code>inlist</code>. Note that this inlist still pertains to the <code>binary</code> module, and <em>not</em> the <code>star</code> module, like you may be accustomed to.">inlist_project</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="inlist_pgstar" data-description="Inlists that set the normal physical parameters for <code>MESA star</code> models that will correspond with the two stars in the binaries.">inlist1 and inlist2</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="mk" data-description="Same as in <code>star</code>: Executable script that recompiles the local copy of <code>star</code>. You only need to execute this if you make changes to files in the <code>src</code> directory or upgrade <samp>MESA</samp>.">mk</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="rn" data-description="Same as in <code>star</code>: Executable that, after compilation with <code>mk</code> starts the simulation defined by <code>inlist</code> and any custom code in <code>src/run_star_extras.f</code>.">rn</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="re" data-description="Executable that restarts an interrupted or completed run from a pair of earlier photos. It takes one argument, which is a photo file found in all three of <code>photos</code>, <code>photos1</code> and <code<photos2</code>, which contain data for the binary as a whole, star 1, and star 2, respectively.">re</a>
+      
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="list-group info-toggle" data-target="#file-description">
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="clean" data-description="Same as in <code>star</code>: Executable that resets the compilation process done by <code>mk</code>. Typically only needed if you are running a simulation that was previously compiled by a different version of the SDK or from an older version of <samp>MESA</samp>">
+        clean
+      </a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="star" data-description="The actual executable that evolves the binary stellar model. Usually this is wrapped by <code>rn</code> and <code>re</code>. You should almost never call it directly.">binary</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="LOGS" data-description="Standard <code>MESA star</code> logs directories for star 1 and star 2, respectively. Additional history data for the binary itself is stored in <code>binary_history.data</code>">LOGS1 and LOGS2</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="photos" data-description="Directory that holds snapshots of the simulation stored in binary. These are used to restart the simulation, but they are <strong>not</strong> for long-term storage of the model, as their format changes from version to version.">photos</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="src" data-description="Directory that contains source code for the executable built by <code>mk</code>. Most is just read in from the main <code>MESA_DIR</code>, but you can add your own code to <code>run_star_extras.f</code>.">src</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="make" data-description="Directory that contains the makefile and byproducts of the compilation process. You rarely need to fiddle with this.">make</a>
+      
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card" id='file-description'>
+      <div class="card-header bg-primary text-white">
+        <samp class='name'>inlist</samp>
+      </div>
+      <div class="card-body">
+        <p class='card-text description'>
+          Similar to the same file in star work directories, but this inlist controls the three <code>binary</code> namelists (<code>binary_job</code>, <code>binary_controls</code>, and <code>binary_pgstar</code>). Often this punts to other inlist files to separate different functionalities, like <code>inlist_project</code>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 id='part1c' class='mt-4'>Envelope Stripping with a Black Hole Companion</h4>
+<p>
+  About a third of all massive stars are expected to lose their hydrogen-rich envelopes either via mass transfer or the successful ejection of a common envelope. Here, we start exploring envelope-stripping via Roche-lobe overflow (RLOF, mass transfer) in a binary initially composed of a 12 M<sub>&#8857;</sub> star that orbits an 8<sub>&#8857;</sub> black hole every 20 days. To speed up the models, we will model stars at the sub-solar metallicity <var>Z</var> = 0.006 (similar to the metallicity in the Large Magellanic Cloud). 
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 1: Prepare your Model</span> Start with downloading the folders called <code>minilab1</code> and <code>ZAMS_models</code>. Update the initial masses and initial period of the two stars in <code>inlist_project</code>. Locate the 12 M<sub>&#8857;</sub> zero-age main sequence model in the <code>ZAMS_model</code> folder and make sure your simulation will use it to start from. You should also update <code>inlist1</code> to reflect that this starting model uses a different metallicity than the default in <code>MESA</code>. Compile and run the code.
+</p>
+
+<div class="card border-warning mb-3">
+  <div class="card-header text-white bg-warning">
+    <h5 class='card-title mb-0'>
+      <samp>MESA</samp> Warning: Low Resolution Runs
+    </h5>
+  </div>
+  <div class="card-body">
+    <p>
+      The process of determining the correct mass transfer rate in a binary run is an iterative process. Essentially, the solver guesses a mass transfer rate and then checks to see if the donor star has receded within its roche lobe. It then tries to find the "right" mass transfer rate to get the final radius within some tolerance of the roche lobe.
+    </p>
+    <p>
+      To make these runs go more quickly, we have lowered this tolerance, as well as the general spatial and temporal tolerances of the donor star model. A more science-ready exploration should investigate if these tolerances are sufficient for robust results (they likely aren't).
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_1" aria-expanded="true" aria-controls="sol1_1">
+      Show Solution 1
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_1">
+    <p class="card-text">
+      Set the masses of the two stars in <code>inlist_project</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">binary_controls</span><span class="w">
+
+ </span><span class="c1">! Initial conditions for the binary</span><span class="w">
+   </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">12.0d0</span><span class="w"> </span><span class="c1">! donor mass in Msun</span><span class="w">
+   </span><span class="n">m2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">8.0d0</span><span class="w"> </span><span class="c1">! companion mass in Msun</span><span class="w">
+   </span><span class="n">initial_period_in_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20.0d0</span><span class="w"> </span></code></pre></figure>
+    </p> 
+    <p class='card-text'>
+      Select the starting model in the <code>star_job</code> namelist in <code>inlist1</code>. Note that you must first copy <code>zams_12Msun.mod</code> to the <code>minilab1</code> directory from the <code>ZAMS_models</code> directory.
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! Load ZAMS model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'zams_12Msun.mod'</span></code></pre></figure>
+    </p>
+    <p class='card-text'>
+      Finally, we must account for the reduced metallicity in the stellar model in <code>inlist1</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">kap</span><span class="w">
+  </span><span class="c1">! kap options</span><span class="w">
+  </span><span class="c1">! see kap/defaults/kap.defaults</span><span class="w">
+  </span><span class="n">use_Type2_opacities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+  </span><span class="n">Zbase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.006</span></code></pre></figure>
+      We don't need to set <code>initial_z</code> since we are loading a saved model that already has that information.
+    </p>
+    <p class='card-text'>
+      To compile, execute <kbd>./mk</kbd> and <kbd>./rn</kbd> as usual.
+    </p>
+  </div>
+</div>
+
+<p>
+  A large pgstar dashboard should pop up. Study each panel and see if you can understand what they are showing you. Can you recognize the mass transfer phase in the Hertzsprung-Russell diagram? Can you distinguish the mass transfer rate from wind mass loss? 
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 2: Analyze the Model</span> At the time the simulation stops, the stellar model should be fusing helium to carbon to carbon and oxygen in its center. Identify the following characteristics for this stripped star:
+</p>
+<ul class='lead'>
+  <li>Mass</li>
+  <li>Effective Temperature</li>
+  <li>Radius</li>
+  <li>Companion (black hole) mass</li>
+  <li>Orbital period in days</li>
+</ul>
+<p class='lead'>
+  Also identify the peak mass loss rate in M<sub>&#8857;</sub>/yr over the whole simulation.
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_2" aria-expanded="true" aria-controls="sol1_2">
+      Show Solution 2
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_2">
+    <p class='card-text'>
+      You can find the following by closely studying the last pgstar frame, <code>LOGS1/history.data</code> and/or <code>binary_history.data</code>. Note that pgstar frames have been saved to the <code>grid_png</code> folder so you can look at them after the run.
+    </p>
+    <ul class="card-text">
+      <li>Mass: 4.383 M<sub>&#8857;</sub></li>
+      <li>Effective Temperature: 80,320 K</li>
+      <li>Radius: 0.92478 R<sub>&#8857;</sub></li>
+      <li>Companion (black hole) mass: 14.321 M<sub>&#8857;</sub></li>
+      <li>Orbital period in days: 52.14 days</li>
+      <li>Peak M&#775;: Approximately 3 &#215; 10<sup>3</sup> M<sub>&#8857;</sub>/yr</li>
+    </ul>
+  </div>
+</div>
+<h4 id='part1d' class='mt-4'>Ionizing Radiation</h4>
+<p>
+  As you can see, this is not a regular 4 M<sub>&#8857;</sub> star! It is extremely hot and very small, since it is essentially the exposed helium core of a massive star. In fact, this stripped star is so hot that it emits hydrogen ionizing radiation at high rates. Unlike main-sequence stars and sometimes even Wolf-Rayet stars, the emission rate of hydrogen-ionizing photons from this intermediate mass stripped star can be approximated with a Planck curve (blackbody radiation). Let's use this approximation to visualize the change in flux of hydrogen-ionizing photons as our this model is stripped.
+</p>
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 3: Track Ionizing Radiation</span> Identify the subroutine defined in <code>src/run_star_extras.f90</code> that computes the emission rate of H-ionizing photons, <var>Q</var><sub>0</sub>. Use this subroutine to add the quantity log<sub>10</sub><var>Q</var><sub>0</sub> as a column in star 1's <code>history.data</code> file called <code>log10_Q0</code>. Then, show the extra panel in the pgstar dashboard (the code is already in the <code>&pgstar</code> namelist in <code>inlist1</code>; you only need to activate the panel). Compile and re-run your model.
+</p>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_3a" aria-expanded="true" aria-controls="hint1_3a">
+      Show Hint: Adding the History Column
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint1_3a">
+    <p class="card-text">
+      The name of the subroutine is <code>calculate_Q0</code>. It lives inside <code>data_for_extra_history_columns</code> and sets its one argument to be the log of the number of H-ionizing photons per second.
+    </p>
+
+    <p class="card-text">
+      You'll need to use this function inside <code>data_for_extra_history_columns</code> to set the value of the new column. Also be sure to set the name of this column by editing the <code>names</code> array in this same subroutine. Finally, don't forget to update the function <code>how_many_extra_history_columns</code> to account for our new column.
+    </p>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_3b" aria-expanded="true" aria-controls="hint1_3b">
+      Show Hint: Plotting log<sub>10</sub><var>Q</var><sub>0</sub>
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint1_3b">
+    <p class="card-text">
+      Look inside <code>inlist_pgstar_binary</code>, and in particular, the <code>pgstar</code> namelist therein. Look at the portions detailing <code>History_Panels1</code>. You will see that four panels are defined, and yet only three appeared in the pgstar dashboard. There's a line here that specifically sets the number of panels to 3. Change it to 4.
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_3" aria-expanded="true" aria-controls="sol1_3">
+      Show Solution 3
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_3">
+    <p class='card-text'>
+      To create the new column in the history file, we'll need to edit the <code>how_many_extra_history_columns</code> function:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">how_many_extra_history_columns</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+         </span><span class="kt">integer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+         </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+         </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+         </span><span class="n">how_many_extra_history_columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">how_many_extra_history_columns</span></code></pre></figure>
+    <p class='card-text'>
+      (The only change from the original code is the second-to-last line being set to 1 instead of 0.)
+    </p>
+    <p class='card-text'>
+      To set the name and value of the new column, you need to edit the subroutine <code>data_for_extra_history_columns</code>. You only need to add the two lines that set <code>names(1)</code> and <code>vals(1)</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_history_columns</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">names</span><span class="p">,</span><span class="w"> </span><span class="n">vals</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w">
+         </span><span class="kt">character</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="n">maxlen_history_column_name</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">names</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w">
+         </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">vals</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+         </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+         </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+
+         </span><span class="c1">! note: do NOT add the extras names to history_columns.list</span><span class="w">
+         </span><span class="c1">! the history_columns.list is only for the built-in history column options.</span><span class="w">
+         </span><span class="c1">! it must not include the new column names you are adding here.</span><span class="w">
+
+         </span><span class="c1">! Add the emission rate of H-ionizing photons to the history file</span><span class="w">
+         </span><span class="n">names</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'log10_Q0'</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">calculate_Q0</span><span class="p">(</span><span class="n">vals</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w"> 
+
+         </span><span class="c1">! contained subroutines and functions omitted for brevity, but you</span><span class="w">
+         </span><span class="c1">! should keep them</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_history_columns</span></code></pre></figure>
+  </div>
+</div>
+
+<p>
+  OB-type stars are through to provide most of the ionizing radiation in a stallar population. Let's compare our star to published main sequence OB stars from the literature. Below is a subset of a table taken from <a href="https://ui.adsabs.harvard.edu/abs/2002MNRAS.337.1309S/abstract" target=_blank>Smith et al. 2002</a> (see the full dataset in Table 1 of that paper) that shows how the emission rates of hydrogen-ionizing (<var>Q</var><sub>0</sub>) photons vary with the spectral type of stellar models.
+</p>
+<div class='row'>
+  <div class='col-8 offset-2'>
+  <table class='table table-striped table-hover table-sm table-responsive'>
+    <caption>
+      Stellar parameters and ionizing photon emission rates of ZAMS models from <a href="https://ui.adsabs.harvard.edu/abs/2002MNRAS.337.1309S/abstract" target=_blank>Smith et al. 2002</a>
+    </caption>
+    <thead class='thead-dark'>
+      <tr>
+        <th>Spectral Type</th>
+        <th><var>T</var><sub>eff</sub> (kK)</th>
+        <th><var>R</var><sub>*</sub> (R<sub>&#8857;</sub>)</th>
+        <th>log<var>Q</var><sub>0</sub>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='text-center'>
+        <td>O3V</td>
+        <td>50.0</td>
+        <td>9.8</td>
+        <td>49.5</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O4V</td>
+        <td>45.7</td>
+        <td>10.4</td>
+        <td>49.4</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O5V</td>
+        <td>42.6</td>
+        <td>10.5</td>
+        <td>49.2</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O6V</td>
+        <td>40.0</td>
+        <td>10.6</td>
+        <td>49.0</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O7V</td>
+        <td>37.2</td>
+        <td>10.5</td>
+        <td>48.7</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O8V</td>
+        <td>34.6</td>
+        <td>10.5</td>
+        <td>48.5</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O9V</td>
+        <td>32.3</td>
+        <td>10.1</td>
+        <td>47.9</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B0V</td>
+        <td>30.2</td>
+        <td>9.5</td>
+        <td>47.4</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B0.5V</td>
+        <td>28.1</td>
+        <td>8.6</td>
+        <td>47.0</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B1V</td>
+        <td>26.3</td>
+        <td>8.1</td>
+        <td>46.5</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B1.5V</td>
+        <td>25.0</td>
+        <td>7.1</td>
+        <td>46.1</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 4: Compare to ZAMS Models</span> Look at Table 1 and decide <strong>which ZAMS stellar model has the most similar rate of H-ionizing photons as your stripped star?</strong> After making this comparison based on <var>Q</var><sub>0</sub> alone, compare how the stellar radius and effective temperature of the stripped star compares with its ZAMS counterpart. 
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_4" aria-expanded="true" aria-controls="sol1_4">
+      Show Solution 4
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_4">
+    <p class='card-text'>
+      You should find (e.g. in the last pgstar snapshot) that log<sub>10</sub><var>Q</var><sub>0</sub> ended at around 48.3. Looking at the table above, that means that <strong>our stripped stellar model is most similar to an O8V star</strong> (log<sub>10</sub><var>Q</var><sub>0</sub> = 48.5 in the table above).
+    </p>
+    <p class='card-text'>
+      An 08V type stars are massive main sequence stars with masses around 20 M<sub>&#8857;</sub>.
+      Note that the effective temperature of our model is roughly 40,000 K higher than its ZAMS counterpart, but its radius is about an order of magnitude smaller. This makes sense, as our smaller star must be more luminous and/or have a harder spectrum to produce the same amount of H-ionizing photons per unit time.
+    </p>
+  </div>
+</div>
+
+<h4 id='part1e' class='mt-4'>Limiting Black Hole Growth</h4>
+<p>
+  We are forgetting that the accretor is a black hole! Black holes cannot accrete at infinite rates, but their mass accretion rates are thought to be limited by the so-called Eddington accretion rate. When the accretion rate reaches the Eddington accretion rate, the radiation pressure produced by the accretion is so strong that it can prevent accretion. 
+</p>
+
+<p>
+  If mass accretion is not fully conservative, some material will be lost from the system, and it leaves with some angular momentum, which can affect the binary orbit. If the material is thought to be flung out after spending some time with the accreting star, it is thought to leave with the specific angular momentum equal to that of the accreting star - a process called isotropic re-emission. 
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 5: Compare to ZAMS Models</span> Search <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code> for an inlist option that will limit the mass accretion rate onto the black hole by the eddington accretion rate. Activate that control and re-run the model. Use the results to answer the following questions:
+</p>
+<ul class='lead'>
+  <li>Is the accretion efficient? That is, is 100% of the mass lost by the donor accreted by the black hole? If not, estimate the quantity <var>β</var> = <var>M&#775;</var><sub>acc</sub>/<var>M&#775;</var><sub>trans</sub>.</li>
+  <li>What was the final orbital period after mass transfer? Compare to this orbital period to what we found before. Does this result make sense?</li>
+</ul>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_4a" aria-expanded="true" aria-controls="hint1_4a">
+      Show Hint: The Inlist Control
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint1_4a">
+    <p class="card-text">
+      The name of the control is <code>limit_retention_by_mdot_edd</code>. From <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! limit_retention_by_mdot_edd</span><span class="w">
+</span><span class="c1">! ~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span class="w">
+
+</span><span class="c1">! Limit accretion using ``mdot_edd``. The current implementation is intended for use with</span><span class="w">
+</span><span class="c1">! black hole accretors, as in e.g. Podsiadlowski, Rappaport &amp; Han (2003), MNRAS, 341, 385.</span><span class="w">
+</span><span class="c1">! For other accretors ``mdot_edd`` should be set with ``use_this_for_mdot_edd``, the hook</span><span class="w">
+</span><span class="c1">! ``use_other_mdot_edd``, or by appropriately setting ``use_this_for_mdot_edd_eta``.</span><span class="w">
+</span><span class="c1">! Note: MESA versions equal or lower than 8118 used eta=1 and did not correct</span><span class="w">
+</span><span class="c1">! the accreted mass for the energy lost by radiation.</span><span class="w">
+
+</span><span class="c1">! If accreted material radiates an amount of energy equal to ``L=eta*mtransfer_rate*clight**2``,</span><span class="w">
+</span><span class="c1">! then accretion is assumed to be limited to the Eddington luminosity,</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+</span><span class="c1">!     Ledd = 4*pi*cgrav*Mbh*clight/kappa</span><span class="w">
+
+</span><span class="c1">! which results in the Eddington mass-accretion rate</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+</span><span class="c1">!     mdot_edd = 4*pi*cgrav*Mbh/(kappa*clight*eta)</span><span class="w">
+
+</span><span class="c1">! the efficiency eta is determined by the properties of the last stable circular orbit,</span><span class="w">
+</span><span class="c1">! and for a BH with no initial spin it can be expressed in terms of the initial BH mass Mbh0</span><span class="w">
+</span><span class="c1">! and the current BH mass,</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+</span><span class="c1">!     eta = 1-sqrt(1-(Mbh/(3*Mbh0))**2)</span><span class="w">
+
+</span><span class="c1">! for Mbh &lt; sqrt(6) Mbh0. For BHs with initial spins different from zero, an effective</span><span class="w">
+</span><span class="c1">! Mbh0 can be computed, corresponding to the mass the black hole would have needed to</span><span class="w">
+</span><span class="c1">! have with zero spin to reach the current mass and spin.</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+    </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
+    <p class='card-text'>
+      But think carefully: in which namelist and inlist should this command go?
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_5" aria-expanded="true" aria-controls="sol1_5">
+      Show Solution 5
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_5">
+    <p class='card-text'>
+      The following line should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
+    </p>
+    <p class='card-text'>
+      To determine if the mass transfer is efficient, we should look at the combined mass of the binary. If it is always 20 M<sub>&#8857;</sub> (since we started with a 12 M<sub>&#8857;</sub> star and an 8 M<sub>&#8857;</sub> black hole). Compare the top history panels from the pgstar dashboard before and after adding this control:
+    </p>
+    <h4>No Limits on Accretion</h4>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/mass_no_limit.png' alt='graphs showing mass of star decreasing and mass of black hole increasing with time'>
+      <figcaption class="figure-caption text-left">
+        Mass histories for stellar model (star 1) and black hole (star 2) when <em>not</em> limiting retention by the Eddington rate. This mass transfer is <strong>conservative</strong> because we specifically disallowed any losses in <code>inlist_project</code> (though wind mass loss from star 1 is actually lost from the system, so the total mass at the end of the evolution is less than the original 20 M<sub>&#8857;</sub>.
+      </figcaption>
+    </figure>
+
+    <h4>Eddington-limited Accretion</h4>
+    <figure class='figure'>
+      <img class='figure-img img-fluid img-rounded' src='images/mass_limited.png' alt='graphs showing mass of star decreasing while mass of black hole remains constant'>
+      <figcaption class="figure-caption text-left">
+        Mass histories for stellar model (star 1) and black hole (star 2) when accretion retention <em>is limited</em> by the Eddington rate.
+      </figcaption>
+    </figure>
+    <p class='card-text'>
+      As we can see, applying the eddington limit scheme results in <strong>nonconservative mass transfer</strong>, as evidenced by apparently constant black hole mass while the donor loses mass. 
+    </p>
+
+    <p class='card-text'>
+      We can estimate <var>β</var> by computing the change in mass of the black hole and dividing it by the magnitude of the change in mass of the donor star. From the last lines of data in the terminal output, we can find the final value of <var>M</var><sub>1</sub> is 4.390338 M<sub>&#8857;</sub>, while the final mass of the black hole, <var>M</var><sub>2</sub>, is 8.007592 M\<sub>&#8857;</sub>. Their starting masses were 12 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub>, respectively. Thus, the mass retention efficiency is
+    </p>
+    \[\beta = \frac{M_{2,f} - M_{2,i}}{\left\vert M_{1,f} - M_{1,i}\right\vert} = \frac{8.007592\,M_\odot - 8.000000\,M_\odot}{\left\vert 4.390338\,M_\odot - 12.000000\,M_\odot\right\vert} = 0.000998 \approx 0.1\%\]
+    <p class='card-text'>
+      The final orbital period is approximately 57.8 days, which is larger than what we found when we didn't limit the accretion rate. This might be surprising since this simulation lost more angular momentum due to nonconservative mass transfer, but remember that the decreased mass of the system itself means a decreased angular momentum even if the period may have increased somewhat.
+    </p>
+  </div>
+</div>
+
+</noscript>
+
+<div class="initially-hidden">
+  <h2 id='overview'> Overview </h2>
+<p>
+  This guide accompanies the final set of exercises for the 
+  <a href="http://cococubed.asu.edu/mesa_summer_school_2021/" target=_blank>
+    2021 MESA Summer School
+  </a>
+  led by lecturer 
+  <a href="https://users.obs.carnegiescience.edu/ygoetberg/" target=_blank>
+    Ylva Goetberg
+  </a>
+  and TAs
+  <a href="https://billwolf.space" target=_blank>
+    Bill Wolf
+  </a>
+  and Eb Farag.
+</p>
+<p>
+  These lab exercises will have you exploring the topic of massive star binaries using the <samp>binary</samp> module of <samp>MESA</samp>. This page will likely fall out of date as the interface of <samp>MESA</samp> changes in its development and the hyperlinks on this page become outdated.
+  For greatest compatibility, you should use the following versions of <samp>MESA</samp> and the SDK:
+</p>
+<dl class="row">
+  <dt class="col-4 col-sm-3 col-xl-2">MESA Version</dt>
+  <dd class="col-8 col-sm-9 col-xl-10">
+    <a href="https://github.com/MESAHub/mesa/releases/tag/r15140" target=_blank>15104</a>
+  </dd>
+
+  <dt class="col-4 col-sm-3 col-xl-2">SDK Version</dt>
+  <dd class="col-8 col-sm-9 col-xl-10">21.4.1 (Mac <em>or</em> Linux)</dd>
+</dl>
+<p>
+  Throughout this page, monospaced text on a black background, like this: <kbd>echo "Hello, World!"</kbd> represent commands you can type into your terminal and execute, while red monospaced text like this: <code>mass_change = 1d-9</code> represent file names or values that you might type into a file, but not something to be executed.
+</p>
+
+<p>
+  This page guides you through three labs. In <a href="#part1">Minilab 1</a>, we'll familiarize ourselves with the <samp>MESA binary</samp> module by modeling the evolution of a star that loses its fluffy, hydrogen-rich envelope via mass transfer to a point-mass companion star. Then, in <a href="part2">Minilab 2</a>, we'll explore adding a custom mass loss mechanism to a star to see how that affects its evolution within the binary. And finally, in the <a href='#part3'>Maxilab</a>, we'll make an exploratory model of a binary star by tracking two stellar models. These two models will merge, so we'll try to combine them into a new merger product and evolve that new model.
+</p>
+
+<h2 id="part1" class='mt-5'> Minilab 1: Simple Mass Transfer in Binaries </h2>
+<h4 id="part1a" class='mt-4'> Objectives</h4>
+<p>In this lab you will learn&#8230;</p>
+<ul>
+  <li>The structure of a <code>binary</code> work directory</li>
+  <li>How to roche lobe overflow from a stellar model to a point mass</li>
+  <li>Several scenarios that can cause roche lobe overflow in massive star binaries</li>
+</ul>
+<hr>
+<h4 id="part1b" class='mt-4'>Structure of a Binary Directory</h4>
+<p>
+  The first minilab directory is not very different from the standard <code>binary</code> work directory located at <code>$MESA_DIR/binary/work</code>, much like its cousin from <code>star</code>. It has a very similar structure with a few key differences stemming from the fact that <code>binary</code> can model two stars simultaneously, which we'll call star 1 and star 2. While it models the two stars in sync, it also tracks data about the binary itself, such as orbital separation, orbital period, and mass transfer rates.
+</p>
+<p>
+  Click through on some of the file names below. Most that look familiar from <code>star</code> have similar or identical functions in <code>binary</code>, but in some cases, like the multiple inlists and LOGS directories, are more nuanced.
+</p>
+<div class="row" id="workdir-files">
+  <div class="col-md-3">
+    <div class="list-group info-toggle" data-target="#file-description">
+      <a href="#part1b" class="list-group-item list-group-item-action active" data-name="inlist" data-description="Similar to the same file in star work directories, but this inlist controls the three <code>binary</code> namelists (<code>binary_job</code>, <code>binary_controls</code>, and <code>binary_pgstar</code>). Often this punts to other inlist files to separate different functionalities, like <code>inlist_project</code>.">
+        inlist
+      </a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="inlist_project" data-description="Another <code>binary</code> inlist that <code>inlist</code> points to. The name isn't special; it just matches what extra inlist is loaded by <code>inlist</code>. Note that this inlist still pertains to the <code>binary</code> module, and <em>not</em> the <code>star</code> module, like you may be accustomed to.">inlist_project</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="inlist_pgstar" data-description="Inlists that set the normal physical parameters for <code>MESA star</code> models that will correspond with the two stars in the binaries.">inlist1 and inlist2</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="mk" data-description="Same as in <code>star</code>: Executable script that recompiles the local copy of <code>star</code>. You only need to execute this if you make changes to files in the <code>src</code> directory or upgrade <samp>MESA</samp>.">mk</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="rn" data-description="Same as in <code>star</code>: Executable that, after compilation with <code>mk</code> starts the simulation defined by <code>inlist</code> and any custom code in <code>src/run_star_extras.f</code>.">rn</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="re" data-description="Executable that restarts an interrupted or completed run from a pair of earlier photos. It takes one argument, which is a photo file found in all three of <code>photos</code>, <code>photos1</code> and <code<photos2</code>, which contain data for the binary as a whole, star 1, and star 2, respectively.">re</a>
+      
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="list-group info-toggle" data-target="#file-description">
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="clean" data-description="Same as in <code>star</code>: Executable that resets the compilation process done by <code>mk</code>. Typically only needed if you are running a simulation that was previously compiled by a different version of the SDK or from an older version of <samp>MESA</samp>">
+        clean
+      </a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="star" data-description="The actual executable that evolves the binary stellar model. Usually this is wrapped by <code>rn</code> and <code>re</code>. You should almost never call it directly.">binary</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="LOGS" data-description="Standard <code>MESA star</code> logs directories for star 1 and star 2, respectively. Additional history data for the binary itself is stored in <code>binary_history.data</code>">LOGS1 and LOGS2</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="photos" data-description="Directory that holds snapshots of the simulation stored in binary. These are used to restart the simulation, but they are <strong>not</strong> for long-term storage of the model, as their format changes from version to version.">photos</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="src" data-description="Directory that contains source code for the executable built by <code>mk</code>. Most is just read in from the main <code>MESA_DIR</code>, but you can add your own code to <code>run_star_extras.f</code>.">src</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="make" data-description="Directory that contains the makefile and byproducts of the compilation process. You rarely need to fiddle with this.">make</a>
+      
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card" id='file-description'>
+      <div class="card-header bg-primary text-white">
+        <samp class='name'>inlist</samp>
+      </div>
+      <div class="card-body">
+        <p class='card-text description'>
+          Similar to the same file in star work directories, but this inlist controls the three <code>binary</code> namelists (<code>binary_job</code>, <code>binary_controls</code>, and <code>binary_pgstar</code>). Often this punts to other inlist files to separate different functionalities, like <code>inlist_project</code>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 id='part1c' class='mt-4'>Envelope Stripping with a Black Hole Companion</h4>
+<p>
+  About a third of all massive stars are expected to lose their hydrogen-rich envelopes either via mass transfer or the successful ejection of a common envelope. Here, we start exploring envelope-stripping via Roche-lobe overflow (RLOF, mass transfer) in a binary initially composed of a 12 M<sub>&#8857;</sub> star that orbits an 8<sub>&#8857;</sub> black hole every 20 days. To speed up the models, we will model stars at the sub-solar metallicity <var>Z</var> = 0.006 (similar to the metallicity in the Large Magellanic Cloud). 
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 1: Prepare your Model</span> Start with downloading the folders called <code>minilab1</code> and <code>ZAMS_models</code>. Update the initial masses and initial period of the two stars in <code>inlist_project</code>. Locate the 12 M<sub>&#8857;</sub> zero-age main sequence model in the <code>ZAMS_model</code> folder and make sure your simulation will use it to start from. You should also update <code>inlist1</code> to reflect that this starting model uses a different metallicity than the default in <code>MESA</code>. Compile and run the code.
+</p>
+
+<div class="card border-warning mb-3">
+  <div class="card-header text-white bg-warning">
+    <h5 class='card-title mb-0'>
+      <samp>MESA</samp> Warning: Low Resolution Runs
+    </h5>
+  </div>
+  <div class="card-body">
+    <p>
+      The process of determining the correct mass transfer rate in a binary run is an iterative process. Essentially, the solver guesses a mass transfer rate and then checks to see if the donor star has receded within its roche lobe. It then tries to find the "right" mass transfer rate to get the final radius within some tolerance of the roche lobe.
+    </p>
+    <p>
+      To make these runs go more quickly, we have lowered this tolerance, as well as the general spatial and temporal tolerances of the donor star model. A more science-ready exploration should investigate if these tolerances are sufficient for robust results (they likely aren't).
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_1" aria-expanded="true" aria-controls="sol1_1">
+      Show Solution 1
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_1">
+    <p class="card-text">
+      Set the masses of the two stars in <code>inlist_project</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">binary_controls</span><span class="w">
+
+ </span><span class="c1">! Initial conditions for the binary</span><span class="w">
+   </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">12.0d0</span><span class="w"> </span><span class="c1">! donor mass in Msun</span><span class="w">
+   </span><span class="n">m2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">8.0d0</span><span class="w"> </span><span class="c1">! companion mass in Msun</span><span class="w">
+   </span><span class="n">initial_period_in_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">20.0d0</span><span class="w"> </span></code></pre></figure>
+    </p> 
+    <p class='card-text'>
+      Select the starting model in the <code>star_job</code> namelist in <code>inlist1</code>. Note that you must first copy <code>zams_12Msun.mod</code> to the <code>minilab1</code> directory from the <code>ZAMS_models</code> directory.
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! Load ZAMS model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'zams_12Msun.mod'</span></code></pre></figure>
+    </p>
+    <p class='card-text'>
+      Finally, we must account for the reduced metallicity in the stellar model in <code>inlist1</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">kap</span><span class="w">
+  </span><span class="c1">! kap options</span><span class="w">
+  </span><span class="c1">! see kap/defaults/kap.defaults</span><span class="w">
+  </span><span class="n">use_Type2_opacities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+  </span><span class="n">Zbase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.006</span></code></pre></figure>
+      We don't need to set <code>initial_z</code> since we are loading a saved model that already has that information.
+    </p>
+    <p class='card-text'>
+      To compile, execute <kbd>./mk</kbd> and <kbd>./rn</kbd> as usual.
+    </p>
+  </div>
+</div>
+
+<p>
+  A large pgstar dashboard should pop up. Study each panel and see if you can understand what they are showing you. Can you recognize the mass transfer phase in the Hertzsprung-Russell diagram? Can you distinguish the mass transfer rate from wind mass loss? 
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 2: Analyze the Model</span> At the time the simulation stops, the stellar model should be fusing helium to carbon to carbon and oxygen in its center. Identify the following characteristics for this stripped star:
+</p>
+<ul class='lead'>
+  <li>Mass</li>
+  <li>Effective Temperature</li>
+  <li>Radius</li>
+  <li>Companion (black hole) mass</li>
+  <li>Orbital period in days</li>
+</ul>
+<p class='lead'>
+  Also identify the peak mass loss rate in M<sub>&#8857;</sub>/yr over the whole simulation.
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_2" aria-expanded="true" aria-controls="sol1_2">
+      Show Solution 2
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_2">
+    <p class='card-text'>
+      You can find the following by closely studying the last pgstar frame, <code>LOGS1/history.data</code> and/or <code>binary_history.data</code>. Note that pgstar frames have been saved to the <code>grid_png</code> folder so you can look at them after the run.
+    </p>
+    <ul class="card-text">
+      <li>Mass: 4.383 M<sub>&#8857;</sub></li>
+      <li>Effective Temperature: 80,320 K</li>
+      <li>Radius: 0.92478 R<sub>&#8857;</sub></li>
+      <li>Companion (black hole) mass: 14.321 M<sub>&#8857;</sub></li>
+      <li>Orbital period in days: 52.14 days</li>
+      <li>Peak M&#775;: Approximately 3 &#215; 10<sup>3</sup> M<sub>&#8857;</sub>/yr</li>
+    </ul>
+  </div>
+</div>
+<h4 id='part1d' class='mt-4'>Ionizing Radiation</h4>
+<p>
+  As you can see, this is not a regular 4 M<sub>&#8857;</sub> star! It is extremely hot and very small, since it is essentially the exposed helium core of a massive star. In fact, this stripped star is so hot that it emits hydrogen ionizing radiation at high rates. Unlike main-sequence stars and sometimes even Wolf-Rayet stars, the emission rate of hydrogen-ionizing photons from this intermediate mass stripped star can be approximated with a Planck curve (blackbody radiation). Let's use this approximation to visualize the change in flux of hydrogen-ionizing photons as our this model is stripped.
+</p>
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 3: Track Ionizing Radiation</span> Identify the subroutine defined in <code>src/run_star_extras.f90</code> that computes the emission rate of H-ionizing photons, <var>Q</var><sub>0</sub>. Use this subroutine to add the quantity log<sub>10</sub><var>Q</var><sub>0</sub> as a column in star 1's <code>history.data</code> file called <code>log10_Q0</code>. Then, show the extra panel in the pgstar dashboard (the code is already in the <code>&pgstar</code> namelist in <code>inlist1</code>; you only need to activate the panel). Compile and re-run your model.
+</p>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_3a" aria-expanded="true" aria-controls="hint1_3a">
+      Show Hint: Adding the History Column
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint1_3a">
+    <p class="card-text">
+      The name of the subroutine is <code>calculate_Q0</code>. It lives inside <code>data_for_extra_history_columns</code> and sets its one argument to be the log of the number of H-ionizing photons per second.
+    </p>
+
+    <p class="card-text">
+      You'll need to use this function inside <code>data_for_extra_history_columns</code> to set the value of the new column. Also be sure to set the name of this column by editing the <code>names</code> array in this same subroutine. Finally, don't forget to update the function <code>how_many_extra_history_columns</code> to account for our new column.
+    </p>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_3b" aria-expanded="true" aria-controls="hint1_3b">
+      Show Hint: Plotting log<sub>10</sub><var>Q</var><sub>0</sub>
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint1_3b">
+    <p class="card-text">
+      Look inside <code>inlist_pgstar_binary</code>, and in particular, the <code>pgstar</code> namelist therein. Look at the portions detailing <code>History_Panels1</code>. You will see that four panels are defined, and yet only three appeared in the pgstar dashboard. There's a line here that specifically sets the number of panels to 3. Change it to 4.
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_3" aria-expanded="true" aria-controls="sol1_3">
+      Show Solution 3
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_3">
+    <p class='card-text'>
+      To create the new column in the history file, we'll need to edit the <code>how_many_extra_history_columns</code> function:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">how_many_extra_history_columns</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+         </span><span class="kt">integer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+         </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+         </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+         </span><span class="n">how_many_extra_history_columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">how_many_extra_history_columns</span></code></pre></figure>
+    <p class='card-text'>
+      (The only change from the original code is the second-to-last line being set to 1 instead of 0.)
+    </p>
+    <p class='card-text'>
+      To set the name and value of the new column, you need to edit the subroutine <code>data_for_extra_history_columns</code>. You only need to add the two lines that set <code>names(1)</code> and <code>vals(1)</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_history_columns</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">names</span><span class="p">,</span><span class="w"> </span><span class="n">vals</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w">
+         </span><span class="kt">character</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="n">maxlen_history_column_name</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">names</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w">
+         </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">vals</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+         </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+         </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+
+         </span><span class="c1">! note: do NOT add the extras names to history_columns.list</span><span class="w">
+         </span><span class="c1">! the history_columns.list is only for the built-in history column options.</span><span class="w">
+         </span><span class="c1">! it must not include the new column names you are adding here.</span><span class="w">
+
+         </span><span class="c1">! Add the emission rate of H-ionizing photons to the history file</span><span class="w">
+         </span><span class="n">names</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'log10_Q0'</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">calculate_Q0</span><span class="p">(</span><span class="n">vals</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w"> 
+
+         </span><span class="c1">! contained subroutines and functions omitted for brevity, but you</span><span class="w">
+         </span><span class="c1">! should keep them</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_history_columns</span></code></pre></figure>
+  </div>
+</div>
+
+<p>
+  OB-type stars are through to provide most of the ionizing radiation in a stallar population. Let's compare our star to published main sequence OB stars from the literature. Below is a subset of a table taken from <a href="https://ui.adsabs.harvard.edu/abs/2002MNRAS.337.1309S/abstract" target=_blank>Smith et al. 2002</a> (see the full dataset in Table 1 of that paper) that shows how the emission rates of hydrogen-ionizing (<var>Q</var><sub>0</sub>) photons vary with the spectral type of stellar models.
+</p>
+<div class='row'>
+  <div class='col-8 offset-2'>
+  <table class='table table-striped table-hover table-sm table-responsive'>
+    <caption>
+      Stellar parameters and ionizing photon emission rates of ZAMS models from <a href="https://ui.adsabs.harvard.edu/abs/2002MNRAS.337.1309S/abstract" target=_blank>Smith et al. 2002</a>
+    </caption>
+    <thead class='thead-dark'>
+      <tr>
+        <th>Spectral Type</th>
+        <th><var>T</var><sub>eff</sub> (kK)</th>
+        <th><var>R</var><sub>*</sub> (R<sub>&#8857;</sub>)</th>
+        <th>log<var>Q</var><sub>0</sub>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class='text-center'>
+        <td>O3V</td>
+        <td>50.0</td>
+        <td>9.8</td>
+        <td>49.5</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O4V</td>
+        <td>45.7</td>
+        <td>10.4</td>
+        <td>49.4</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O5V</td>
+        <td>42.6</td>
+        <td>10.5</td>
+        <td>49.2</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O6V</td>
+        <td>40.0</td>
+        <td>10.6</td>
+        <td>49.0</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O7V</td>
+        <td>37.2</td>
+        <td>10.5</td>
+        <td>48.7</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O8V</td>
+        <td>34.6</td>
+        <td>10.5</td>
+        <td>48.5</td>
+      </tr>
+      <tr class='text-center'>
+        <td>O9V</td>
+        <td>32.3</td>
+        <td>10.1</td>
+        <td>47.9</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B0V</td>
+        <td>30.2</td>
+        <td>9.5</td>
+        <td>47.4</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B0.5V</td>
+        <td>28.1</td>
+        <td>8.6</td>
+        <td>47.0</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B1V</td>
+        <td>26.3</td>
+        <td>8.1</td>
+        <td>46.5</td>
+      </tr>
+      <tr class='text-center'>
+        <td>B1.5V</td>
+        <td>25.0</td>
+        <td>7.1</td>
+        <td>46.1</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 4: Compare to ZAMS Models</span> Look at Table 1 and decide <strong>which ZAMS stellar model has the most similar rate of H-ionizing photons as your stripped star?</strong> After making this comparison based on <var>Q</var><sub>0</sub> alone, compare how the stellar radius and effective temperature of the stripped star compares with its ZAMS counterpart. 
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_4" aria-expanded="true" aria-controls="sol1_4">
+      Show Solution 4
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_4">
+    <p class='card-text'>
+      You should find (e.g. in the last pgstar snapshot) that log<sub>10</sub><var>Q</var><sub>0</sub> ended at around 48.3. Looking at the table above, that means that <strong>our stripped stellar model is most similar to an O8V star</strong> (log<sub>10</sub><var>Q</var><sub>0</sub> = 48.5 in the table above).
+    </p>
+    <p class='card-text'>
+      An 08V type stars are massive main sequence stars with masses around 20 M<sub>&#8857;</sub>.
+      Note that the effective temperature of our model is roughly 40,000 K higher than its ZAMS counterpart, but its radius is about an order of magnitude smaller. This makes sense, as our smaller star must be more luminous and/or have a harder spectrum to produce the same amount of H-ionizing photons per unit time.
+    </p>
+  </div>
+</div>
+
+<h4 id='part1e' class='mt-4'>Limiting Black Hole Growth</h4>
+<p>
+  We are forgetting that the accretor is a black hole! Black holes cannot accrete at infinite rates, but their mass accretion rates are thought to be limited by the so-called Eddington accretion rate. When the accretion rate reaches the Eddington accretion rate, the radiation pressure produced by the accretion is so strong that it can prevent accretion. 
+</p>
+
+<p>
+  If mass accretion is not fully conservative, some material will be lost from the system, and it leaves with some angular momentum, which can affect the binary orbit. If the material is thought to be flung out after spending some time with the accreting star, it is thought to leave with the specific angular momentum equal to that of the accreting star - a process called isotropic re-emission. 
+</p>
+
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 5: Compare to ZAMS Models</span> Search <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code> for an inlist option that will limit the mass accretion rate onto the black hole by the eddington accretion rate. Activate that control and re-run the model. Use the results to answer the following questions:
+</p>
+<ul class='lead'>
+  <li>Is the accretion efficient? That is, is 100% of the mass lost by the donor accreted by the black hole? If not, estimate the quantity <var>β</var> = <var>M&#775;</var><sub>acc</sub>/<var>M&#775;</var><sub>trans</sub>.</li>
+  <li>What was the final orbital period after mass transfer? Compare to this orbital period to what we found before. Does this result make sense?</li>
+</ul>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_4a" aria-expanded="true" aria-controls="hint1_4a">
+      Show Hint: The Inlist Control
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint1_4a">
+    <p class="card-text">
+      The name of the control is <code>limit_retention_by_mdot_edd</code>. From <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! limit_retention_by_mdot_edd</span><span class="w">
+</span><span class="c1">! ~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span class="w">
+
+</span><span class="c1">! Limit accretion using ``mdot_edd``. The current implementation is intended for use with</span><span class="w">
+</span><span class="c1">! black hole accretors, as in e.g. Podsiadlowski, Rappaport &amp; Han (2003), MNRAS, 341, 385.</span><span class="w">
+</span><span class="c1">! For other accretors ``mdot_edd`` should be set with ``use_this_for_mdot_edd``, the hook</span><span class="w">
+</span><span class="c1">! ``use_other_mdot_edd``, or by appropriately setting ``use_this_for_mdot_edd_eta``.</span><span class="w">
+</span><span class="c1">! Note: MESA versions equal or lower than 8118 used eta=1 and did not correct</span><span class="w">
+</span><span class="c1">! the accreted mass for the energy lost by radiation.</span><span class="w">
+
+</span><span class="c1">! If accreted material radiates an amount of energy equal to ``L=eta*mtransfer_rate*clight**2``,</span><span class="w">
+</span><span class="c1">! then accretion is assumed to be limited to the Eddington luminosity,</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+</span><span class="c1">!     Ledd = 4*pi*cgrav*Mbh*clight/kappa</span><span class="w">
+
+</span><span class="c1">! which results in the Eddington mass-accretion rate</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+</span><span class="c1">!     mdot_edd = 4*pi*cgrav*Mbh/(kappa*clight*eta)</span><span class="w">
+
+</span><span class="c1">! the efficiency eta is determined by the properties of the last stable circular orbit,</span><span class="w">
+</span><span class="c1">! and for a BH with no initial spin it can be expressed in terms of the initial BH mass Mbh0</span><span class="w">
+</span><span class="c1">! and the current BH mass,</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+</span><span class="c1">!     eta = 1-sqrt(1-(Mbh/(3*Mbh0))**2)</span><span class="w">
+
+</span><span class="c1">! for Mbh &lt; sqrt(6) Mbh0. For BHs with initial spins different from zero, an effective</span><span class="w">
+</span><span class="c1">! Mbh0 can be computed, corresponding to the mass the black hole would have needed to</span><span class="w">
+</span><span class="c1">! have with zero spin to reach the current mass and spin.</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+    </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
+    <p class='card-text'>
+      But think carefully: in which namelist and inlist should this command go?
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_5" aria-expanded="true" aria-controls="sol1_5">
+      Show Solution 5
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol1_5">
+    <p class='card-text'>
+      The following line should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
+    </p>
+    <p class='card-text'>
+      To determine if the mass transfer is efficient, we should look at the combined mass of the binary. If it is always 20 M<sub>&#8857;</sub> (since we started with a 12 M<sub>&#8857;</sub> star and an 8 M<sub>&#8857;</sub> black hole). Compare the top history panels from the pgstar dashboard before and after adding this control:
+    </p>
+    <h4>No Limits on Accretion</h4>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/mass_no_limit.png' alt='graphs showing mass of star decreasing and mass of black hole increasing with time'>
+      <figcaption class="figure-caption text-left">
+        Mass histories for stellar model (star 1) and black hole (star 2) when <em>not</em> limiting retention by the Eddington rate. This mass transfer is <strong>conservative</strong> because we specifically disallowed any losses in <code>inlist_project</code> (though wind mass loss from star 1 is actually lost from the system, so the total mass at the end of the evolution is less than the original 20 M<sub>&#8857;</sub>.
+      </figcaption>
+    </figure>
+
+    <h4>Eddington-limited Accretion</h4>
+    <figure class='figure'>
+      <img class='figure-img img-fluid img-rounded' src='images/mass_limited.png' alt='graphs showing mass of star decreasing while mass of black hole remains constant'>
+      <figcaption class="figure-caption text-left">
+        Mass histories for stellar model (star 1) and black hole (star 2) when accretion retention <em>is limited</em> by the Eddington rate.
+      </figcaption>
+    </figure>
+    <p class='card-text'>
+      As we can see, applying the eddington limit scheme results in <strong>nonconservative mass transfer</strong>, as evidenced by apparently constant black hole mass while the donor loses mass. 
+    </p>
+
+    <p class='card-text'>
+      We can estimate <var>β</var> by computing the change in mass of the black hole and dividing it by the magnitude of the change in mass of the donor star. From the last lines of data in the terminal output, we can find the final value of <var>M</var><sub>1</sub> is 4.390338 M<sub>&#8857;</sub>, while the final mass of the black hole, <var>M</var><sub>2</sub>, is 8.007592 M\<sub>&#8857;</sub>. Their starting masses were 12 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub>, respectively. Thus, the mass retention efficiency is
+    </p>
+    \[\beta = \frac{M_{2,f} - M_{2,i}}{\left\vert M_{1,f} - M_{1,i}\right\vert} = \frac{8.007592\,M_\odot - 8.000000\,M_\odot}{\left\vert 4.390338\,M_\odot - 12.000000\,M_\odot\right\vert} = 0.000998 \approx 0.1\%\]
+    <p class='card-text'>
+      The final orbital period is approximately 57.8 days, which is larger than what we found when we didn't limit the accretion rate. This might be surprising since this simulation lost more angular momentum due to nonconservative mass transfer, but remember that the decreased mass of the system itself means a decreased angular momentum even if the period may have increased somewhat.
+    </p>
+  </div>
+</div>
+
+</div>
+      </div>
+    </div>      
+  </div>
+</body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/application.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script type="text/javascript" async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML'></script>
+
+<script src="/js/leiden.js"></script>
+
+</html>

@@ -48,7 +48,10 @@ body {
 
 #leiden-body {
   padding-bottom: 0;
+}
 
+#binaries-body {
+  padding-bottom: 0;
 }
 
 .main-body {
@@ -148,6 +151,37 @@ table.classes {
 }
 
 #leiden-instructions .btn-lg {
+  min-width: 300px;
+}
+
+.splash-binaries {
+  height: 30em;
+  padding-top: 10em;
+  margin-bottom: 3em;
+  background-size: auto;
+  color: #fff;
+  vertical-align: middle;
+  text-shadow: 4px 4px 4px #000;
+  text-align: center;
+  background-repeat: no-repeat;
+  background-color: #000000;
+  background-image: url("/images/star_field.jpg");
+  background-position: center;
+}
+
+#binaries-instructions {
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
+
+#binaries-instructions code {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+#binaries-instructions .btn-lg {
   min-width: 300px;
 }
 
