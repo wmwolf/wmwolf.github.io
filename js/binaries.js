@@ -23,13 +23,30 @@ var rng = {
   setup: function() {
     $('#mdot-gen').click(function() {
       // alert('clicked');
-      var mdot_min = 3.1
-      var mdot_max = 3.7
+      var mdot_min = 3.1;
+      var mdot_max = 3.7;
       var new_base = (mdot_min + Math.random() * (mdot_max - mdot_min)).toPrecision(3);
       $('span.mdot-base').text(new_base);
     });
   }
 };
+
+var quizQuestions = {
+  setup: function() {
+    $('.quiz-option').click(function() {
+      self = $(this);
+      $(self.data('group')).collapse('hide');
+      if (self.data('quiz-correct')) {
+        self.removeClass('btn-primary');
+        self.addClass('btn-success');
+      } else {
+        self.removeClass('btn-primary');
+        self.addClass('btn-danger');        
+      }
+
+    })
+  }
+}
 
 // var sideNav = {
 //   setup: function() {
@@ -46,6 +63,7 @@ $( document ).ready(function() {
   infoToggle.setup();
   rng.setup();
   $('[data-toggle="tooltip"]').tooltip()
+  quizQuestions.setup();
   // sideNav.setup();
   // alert('done with sideNav setup');
 });

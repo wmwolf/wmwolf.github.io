@@ -38,12 +38,12 @@
     <a class="nav-link ml-3 my-1" href="#part1d">Updating M&#775;</a>
     <a class="nav-link ml-3 my-1" href="#part1e">Ionizing Radiation <em>(Bonus)</em></a>
   </nav>
-  <a class="nav-link part-header" href="#part2">Minilab 2: X-ray Binaries and Supernova Progenitors</a>
+  <a class="nav-link part-header" href="#part2">Minilab 2: Stripped-envelope Supernova Progenitors</a>
   <nav class="nav nav-pills flex-column" id="part2-subparts">
     <a class="nav-link ml-3 my-1" href="#part2a">Objectives</a>
     <a class="nav-link ml-3 my-1" href="#part2b">Stripped-envelope Supernovae</a>
     <a class="nav-link ml-3 my-1" href="#part2c">Supernova Progenitors</a>
-    <a class="nav-link ml-3 my-1" href="#part2d">High-mass X-ray Binaries</a>
+    <a class="nav-link ml-3 my-1" href="#part2d">High-mass X-ray Binaries <em>(Bonus)</em></a>
   </nav>
   <a class="nav-link part-header" href="#part3">Maxilab: Massive Binary Mergers</a>
 </nav>
@@ -637,7 +637,7 @@
 <p>
   Because stripped stars reach extremely high surface temperatures, they emit very energetic radiation. In fact, the majority of their emitted radiation is ionizing. To accurately compute the emission rate of ionizing photons, spectral models that match the properties of the stripped stars are necessary. However, the hydrogen-ionizing emission rate from intermediate mass stripped stars is quite well approximated by a blackbody radiation curve.
 </p>
-<p class='lead'>
+<p class='lead' id='task1_5'>
   <span class='font-weight-bold text-primary'>Bonus Task 5: Track Ionizing Radiation</span> In the text file <code>Q0_function.txt</code> in the work directory, there is a function that calculates the emission rate of H-ionizing photons, <var>Q</var><sub>0</sub>. Copy this function and place it in the correct place in the <code>run_star_extras.f90</code> file so that you can add log(<var>Q</var><sub>0</sub>) as an output in the <code>history.data</code> file. Make sure to call the new column <code>log_Q0</code>. Before compiling and running the model, un-comment the fourth panel in the pgstar window (tip: search for <code>EDIT HERE</code>) so that you can see the evolution of the emission rate of H-ionizing photons. It is also advantageous to set the minimum of the y-axis to 46.
 </p> 
 <div class="card border-primary mb-3">
@@ -863,25 +863,32 @@
   </div>
 </div>
 <hr class='my-5'>
-<h2 id="part2" class='mt-5'> Minilab 2: X-ray Binaries and Supernova Progenitors </h2>
+<h2 id="part2" class='mt-5'> Minilab 2: Stripped-envelope Supernova Progenitors </h2>
+<p>
+  The detection of only one intermediate mass stripped star has been published. It is called a "quasi Wolf Rayet star" and is part of the binary system HD 45166 (e.g., <a href="https://ui.adsabs.harvard.edu/abs/2008A%26A...485..245G/abstract" target=_blank>Groh et al., 2008</a>). Even though stripped stars themselves appear rare or are rather difficult to locate, many supernovae thought to result from the collapse of stripped stars have been identified. These stripped-envelope supernovae are, unsurprisingly, hydrogen-poor and constitute about a third of all core-collapse supernovae (<a href="https://ui.adsabs.harvard.edu/abs/2011MNRAS.412.1522S/abstract" target=_blank>Smith et al., 2011</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..120G/abstract" target=_blank>Graur et al., 2017a</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..121G/abstract" target=_blank>Graur et al., 2017b</a>). 
+</p>
+
 <h4 id='part2a' class='mt-4'>Objectives</h4>
 <p>
-  In this lab you will&#8230;
+  In this lab you will learn and practice how to&#8230;
   <ul>
     <li>
-      Deepen your understanding of the <code>binary</code> module by altering the behavior of the accretor through modifying <code>inlist_project</code>
+      Adjust stopping conditions and data reported to the terminal by <code>MESA star</code> to try to produce stripped-envelope supernova progenitor models,
     </li>
     <li>
-      Perform a parameter space study in mass and initial period to demonstrate the variety of supernova types that can be obtained from interacting binaries
+      Perform a parameter-space study to charaterize the likelihood of observatibity of stripped-envelope supernova progenitors in surveys,
     </li>
     <li>
-      Learn how to use <code>run_binary_extras.f90</code> to record and visualize data beyond the default history data columns
+      (Optionally) Use controls in the <code>binary</code> to more accurately model the mass transfer rate onto the black hole companion, and
+    </li>
+    <li>
+      (Optionally) Use <code>run_binary_extras.f90</code> to track a new quantity that relies on properties of the binary rather than just a single star.
     </li>
   </ul>
 </p>
 <h4 id='part2b' class='mt-4'>Stripped-envelope Supernovae</h4>
 <p>
-  There are three main classes of stripped-envelope supernovae, distinguished by how much hydrogen or helium they contain. Following Hachinger et al. (2012), we make the following distinction: 
+  There are three main classes of stripped-envelope supernovae, distinguished by how much hydrogen or helium they contain. Following <a href="https://ui.adsabs.harvard.edu/abs/2012MNRAS.422...70H/abstract" target=_blank>Hachinger et al. (2012)</a>, we make the following distinctions: 
 </p>
 <dl class="row" id='sn_types'>
   <dt class='col-2'>Type IIb</dt>
@@ -896,35 +903,310 @@
   As this list shows, the amount of leftover hydrogen at explosion is an important determinant for the supernova type. In this lab, we will explore how much hydrogen is left on the surface of stripped stars and what its effect is, not the least for what supernova the star produces. 
 </p>
 
+<p class='lead'>
+  <span class='font-weight-bold text-primary'>Task 1: Prepare a Progenitor</span>
+</p>
+<ul class='lead'>
+  <li>Navigate back to the original work directory from minilab 1 (before we implemented the standard mass loss scheme).</li>
+  <li>Change the stopping condition to core carbon-depletion, which we will approximate as when the central abundance of <sup>12</sup>C drops below 10<sup>–2</sup>. This isn't technically "right before" core collapse, but we don't anticipate the outer regions of the star changing substantially between this time and core collapse.</li>
+  <li>Identify and implement the inlist controls that will print the <span class="font-weight-bold">total masses</span> of <sup>1</sup>H and <sup>4</sup>He in the star to the terminal with each time step. Alternatively, edit the text summary in the pgstar window to include these two pieces of data. We'll use this data to predict which type of supernova the stripped star would produce.</li>
+  <li><span class="font-weight-bold">Restart</span> (i.e., <span class="font-weight-bold text-danger">do not start a new run</span>) your model from where it stopped last (this saves a lot of time by skipping the main sequence and helium depletion).</li>
+</ul>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_1a" aria-expanded="true" aria-controls="hint2_1a">
+      Show Hint: The Stopping Condition
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint2_1a">
+    <p class="card-text">
+      There should already a stopping condition present for when central helium falls below 0.20. You need only update the isotope and the threshold.
+    </p>
+    <p class='card-text'>
+      <em>Note:</em> If we were to do a full run rather than a restart, this might pose a problem, because the initial carbon mass fraction would already be below this threshold (it hasn't yet been produced via triple alpha reactions). We would instead need to stop at some point after helium burning has begun and then change the stopping condition (essentially what we've done here) or create a clever stopping condition in <code>run_star_extras.f90</code>.
+    </p>
+  </div>
+</div>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_1b" aria-expanded="true" aria-controls="hint2_1b">
+      Show Hint: Tracking <sup>1</sup>H and <sup>4</sup>He
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint2_1b">
+    <p class="card-text">
+      Can't find the inlist controls? They are in the <code>controls</code> namelist (and thus documented in <code>$MESA_DIR/star/defaults/controls.defaults</code>). Search for the word "trace" and see if you can figure out how to use them. You'll need to add three lines total to your <code>controls</code> namelist. You may also need to look in <code>history_columns.list</code> to see which quantities can be tracked.
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3" id='sol2_1_label'>
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_1" aria-expanded="true" aria-controls="sol2_1">
+      Show Solution 1
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_1">
+    <p class='card-text'>
+      First, as a reminder, we wanted to be in the original working directory. If you came to this from the previous minilab, your session was probably in the altered version, so you'd need to execute <kbd>cd ../minilab1</kbd>.
+    </p>
+
+    <p class='card-text'>
+      The stopping condition can simply be adapted from the existing one (of reduced helium mass fraction). You should have something like the following in <code>inlist_donor</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! Central abundance limit</span><span class="w">
+    </span><span class="n">xa_central_lower_limit_species</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'c12'</span><span class="w">
+    </span><span class="n">xa_central_lower_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-2</span></code></pre></figure>
+    <p class="card-text">
+      And to track the values on the terminal, we would add the following lines to the <code>controls</code> namelist, also in <code>inlist_donor</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! track the total masses of h1 and he4</span><span class="w">
+    </span><span class="n">num_trace_history_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="n">trace_history_value_name</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'total_mass_h1'</span><span class="w">
+    </span><span class="n">trace_history_value_name</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'total_mass_he4'</span></code></pre></figure>
+    <p class="card-text">
+      These lines weren't present at all before. Note that we need to first indicate the number of columns to be traced (the first line), and then we need to provide the names of the columns as they would appear in that model's <code>history.data</code>. Fortunately, we were already recording these two values, but if we tried to track the total mass of <sup>12</sup>C, we would need to edit <code>history_columns.list</code> first.
+    </p>
+    <p class="card-text">
+      To restart from the last photo (which should be where we left off from minilab 1), we can simply execute <kbd>./re</kbd>. But, if you wanted to specify the particular photo, you could do something like <kbd>./re x278</kbd>.
+    </p>
+  </div>
+</div>
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Task 2: Supernova Taxonomy</span> Using the final total masses of <sup>1</sup>H and <sup>4</sup>He in the carbon-depleted model and the classification given above, which type of supernova do you think will result from this progenitor?
+</p>
+
+<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Supernova choices">
+  <button class="btn btn-primary quiz-option" data-quiz-correct='false' data-toggle='collapse' data-target='#response-2-2-a' data-group='.taxonomy' aria-expanded="true" aria-controls="#response-2-2-a">
+    Type IIb
+  </button>
+  <button class="btn btn-primary quiz-option" data-quiz-correct='true'data-toggle='collapse' data-target='#response-2-2-b' data-group='.taxonomy' aria-expanded="true" aria-controls="#response-2-2-b">
+    Type Ib
+  </button>
+  <button class="btn btn-primary quiz-option" data-quiz-correct='false' data-toggle='collapse' data-target='#response-2-2-c' data-group='.taxonomy' aria-expanded="true" aria-controls="#response-2-2-c">
+    Type Ic
+  </button>
+</div>
+<div class="card border-danger collapse taxonomy" id="response-2-2-a">
+  <div class="card-body">
+    <h4 class="card-title text-danger">Try Again</h4>
+    <p class="card-text">
+      A type IIb supernova progenitor should have at least 0.03 M<sub>&#8857;</sub> of hydrogen, while this stripped model (without the Vink 17 wind scheme) should only have retained around 10<sup>–8</sup> M<sub>&#8857;</sub> of hydrogen. Check what the final total masses of <sup>1</sup>H and <sup>4</sup>He were in your model and try again. 
+    </p>
+  </div>
+</div>
+<div class="card border-success collapse taxonomy" id="response-2-2-b">
+  <div class="card-body">
+    <h4 class="card-title text-success">Correct</h4>
+    <p class="card-text">
+      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–8</sup> M<sub>&#8857;</sub>, which firmly puts us in type IIbc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
+    </p>
+  </div>
+</div><div class="card border-danger collapse taxonomy" id="response-2-2-c">
+  <div class="card-body">
+    <h4 class="card-title text-danger">Try Again</h4>
+    <p class="card-text">
+      A type Ic supernova progenitor is thought to have less than 0.06 M<sub>&#8857;</sub> of <sup>4</sup>He left, while this model should still contain around 1.4 M<sub>&#8857;</sub>. Check what the final mass of <sup>1</sup>H was to determine if this is a type IIb or type Ib supernova progenitor.
+    </p>
+  </div>
+</div>
+
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Task 3: Back to Vink 2017 Winds</span> Perform task 1 again, but in the work directory with the Vink 2017 wind scheme implemented. Update your inlist(s) in the same way you did for the original work directory (see the <a href="#sol2_1_label">task 1 solution</a> for guidance). Again, <span class="font-weight-bold">restart</span> the run rather than starting it from the beginning.
+</p>
+<p class="lead">
+  This model should enter a second phase of mass transfer. <span class="font-weight-bold text-warning">You do not need to follow it to completion, as it will be quite slow.</span> Instead, stop the model once it is in this second phase of mass transfer and not undergoing rapid changes.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_3" aria-expanded="true" aria-controls="sol2_3">
+      Show Solution 3
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_3">
+    <p class='card-text'>
+      First, as a reminder, we wanted to be in the modified working directory (with the Vink (2017) wind scheme). If you came to this from the previous task, your session was probably in the original version, so you'd need to execute <kbd>cd ../minilab1_vink17</kbd>, though you may have called the working directory something else in minilab 1.
+    </p>
+
+    <p class='card-text'>
+      The stopping condition can simply be adapted from the existing one (of reduced helium mass fraction). You should have something like the following in <code>inlist_donor</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! Central abundance limit</span><span class="w">
+    </span><span class="n">xa_central_lower_limit_species</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'c12'</span><span class="w">
+    </span><span class="n">xa_central_lower_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-2</span></code></pre></figure>
+    <p class="card-text">
+      And to track the values on the terminal, we would add the following lines to the <code>controls</code> namelist, also in <code>inlist_donor</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! track the total masses of h1 and he4</span><span class="w">
+    </span><span class="n">num_trace_history_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="n">trace_history_value_name</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'total_mass_h1'</span><span class="w">
+    </span><span class="n">trace_history_value_name</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'total_mass_he4'</span></code></pre></figure>
+    <p class="card-text">
+      These lines weren't present at all before. Note that we need to first indicate the number of columns to be traced (the first line), and then we need to provide the names of the columns as they would appear in that model's <code>history.data</code>. Fortunately, we were already recording these two values, but if we tried to track the total mass of <sup>12</sup>C, we would need to edit <code>history_columns.list</code> first.
+    </p>
+    <p class="card-text">
+      To restart from the last photo (which should be where we left off from minilab 1), we can simply execute <kbd>./re</kbd>. But, if you wanted to specify the particular photo, you could do something like <kbd>./re x279</kbd>.
+    </p>
+
+    <p class="card-text">
+      Though we specified a stopping condition of carbon depletion, we probably won't get there in a reasonable time. The model should enter a new phase of mass transfer, and time steps will drop down to the single digits in years. This will probably happen within 200 or so timesteps from restarting, at which point you can kill off the run with <kbd>ctrl-c</kbd>.
+    </p>
+  </div>
+</div>
+
+<p>
+  Why can we stop the run even before getting to carbon depletion? Well, even though mass is being lost from the star rather rapidly, it has very little time left to live due to the low energy content in the remaining nuclear fuel. Therefore, its surface properties will not change significantly once the star has entered its second phase of mass transfer. If you have the time, go ahead and leave this model running all the way to carbon depletion; you'll find it won't change things much.
+</p>
+
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Task 4: Supernova Taxonomy revisited</span> Using the final total masses of <sup>1</sup>H and <sup>4</sup>He in the Vink (2017) wind scheme model and the classification given above, which type of supernova do you think will result from this progenitor?
+</p>
+
+<div class="btn-group btn-group-lg d-flex" role="group" aria-label="Supernova choices">
+  <button class="btn btn-primary quiz-option" data-quiz-correct='true' data-toggle='collapse' data-target='#response-2-4-a' data-group='.taxonomy-2' aria-expanded="true" aria-controls="#response-2-4-a">
+    Type IIb
+  </button>
+  <button class="btn btn-primary quiz-option" data-quiz-correct='false'data-toggle='collapse' data-target='#response-2-4-b' data-group='.taxonomy-2' aria-expanded="true" aria-controls="#response-2-4-b">
+    Type Ib
+  </button>
+  <button class="btn btn-primary quiz-option" data-quiz-correct='false' data-toggle='collapse' data-target='#response-2-4-c' data-group='.taxonomy-2' aria-expanded="true" aria-controls="#response-2-4-c">
+    Type Ic
+  </button>
+</div>
+<div class="card border-success collapse taxonomy-2" id="response-2-4-a">
+  <div class="card-body">
+    <h4 class="card-title text-success">Correct</h4>
+    <p class="card-text">
+      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> left on the star (but not much, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it wil still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
+    </p>
+  </div>
+</div>
+<div class="card border-danger collapse taxonomy-2" id="response-2-4-b">
+  <div class="card-body">
+    <h4 class="card-title text-danger">Try Again</h4>
+    <p class="card-text">
+      Double check your final <sup>1</sup>H and <sup>4</sup>He masses. In order to be a type Ib progenitor, we need less than 0.02 M<sub>&#8857;</sub> of <sup>1</sup>H <em>and</em> greater than 0.14 M<sub>&#8857;</sub> of <sup>4</sup>He left.
+    </p>
+  </div>
+</div><div class="card border-danger collapse taxonomy-2" id="response-2-4-c">
+  <div class="card-body">
+    <h4 class="card-title text-danger">Try Again</h4>
+    <p class="card-text">
+      A type Ic supernova progenitor is thought to have less than 0.06 M<sub>&#8857;</sub> of <sup>4</sup>He left, while this model should still contain around 1.7 M<sub>&#8857;</sub>. Check what the final mass of <sup>1</sup>H was to determine if this is a type IIb or type Ib supernova progenitor.
+    </p>
+  </div>
+</div>
+
 <h4 id='part2c' class='mt-4'>Supernova Progenitors</h4>
 <p>
-  The detection of only one intermediate mass stripped star has been published. It is called a "quasi Wolf Rayet star" and is part of the binary system HD 45166 (e.g., <a href="https://ui.adsabs.harvard.edu/abs/2008A%26A...485..245G/abstract" target=_blank>Groh et al., 2008</a>). Even though stripped stars themselves appear rare or are rather difficult to locate, many supernovae thought to result from the collapse of stripped stars have been identified. These stripped-envelope supernovae are, unsurprisingly, hydrogen-poor and constitute about a third of all core-collapse supernovae (<a href="https://ui.adsabs.harvard.edu/abs/2011MNRAS.412.1522S/abstract" target=_blank>Smith et al., 2011</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..120G/abstract" target=_blank>Graur et al., 2017a</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..121G/abstract" target=_blank>Graur et al., 2017b</a>). 
+  To identify what type of star is responsible for a certain type of supernova, archival images of the progenitor can sometimes be found. If the progenitor can be found, it is brighter than the magnitude limit of the observations. iPTF13bvn was a stripped envelope supernova for which the progenitor was detected (<a href="https://ui.adsabs.harvard.edu/abs/2013ApJ...775L...7C/abstract" target=_blank>Cao et al., 2013</a>). It was found to have V-band magnitude of &#8776;25 and the host galaxy is located at &#8776;25 Mpc distance. 
+</p>
+<p>
+  <code>MESA</code> can provide decent estimates for the absolute magnitudes of a large number of stars using a grid of synthetic spectra (<a href="https://ui.adsabs.harvard.edu/abs/1998A%26AS..130...65L/abstract" target=_blank>Lejeune et al., 1998</a>). However, as you have discovered, stripped stars are not standard stars and are therefore not part of standard spectral libraries. 
 </p>
 
-<h4 id='part2d' class='mt-4'>High-mass X-ray Binaries</h4>
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Task 5: Detection Distance</span> Assuming that the model you just created is a good representation of a supernova progenitor, to what maximum distance would it be detectable if available images were limited to the magnitude <var>V</var> < 25 mag?
+</p>
+<ul class="lead">
+  <li>
+    Identify the panel in the pgstar dashboard that shows the evolution of the absolute <var>V</var>-band magnitude. Can you see where <code>MESA</code> is unable to compute a realistic magnitude? No need to re-run your model. You can simply locate the last frame in <code>grid_png</code>.
+  </li>
+  <li>
+    Use the <var>V</var>-band history panel in the pgstar dashboard to find the final <var>V</var>-magnitude of your progenitor model (still in the Vink 2017 wind scheme model).
+  </li>
+  <li>
+    Using the distance modulus relation,
+    \[M_V = m_V - 5\log_{10}\left(\frac{d}{1\,\mathrm{pc}}\right) + 5,\]
+    where <var>M<sub>V</sub></var> is the absolte <var>V</var>-band magnitude, <var>m<sub>V</sub></var> is the apparent <var>V</var>-band magnitude, and <var>d</var> is the distance, compute the furthest distance away that presupernova imaging could detect this progenitor. Assume available imaging is limited to <var>m<sub>V</sub></var> < 25.
+  </li>
+</ul>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_5" aria-expanded="true" aria-controls="sol2_5">
+      Show Solution 5
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_5">
+    <p class='card-text'>
+      The panel of interest is in the lower right of the dashboard. It's below the HR diagram, but to the left of the history panels.
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/grid_001358.jpg' alt='dashboard of stellar evolution plots with a V-band vs model number plot highlighted by a green square'>
+      <figcaption class="figure-caption text-left">
+        Pgstar dashboard frame from He-shell burning stripped supernova progenitor model. The <var>M<sub>V</sub></var> vs. model number panel is highlighted in the green square.
+      </figcaption>
+    </figure>
+
+    <p class='card-text'>
+      From around model 230 to model 330, the magnitude becomes undefined and we see the vertical lines. This happens a few times afterwards, too. The star of course has a well-behaved <var>V</var>-band magnitude at these times, but due to its extreme nature, we have "fallen off the tables" that <code>MESA</code> uses to estimate the magnitudes from effective temperature, luminosity, metallicity, etc.
+    </p>
+
+    <p>
+      At the end of the evolution, though, we do have a <var>V</var>-band magnitude of approximately –6.75. If we set <var>M<sub>V</sub></var> to this value and assume <var>m<sub>V</sub></var> = 25 and plug these into the distance modulus formula to solve for a distance, we find it is about 22 Mpc.
+    </p>
+
+    <p>
+      Thus, if this star had been in the same galaxy as iPTF13bvn, it would not have been detected in presupernova imaging because that galaxy is too distant (at about 25 Mpc).
+    </p>
+  </div>
+</div>
+<p class='mt-4'>
+  The brightness in the <var>V</var>-band of the supernova progenitor is not only determined by the distance, but also by the temperature of the star -- a cooler star emits a larger fraction of its photons in the optical band compared to a hotter star. Since your stripped star model dies during mass transfer, the Roche radius and therefore also the orbital period determines how large and cool the stripped star will be at core-collapse. 
+</p>
+
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Task 6: Varying Parameters</span>
+  Now let's do a parameter-space study to see how the supernova type varies with mass and initial orbital period.
+</p>
+<ul class="lead">
+  <li>
+    Make a copy of your latest work directory (the one with the Vink 2017 wind prescription) and prepare it for modeling a different star. Your "table" will be assigned an initial mass (<var>M</var><sub>1</sub>) and each member of your "table" will pick an initial orbital period from the list in the google sheet. Make sure that the initial mass ratio between the two stars in the binary is <var>q</var>=<var>M</var><sub>2</sub>/<var>M</var><sub>1</sub> = 0.5 - 0.9. Don’t forget to find the new ZAMS model and import it in your inlist.
+  </li>
+  <li>
+    Run your model and report its absolute <var>V</var>-band magnitude and predicted supernova type once it either reaches central carbon depletion or enters the second phase of mass transfer. Recall that you may need to use two stopping conditions and a restart in between, or be clever and create a more complex stopping conditions in <code>run_star_extras.f90</code>.
+  </li>
+</ul>
+
+
+<h4 id='part2d' class='mt-5'>
+  <span class="font-weight-bold">BONUS:</span> High-mass X-ray Binaries
+</h4>
 <p>
-  We are forgetting that the accretor is a black hole! Black holes cannot accrete at infinite rates, but their mass accretion rates are thought to be limited by the so-called Eddington accretion rate. When the accretion rate reaches the Eddington accretion rate, the radiation pressure produced by the accretion is so strong that it can prevent accretion. 
+  We have completely forgotten that the companion is a black hole!
+</p>
+<p>
+  Black holes cannot accrete at infinite rates. Rather, their mass accretion rates are thought to be limited by the so-called Eddington accretion rate. When the accretion rate reaches the Eddington accretion rate, the radiation pressure produced by the accretion is so strong that it can prevent accretion. 
 </p>
 
 <p>
-  If mass accretion is not fully conservative, some material will be lost from the system, and it leaves with some angular momentum, which can affect the binary orbit. If the material is thought to be flung out after spending some time with the accreting star, it is thought to leave with the specific angular momentum equal to that of the accreting star - a process called isotropic re-emission. 
+  The black hole is also moving through stellar wind material as it orbits its companion star. Therefore, the black hole can accrete material also when the stars are detached and mass transfer is not ongoing.
 </p>
 
 <p class='lead'>
-  <span class='font-weight-bold text-primary'>Task 1: Limiting Retention</span> Search <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code> for an inlist option that will limit the mass accretion rate onto the black hole by the eddington accretion rate. Activate that control and re-run the model. Use the results to answer the following questions:
+  <span class='font-weight-bold text-primary'>Bonus Task 7: Updating Black Hole Accretion</span> Search <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code> for an inlist options to accomplish the following and implement them in <code>inlist_project</code> <span class="font-weight-bold">in your working directory from Tasks 3–5 (before the parameter space study)</span>:
 </p>
-<ul class='lead'>
-  <li>Is the accretion efficient? That is, is 100% of the mass lost by the donor accreted by the black hole? If not, estimate the quantity <var>β</var> = <var>M&#775;</var><sub>acc</sub>/<var>M&#775;</var><sub>trans</sub>.</li>
-  <li>What was the final orbital period after mass transfer? Compare to this orbital period to what we found before. Does this result make sense?</li>
+<ul class="lead">
+  <li>
+    Limit accretion onto the black hole by the Eddington accretion rate.
+  </li>
+  <li>
+    Activate accretion of the wind from the donor. Limit this accretion to a maximum of 10% of the stellar wind mass loss (this number is not based in any rigorous reasoning).
+  </li>
 </ul>
+<p class="lead">
+  Also remove the stopping condition based on core composition. We will be stopping the simulation "by hand" once it has entered the second mass transfer phase, so we don't need a stopping condition, and the carbon-depletion one will trigger instantaneously on the ZAMS model.
+</p>
 
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint1_4a" aria-expanded="true" aria-controls="hint1_4a">
-      Show Hint: The Inlist Control
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_7a" aria-expanded="true" aria-controls="hint2_7a">
+      Show Hint: Limiting Retention to Eddington Accretion Rate
     </button>
   </div>
-  <div class="card-body collapse" id="hint1_4a">
+  <div class="card-body collapse" id="hint2_7a">
     <p class="card-text">
       The name of the control is <code>limit_retention_by_mdot_edd</code>. From <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code>:
     </p>
@@ -966,23 +1248,71 @@
 </span><span class="c1">! ::</span><span class="w">
 
     </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
-    <p class='card-text'>
-      But think carefully: in which namelist and inlist should this command go?
+  </div>
+</div>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_7b" aria-expanded="true" aria-controls="hint2_7b">
+      Show Hint: Activating Wind Accretion
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint2_7b">
+    <p class="card-text">
+      The name of the controls are <code>do_wind_mass_transfer_1/2</code> and <code>max_wind_transfer_fraction_1/2</code>. From <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! Wind mass accretion</span><span class="w">
+</span><span class="c1">! ___________________</span><span class="w">
+
+
+</span><span class="c1">! do_wind_mass_transfer_*</span><span class="w">
+</span><span class="c1">! ~~~~~~~~~~~~~~~~~~~~~~~</span><span class="w">
+
+</span><span class="c1">! transfer part of the mass lost due to stellar winds from the mass losing</span><span class="w">
+</span><span class="c1">! component to its companion. Using the Bondi-Hoyle mechanism.</span><span class="w">
+</span><span class="c1">! "\_1" refers to first star, "\_2" to the second one.</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+    </span><span class="n">do_wind_mass_transfer_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span><span class="w">
+    </span><span class="n">do_wind_mass_transfer_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
+   <p class='card-text'>and</p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! max_wind_transfer_fraction_*</span><span class="w">
+</span><span class="c1">! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span class="w">
+
+</span><span class="c1">! Upper limit on the wind transfer fraction for star *</span><span class="w">
+</span><span class="c1">! "\_1" refers to first star, "\_2" to the second one.</span><span class="w">
+
+</span><span class="c1">! ::</span><span class="w">
+
+    </span><span class="n">max_wind_transfer_fraction_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5d0</span><span class="w">
+    </span><span class="n">max_wind_transfer_fraction_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5d0</span></code></pre></figure>
+    <p class="card-text">
+      You will still need to figure out which versions of these (1 or 2) to use and set their values accordingly.
     </p>
   </div>
 </div>
-
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol1_5" aria-expanded="true" aria-controls="sol1_5">
-      Show Solution 1
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_7" aria-expanded="true" aria-controls="sol2_7">
+      Show Solution 7
     </button>
   </div>
-  <div class="card-body collapse" id="sol1_5">
+  <div class="card-body collapse" id="sol2_7">
     <p class='card-text'>
       The following line should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
+    <p class="card-text">
+      and
     </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">do_wind_mass_transfer_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+   </span><span class="n">max_wind_transfer_fraction_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1d0</span></code></pre></figure>    
+    </p>
+    <p class="card-text">
+      To remove the stopping condition, comment out in <code>inlist_donor</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! Central abundance limit</span><span class="w">
+  </span><span class="c1">!  xa_central_lower_limit_species(1) = 'c12'</span><span class="w">
+  </span><span class="c1">!  xa_central_lower_limit(1) = 1d-2</span></code></pre></figure>
     <p class='card-text'>
       To determine if the mass transfer is efficient, we should look at the combined mass of the binary. If it is always 20 M<sub>&#8857;</sub> (since we started with a 12 M<sub>&#8857;</sub> star and an 8 M<sub>&#8857;</sub> black hole). Compare the top history panels from the pgstar dashboard before and after adding this control:
     </p>
@@ -1015,6 +1345,136 @@
   </div>
 </div>
 
+<p class="mt-4">
+  As the black hole accretes material, it emits X-rays. In our model, we have the opportunity to explore different stages of the life of a high mass X-ray binary (HMXB): accompanied by a main sequence star, a stripped star, and detached and semi-detached. First, let’s just implement an approximation for how high the X-ray luminosity from the system is.
+</p>
+<p>
+  The X-ray luminosity, <var>L</var><sub>X</sub> can be approximated by the function
+  \[L_X = \epsilon\frac{GM_{\rm CO}\dot{M}_{\rm acc}}{R_{\rm acc}},\]
+  where <var>M</var><sub>CO</sub> is the mass of the blackhole, <var>M&#775;</var> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>ε</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>CO</sub>/<var>c</var><sup>2</sup>.
+</p>
+
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Bonus Task 8: Tracking X-ray Luminosity</span>
+</p>
+<ul class="lead">
+  <li>
+    Following the simplified calculation for X-ray luminosity above, and assuming that ε = 0.1, write a function in <code>run_binary_extras.f90</code> that adds a new column called <code>log_LX</code> to the <code>binary_history.data</code> file.
+  </li>
+  <li>
+    Un-comment the X-ray luminosity in the pgstar window so you can follow the X-ray emission rate with time (similar to <a href="#task1_5">Bonus Task 5</a> from minilab 1).
+  </li>
+  <li>
+    Wipe out the contents of <code>grid_png</code>, and then compile and run your model from the ZAMS to the second mass transfer phase.
+  </li>
+</ul>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_8a" aria-expanded="true" aria-controls="hint2_8a">
+      Show Hint: Adding a History Column in Binary
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint2_8a">
+    <p class="card-text">
+      The process for adding a history column in <code>run_binary_extras.f90</code> is nearly identical to the way it is done in <code>run_star_extras.f90</code>. The main difference is that you need to use the <code>binary_info</code> object rather than the <code>star_info</code> object.
+    </p>
+  </div>
+</div>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_8b" aria-expanded="true" aria-controls="hint2_8b">
+      Show Hint: Working with the Binary Info Object
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint2_8b">
+    <p class="card-text">
+      Just as you can find components of the <code>star_info</code> object in <code>$MESA_DIR/star_data/public/star_data.inc</code>, the analagous location in <code>binary</code> is <code>$MESA_DIR/binary/public/binary_data.inc</code>.
+    </p>
+    <p>
+      In here, there are objects that record the mass of each component star as well as the accretion rate onto each component star (that one is probably the harder one to identify). These are the only two you will need to compute the X-ray luminosity. Note that many members of this structure are actually arrays with two elements. Element 1 is associated with star 1, and element 2 is associated with star 2.
+    </p>
+    <p>
+      Though you don't need it for this exercise, you can also just get at each star's <code>star_info</code> object with the <code>s1</code> and <code>s2</code> members of the <code>binary_info</code> object. So for instance, if <code>b</code> is initiated as a <code>binary_info</code> object (it's conventional to use "b" for this rather than "s"), you could get at star 1's luminosity via <code>b% s1% photosphere_L</code>. This isn't much help when star 2 is just a point mass, though, since it doesn't have an associated <code>star_info</code> structure!
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_8" aria-expanded="true" aria-controls="sol2_8">
+      Show Solution 8
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_8">
+    <p class='card-text'>
+      To add the history column, we only need to edit one function, <code>how_many_extra_binary_history_columns</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">how_many_extra_binary_history_columns</span><span class="p">(</span><span class="n">binary_id</span><span class="p">)</span><span class="w">
+         </span><span class="k">use</span><span class="w"> </span><span class="n">binary_def</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">binary_info</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">binary_id</span><span class="w">
+         </span><span class="n">how_many_extra_binary_history_columns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">how_many_extra_binary_history_columns</span></code></pre></figure>
+    <p class="card-text">
+      and one subrotune, <code>data_for_extra_binary_history_columns</code>
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_binary_history_columns</span><span class="p">(</span><span class="n">binary_id</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">names</span><span class="p">,</span><span class="w"> </span><span class="n">vals</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">binary_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">b</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">binary_id</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">n</span><span class="w">
+         </span><span class="kt">character</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="n">maxlen_binary_history_column_name</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">names</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w">
+         </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">vals</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w">
+         </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+         </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">binary_ptr</span><span class="p">(</span><span class="n">binary_id</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'failed in binary_ptr'</span><span class="w">
+            </span><span class="k">return</span><span class="w">
+         </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
+
+         </span><span class="n">names</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'log_LX'</span><span class="w">
+         </span><span class="k">call</span><span class="w"> </span><span class="n">set_log_LX</span><span class="p">(</span><span class="n">vals</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w">
+
+         </span><span class="k">contains</span><span class="w">
+
+         </span><span class="k">subroutine</span><span class="w"> </span><span class="n">set_log_LX</span><span class="p">(</span><span class="n">log_L_X</span><span class="p">)</span><span class="w">
+             </span><span class="k">implicit</span><span class="w"> </span><span class="k">none</span><span class="w">
+             </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">log_L_X</span><span class="p">,</span><span class="w"> </span><span class="nb">epsilon</span><span class="p">,</span><span class="w"> </span><span class="n">M_CO</span><span class="p">,</span><span class="w"> </span><span class="n">mdot_acc</span><span class="p">,</span><span class="w"> </span><span class="n">R_acc</span><span class="p">,</span><span class="w"> </span><span class="n">R_sch</span><span class="w">
+             </span><span class="nb">epsilon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-1</span><span class="w">
+             </span><span class="n">M_CO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="o">%</span><span class="w"> </span><span class="n">m</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">
+             </span><span class="n">mdot_acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="o">%</span><span class="w"> </span><span class="n">component_mdot</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">
+             </span><span class="n">R_sch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">standard_cgrav</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_CO</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="p">(</span><span class="n">clight</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">clight</span><span class="p">)</span><span class="w">
+             </span><span class="n">R_acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">R_sch</span><span class="w">
+             </span><span class="n">log_L_X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">safe_log10</span><span class="p">(</span><span class="nb">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">standard_cgrav</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_CO</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mdot_acc</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">R_acc</span><span class="p">)</span><span class="w">
+         </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">set_log_LX</span><span class="w">
+
+      </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_binary_history_columns</span></code></pre></figure>
+    <p class="card-text">
+      You didn't have to break the calculation out into the contained subroutine, but this is similar to how we implemented the flux of H-ionizing photons back in <a href="#task1_5">Bonus Task 5 of minilab 1</a>. Note the use of <code>b% m(2)</code> to get the mass of the black hole in grams, as well as <code>b% component_mdot(2)</code> to get the overall accretion rate of the black hole in g/s. The resulting quantity is the log of the X-ray luminosity in erg/s.
+    </p>
+    <p class="card-text">
+      We also wanted to trigger plotting of the X-ray luminosity on our pgstar dashboard. There's one line in <code>inlist_pgstar_binary</code> that needs to be tweaked, similar to <a href="#task1_5">Bonus Task 5 from minilab 1</a>, which is the third line below, which originally pointed to an empty string:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="c1">! The fourth panel </span><span class="w">
+      </span><span class="c1">! ! ! ! EDIT HERE ! ! ! ! ! ! !</span><span class="w">
+      </span><span class="n">History_Panels1_yaxis_name</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'log_Q0'</span><span class="w">   </span><span class="c1">! Extra exercise, minilab 1</span><span class="w">
+      </span><span class="n">History_Panels1_ymin</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">46</span><span class="w">  </span><span class="c1">! Extra exercise, minilab 1</span><span class="w">
+      </span><span class="n">History_Panels1_other_yaxis_name</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'log_LX'</span><span class="w"> </span><span class="c1">! Extra exercise, minilab 2</span><span class="w">
+      </span><span class="c1">! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !</span></code></pre></figure>
+    <p class="card-text">
+      To clean out the old pngs, we execute <kbd>rm -f grid_png/*</kbd>. Then we can compile with <kbd>./mk</kbd> and run with <kbd>./rn</kbd>, as usual. We stop it manually once it has entered the second mass transfer phase.
+    </p>
+  </div>
+</div>
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Bonus Task 9: X-ray Analysis</span> What different rough X-ray luminosities do you find that the black hole accretion produces for the following stages?
+</p>
+<ul class="lead">
+  <li>Main sequcne + black hole stage</li>
+  <li>First Mass Transfer Phase</li>
+  <li>Black hole orbiting stripped star</li>
+  <li>Second mass transfer phase</li>
+</ul>
 <h2 id="part3" class='mt-5'> Maxilab: Massive Binary Mergers</h2>
 
       </div>
