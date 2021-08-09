@@ -1195,9 +1195,15 @@
   <li>
     Activate accretion of the wind from the donor. Limit this accretion to a maximum of 10% of the stellar wind mass loss (this number is not based in any rigorous reasoning).
   </li>
+  <li>
+    Remove the stopping condition based on core composition.
+  </li>
 </ul>
 <p class="lead">
-  Also remove the stopping condition based on core composition. We will be stopping the simulation "by hand" once it has entered the second mass transfer phase, so we don't need a stopping condition, and the carbon-depletion one will trigger instantaneously on the ZAMS model.
+  We will be stopping the simulation "by hand" once it has entered the second mass transfer phase, so we don't need a stopping condition, and the carbon-depletion one will trigger instantaneously on the ZAMS model.
+</p>
+<p class="lead">
+  Don't start the model yet (we'll get there).
 </p>
 
 <div class="card border-primary mb-3">
@@ -1313,35 +1319,6 @@
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! Central abundance limit</span><span class="w">
   </span><span class="c1">!  xa_central_lower_limit_species(1) = 'c12'</span><span class="w">
   </span><span class="c1">!  xa_central_lower_limit(1) = 1d-2</span></code></pre></figure>
-    <p class='card-text'>
-      To determine if the mass transfer is efficient, we should look at the combined mass of the binary. If it is always 20 M<sub>&#8857;</sub> (since we started with a 12 M<sub>&#8857;</sub> star and an 8 M<sub>&#8857;</sub> black hole). Compare the top history panels from the pgstar dashboard before and after adding this control:
-    </p>
-    <h4>No Limits on Accretion</h4>
-    <figure class='figure'>
-      <img class='figure-img img-fluid rounded' src='images/mass_no_limit.png' alt='graphs showing mass of star decreasing and mass of black hole increasing with time'>
-      <figcaption class="figure-caption text-left">
-        Mass histories for stellar model (star 1) and black hole (star 2) when <em>not</em> limiting retention by the Eddington rate. This mass transfer is <strong>conservative</strong> because we specifically disallowed any losses in <code>inlist_project</code> (though wind mass loss from star 1 is actually lost from the system, so the total mass at the end of the evolution is less than the original 20 M<sub>&#8857;</sub>.
-      </figcaption>
-    </figure>
-
-    <h4>Eddington-limited Accretion</h4>
-    <figure class='figure'>
-      <img class='figure-img img-fluid img-rounded' src='images/mass_limited.png' alt='graphs showing mass of star decreasing while mass of black hole remains constant'>
-      <figcaption class="figure-caption text-left">
-        Mass histories for stellar model (star 1) and black hole (star 2) when accretion retention <em>is limited</em> by the Eddington rate.
-      </figcaption>
-    </figure>
-    <p class='card-text'>
-      As we can see, applying the eddington limit scheme results in <strong>nonconservative mass transfer</strong>, as evidenced by apparently constant black hole mass while the donor loses mass. 
-    </p>
-
-    <p class='card-text'>
-      We can estimate <var>β</var> by computing the change in mass of the black hole and dividing it by the magnitude of the change in mass of the donor star. From the last lines of data in the terminal output, we can find the final value of <var>M</var><sub>1</sub> is 4.390338 M<sub>&#8857;</sub>, while the final mass of the black hole, <var>M</var><sub>2</sub>, is 8.007592 M\<sub>&#8857;</sub>. Their starting masses were 12 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub>, respectively. Thus, the mass retention efficiency is
-    </p>
-    \[\beta = \frac{M_{2,f} - M_{2,i}}{\left\vert M_{1,f} - M_{1,i}\right\vert} = \frac{8.007592\,M_\odot - 8.000000\,M_\odot}{\left\vert 4.390338\,M_\odot - 12.000000\,M_\odot\right\vert} = 0.000998 \approx 0.1\%\]
-    <p class='card-text'>
-      The final orbital period is approximately 57.8 days, which is larger than what we found when we didn't limit the accretion rate. This might be surprising since this simulation lost more angular momentum due to nonconservative mass transfer, but remember that the decreased mass of the system itself means a decreased angular momentum even if the period may have increased somewhat.
-    </p>
   </div>
 </div>
 
@@ -1350,8 +1327,8 @@
 </p>
 <p>
   The X-ray luminosity, <var>L</var><sub>X</sub> can be approximated by the function
-  \[L_X = \epsilon\frac{GM_{\rm CO}\dot{M}_{\rm acc}}{R_{\rm acc}},\]
-  where <var>M</var><sub>CO</sub> is the mass of the blackhole, <var>M&#775;</var> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>ε</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>CO</sub>/<var>c</var><sup>2</sup>.
+  \[L_X = \epsilon\frac{GM_{\rm BH}\dot{M}_{\rm acc}}{R_{\rm acc}},\]
+  where <var>M</var><sub>BH</sub> is the mass of the blackhole, <var>M&#775;</var> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>ε</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>BH</sub>/<var>c</var><sup>2</sup>.
 </p>
 
 <p class='lead mt-4'>
@@ -1439,13 +1416,13 @@
 
          </span><span class="k">subroutine</span><span class="w"> </span><span class="n">set_log_LX</span><span class="p">(</span><span class="n">log_L_X</span><span class="p">)</span><span class="w">
              </span><span class="k">implicit</span><span class="w"> </span><span class="k">none</span><span class="w">
-             </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">log_L_X</span><span class="p">,</span><span class="w"> </span><span class="nb">epsilon</span><span class="p">,</span><span class="w"> </span><span class="n">M_CO</span><span class="p">,</span><span class="w"> </span><span class="n">mdot_acc</span><span class="p">,</span><span class="w"> </span><span class="n">R_acc</span><span class="p">,</span><span class="w"> </span><span class="n">R_sch</span><span class="w">
+             </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">log_L_X</span><span class="p">,</span><span class="w"> </span><span class="nb">epsilon</span><span class="p">,</span><span class="w"> </span><span class="n">M_BH</span><span class="p">,</span><span class="w"> </span><span class="n">mdot_acc</span><span class="p">,</span><span class="w"> </span><span class="n">R_acc</span><span class="p">,</span><span class="w"> </span><span class="n">R_sch</span><span class="w">
              </span><span class="nb">epsilon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-1</span><span class="w">
-             </span><span class="n">M_CO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="o">%</span><span class="w"> </span><span class="n">m</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">
+             </span><span class="n">M_BH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="o">%</span><span class="w"> </span><span class="n">m</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">
              </span><span class="n">mdot_acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="o">%</span><span class="w"> </span><span class="n">component_mdot</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">
-             </span><span class="n">R_sch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">standard_cgrav</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_CO</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="p">(</span><span class="n">clight</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">clight</span><span class="p">)</span><span class="w">
+             </span><span class="n">R_sch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">standard_cgrav</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_BH</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="p">(</span><span class="n">clight</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">clight</span><span class="p">)</span><span class="w">
              </span><span class="n">R_acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">R_sch</span><span class="w">
-             </span><span class="n">log_L_X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">safe_log10</span><span class="p">(</span><span class="nb">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">standard_cgrav</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_CO</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mdot_acc</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">R_acc</span><span class="p">)</span><span class="w">
+             </span><span class="n">log_L_X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">safe_log10</span><span class="p">(</span><span class="nb">epsilon</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">standard_cgrav</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_BH</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mdot_acc</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">R_acc</span><span class="p">)</span><span class="w">
          </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">set_log_LX</span><span class="w">
 
       </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">data_for_extra_binary_history_columns</span></code></pre></figure>
@@ -1467,14 +1444,109 @@
   </div>
 </div>
 <p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Bonus Task 9: X-ray Analysis</span> What different rough X-ray luminosities do you find that the black hole accretion produces for the following stages?
+  <span class='font-weight-bold text-primary'>Bonus Task 9: Mass Transfer Efficiency</span> What happens to the mass transfer? Is it conservative (100% of the mass lost from the donor is accreted by the black hole) or non-conservative? How does this compare to the previous models?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_9" aria-expanded="true" aria-controls="sol2_9">
+      Show Solution 9
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_9">
+    <p class='card-text'>
+      Let's compare the original accretion settings to the Eddington-limited + wind accretion scenario:
+    </p>
+    <h4>No Limits on Accretion</h4>
+    <figure class='figure text-center'>
+      <img class='figure-img img-fluid rounded' src='images/mass_no_limit.png' alt='graphs showing mass of star decreasing and mass of black hole increasing with time'>
+      <figcaption class="figure-caption text-left">
+        Mass histories for stellar model (star 1) and black hole (star 2) when <em>not</em> limiting retention by the Eddington rate. This mass transfer is <strong>conservative</strong> because we specifically disallowed any losses in <code>inlist_project</code> (though wind mass loss from star 1 is actually lost from the system, so the total mass at the end of the evolution is less than the original 20 M<sub>&#8857;</sub>.
+      </figcaption>
+    </figure>
+
+    <h4>Eddington-limited + Wind Accretion</h4>
+    <figure class='figure text-center'>
+      <img class='figure-img img-fluid img-rounded' src='images/mass_limited.png' alt='graphs showing mass of star decreasing while mass of black hole remains constant'>
+      <figcaption class="figure-caption text-left">
+        Mass histories for stellar model (star 1) and black hole (star 2) when accretion retention <em>is limited</em> by the Eddington rate.
+      </figcaption>
+    </figure>
+    <p class='card-text'>
+      As we can see, applying the eddington limit scheme results in <strong>nonconservative mass transfer</strong>, as evidenced by apparently constant black hole mass while the donor loses mass. As it turns out, almost none of mass lost from the donor actually makes it to the black hole since the eddington accretion rate is so small compared to the transfer rates.
+    </p>
+  </div>
+</div>
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Bonus Task 10: X-ray Analysis</span> What different rough X-ray luminosities do you find that the black hole accretion produces for the following stages?
 </p>
 <ul class="lead">
   <li>Main sequence + black hole stage</li>
-  <li>First Mass Transfer Phase</li>
+  <li>First mass transfer phase</li>
   <li>Black hole orbiting stripped star</li>
   <li>Second mass transfer phase</li>
 </ul>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_10" aria-expanded="true" aria-controls="sol2_10">
+      Show Solution 10
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_10">
+    <p class='card-text'>
+      Now let's look at the history of the X-ray luminosity along with the mass transfer rate.
+    </p>
+    <figure class='figure text-center'>
+      <img class='figure-img img-fluid rounded' src='images/L_X_limited.png' alt='two graph vertically-stacked graphs divided horizontally into four portions'>
+      <figcaption class="figure-caption text-left">
+        Lower history panels from the run performed in Bonus Task 8. The panels are divided horizontally into the four phases, which we can identify as when mass transfer rate (blue line on top panel) first shoots up, indicating the beginning of the first mass transfer phase. Then the line dropps down around model 300, indicating the end of this mass transfer phase and the beginning of the stripped star/black hole phase. Finally, the transfer rate jumps up again after model number 500, starting the second mass transfer phase.
+      </figcaption>
+    </figure>
+    <p class="card-text">
+      The plot above is divided into four phases according to the mass transfer rate (see the caption for more). As the mass transfer rate changes, so too does the X-ray emission from the black hole. From this panel, we recover the following rough values:
+    </p>
+    <ul class="card-text">
+      <li>
+        Main sequence + black hole: Varies from ~10<sup>34</sup> to ~10<sup>37</sup> erg/s (the jump towards 10<sup>37</sup> occurs at the bistability jump, when the wind mass loss rate increases substantially)
+      </li>
+      <li>
+        First mass transfer phase: Roughly 3 &#215; 10<sup>38</sup> erg/s
+      </li>
+      <li>
+        Black hole orbiting stripped star: Varies between ~10<sup>36</sup> and ~10<sup>37</sup> erg/s
+      </li>
+      <li>
+        Second mass transfer phase: Back to around 10<sup>38</sup> erg/s
+      </li>
+      Unsurprisingly, the rise in mass transfer rate begets a strong X-ray luminosity since that luminosity is generated by gravitational losses from materially as it is accreted onto the black hole.
+    </ul>
+  </div>
+</div>
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Bonus Task 11: Ultraluminous X-ray Sources</span> Ultraluminous X-ray sources (ULXs) have X-ray luminosities above 10<sup>39</sup> erg/s. Does your model ever reach such a stage? What kinds of systems do you expect can become ULXs, and/or what assumptions would need to be relaxed to get a ULX?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_11" aria-expanded="true" aria-controls="sol2_11">
+      Show Solution 11
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_11">
+    <p class='card-text'>
+      As evidenced in the last solution, this model never does become as bright as a ULX. To be able to reach higher X-ray luminosities, there are at least three possibilities:
+    </p>
+    <ol class="card-text">
+      <li>
+        The black hole accretes at super-Eddington mass accretion rates (likely in a non-spherically symmetric fashion so the excess radiation pressure can be relieved).
+      </li>
+      <li>
+        The black hole substantially more massive, and therefore it has a higher Eddington accretion rate.
+      </li>
+      <li>
+        The efficiency parameter is actually higher than 0.1.
+      </li>
+    </ol>
+  </div>
+</div>
 <h2 id="part3" class='mt-5'> Maxilab: Massive Binary Mergers</h2>
 
       </div>
