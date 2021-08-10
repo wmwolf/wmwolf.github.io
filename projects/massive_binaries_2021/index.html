@@ -46,6 +46,10 @@
     <a class="nav-link ml-3 my-1" href="#part2d">High-mass X-ray Binaries <em>(Bonus)</em></a>
   </nav>
   <a class="nav-link part-header" href="#part3">Maxilab: Massive Binary Mergers</a>
+  <nav class="nav nav-pills flex-column" id="part3-subparts">
+    <a href="#part3a" class="nav-link ml-3 my-1">Objectives</a>
+    <a href="#part3b" class="nav-link ml-3 my-1">Modeling a Merged Star</a>
+  </nav>
 </nav>
 
       </div>
@@ -1548,6 +1552,321 @@
   </div>
 </div>
 <h2 id="part3" class='mt-5'> Maxilab: Massive Binary Mergers</h2>
+<p class="font-italic">
+  Note: This lab was inspired by the evolution of merger products desribed in <a href="https://ui.adsabs.harvard.edu/abs/2020ApJ...904L..13R" target=_blank>Renzo et al., (2020)</a>.
+</p>
+<p>
+  In the minilabs, we modeled the evolution of systems undergoing mass transfer and the associated envelope stripping. But, about a quarter of all massive stars are expected to merge with their companions, for example when the mass transfer becomes unstable. <code>MESA</code> cannot model common envelope evolution, so when a common envelope is expected to be initiated, <code>MESA</code> stops. Even though we don’t have the full evolution leading to the merger product, we can come up with a possible outcome of a common envelope evolution and then model the future evolution of the merged binary. 
+</p>
+<h4 id="part3a" class='mt-4'> Objectives</h4>
+<p>In this maxilab, we will</p>
+<ul>
+  <li>
+    Evolve both stars in a binary starting from their zero-age main-sequences until a common envelope should develop. 
+  </li>
+  <li>
+    Make an assumption for how much mass is lost during the merger and how to arrange the interior of the merger product. 
+  </li>
+  <li>
+    To prepare the merger product, we will first relax the mass to the mass corresponding to the mass we decided for the merger product. Then, we will relax the interior composition to match our assumptions. 
+  </li>
+  <li>
+    Finally, we will evolve the merger product, exploring its properties during life and before death. 
+  </li>
+</ul>
+<h4 id="part3b" class='mt-4'>Modeling a Merged Star</h4>
+<h5>Evolving a binary until coalescence is initiated</h5>
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Task 1: Get Set Up</span> 
+</p>
+<ul class="lead">
+  <li>
+    Download the maxilab starting directory (below, or on Dropbox/Zenodo) and place it where it is most convenient (likely in the same place as the <code>minilab1</code> and <code>ZAMS_models</code> directories), unzipping or untarring if necessary.
+  </li>
+  <li>
+    Inside this directory, enter <code>1_evolve_binary</code>, which is the first of several working directories we will use. Switch on the evolution for <em>both</em> stars, and choose masses of 16 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub>. Be sure to use the right ZAMS models <em>for each star</em>.
+  </li>
+  <li>
+    Update the initial period to 500 days.
+  </li>
+  <li>
+    Compile and run the model
+  </li>
+  <li>
+    Identify in which evolutionary stage and for what reason the model stops.
+  </li>
+</ul> 
+<div class="text-center mb-4">
+  <a href="maxilab.tar.gz" download>
+    <button class='btn btn-primary btn-lg'>
+      Download Maxilab Directory
+    </button>
+  </a>
+</div>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint3_1a" aria-expanded="true" aria-controls="hint3_1a">
+      Show Hint: What's that stupid <code class="text-white">tar</code> command?
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint3_1a">
+    <p class="card-text">
+      Glad you asked. It's <kbd>tar -xvzf maxilab.tar.gz</kbd>. It should create a directory called <code>maxilab</code>.
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_1" aria-expanded="true" aria-controls="sol3_1">
+      Show Solution 1
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_1">
+    <p class='card-text'>
+      Turn on evolving both stars, set the masses of the stars, and adjust the initial period in the <code>binary</code> inlist, <code>inlist_project</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+</span><span class="p">&amp;</span><span class="n">binary_job</span><span class="w">
+
+ </span><span class="c1">! What inlist to use for the first star  </span><span class="w">
+   </span><span class="n">inlist_names</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inlist1'</span><span class="w"> 
+   </span><span class="n">inlist_names</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inlist2'</span><span class="w">
+
+ </span><span class="c1">! Whether to evolve both stars in the system or treat one as a point mass</span><span class="w">
+   </span><span class="n">evolve_both_stars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+
+</span><span class="p">/</span><span class="w"> </span><span class="c1">! end of binary_job namelist</span><span class="w">
+
+
+</span><span class="p">&amp;</span><span class="n">binary_controls</span><span class="w">
+         
+ </span><span class="c1">! Initial conditions for the binary</span><span class="w">
+   </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">16.0d0</span><span class="w">  </span><span class="c1">! donor mass in Msun</span><span class="w">
+   </span><span class="n">m2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">8.0d0</span><span class="w"> </span><span class="c1">! companion mass in Msun</span><span class="w">
+   </span><span class="n">initial_period_in_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">500.0d0</span><span class="w">
+
+ </span><span class="c1">! rest of the inlist omitted</span></code></pre></figure>
+    <p class="card-text">
+      We also need to updated the models loaded by <star> for stars 1 and 2 to be the 16 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub> models, respectively. You either need to copy the models into <code>1_evolve_binary</code> or provide a path to the files. We'll assume you have copied the models in (via something like <kbd>cp ../../ZAMS_modesl/zams_8Msun.mod ./</kbd>). Then in <code>inlist1</code>, you'll need
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist1</span><span class="w">
+</span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
+
+  </span><span class="c1">! Load ZAMS model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'zams_16Msun.mod'</span><span class="w">
+
+ </span><span class="c1">! rest of the inlist omitted</span></code></pre></figure>
+    <p class="card-text">
+      And in <code>inlist2</code>, you'll similarly need
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inilst2</span><span class="w">
+</span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
+
+  </span><span class="c1">! Load ZAMS model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'zams_8Msun.mod'</span><span class="w">
+
+ </span><span class="c1">! rest of the inlist omitted</span></code></pre></figure>
+    <p class="card-text">
+      And then compile and run as usual: <kbd>./mk && ./rn</kbd>. The simulation should end after around 173 timesteps with the final frames of the pgstar output for the two stars shown below (they aren't saved for you anymore).
+    </p>
+
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/twin_panel_contact.png' alt='two pgstar dashboards'>
+      <figcaption class="figure-caption text-left">
+        The final pgstar frames for the two stars (16 M<sub>&#8857;</sub> on the left, 8 M<sub>&#8857;</sub> on the right). Note that even though the model numbers and ages don't match, this is an artifact of the model numbers and ages saved in the initial models; <code>binary</code> is evolving both stars with equal timesteps.
+      </figcaption>
+    </figure>
+
+    <p class="card-text">
+      The simulation should end when the donor star (16 M<sub>&#8857;</sub>) has started core helium burning and is red and large (<var>R</var> &#8776; 340 R<sub>&#8857;</sub>). It also has started to develop a convective envelope because it is close to the Hayshi track. The accreting star has become brighter and bloated from the accretion, causing it to also fill its Roche lobe. Because the accretor star fills its Roche lobe, <code>MESA</code> stops.
+    </p>
+  </div>
+</div>
+<p>
+  Whether accretor stars can stably accrete the material they are fed during Hertzsprung gap Roche lobe overflow is uncertain. The later during the Hertzsprung gap the donor fills its Roche lobe, the faster is the flow of material as the thermal timescale of the donor decreases, making it more and more difficult for the accretor star to accrete the material. Here, let’s assume that the two stars in the binary you just created actually will lead to the development of a common envelope and a subsequent merger.
+</p>
+
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Task 2: Merger Mass</span>
+  Assuming no mass is lost during the merger, what will be the mass of the merger product?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_2" aria-expanded="true" aria-controls="sol3_2">
+      Show Solution 2
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_2">
+    <p class='card-text'>
+      The final masses of the two stars were 15.4 M<sub>&#8857;</sub> and 8.3 M<sub>&#8857;</sub>. If there is no mass lost, the merger should contain all of this matter, and thus have a mass of <strong class="font-weight-bold">23.7 M<sub>&#8857;</sub></strong>.
+    </p>
+  </div>
+</div>
+<h5>Constructing a Fake Merger Product</h5>
+<p>
+  <code>MESA</code> has capabilities to create and evolve many different types of structures, not all necessarily physically motivated. To mimic a merger product, let’s use this capability and fake the resulting star. 
+</p>
+<p>
+  To be able to evolve a merger product, we must first create the model to start from. To do this, we begin with making a model with the right mass, and then improving it to also have the composition we want. 
+</p>
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Task 3: Faking a Merger</span>
+  We need to create a starting model that has the total mass of the merger product. To do that, use the work directory <code>2_relax_mass</code>. Start with studying the <code>inlist_project</code> file.
+</p>
+<p class="lead">
+  We need a model to start from, it doesn’t matter very much which one, but we have a model with quite close mass created from the previous step -- the final model for the donor. Start the mass relaxation from this model and also adjust the total mass that you would like to reach. Compile and run the model. See how you reach the appropriate mass in the terminal.
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_3" aria-expanded="true" aria-controls="sol3_3">
+      Show Solution 3
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_3">
+    <p class='card-text'>
+      First update the saved model's filename. You could copy the final model for the donor from the previous directory and simply use <code>'M1.mod'</code>, or you can reference it directly from the previous work directory, which might be nice if this directory should be run in succession with the previous. We'll do that here:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+</span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
+
+  </span><span class="c1">! Load saved model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'../1_evolve_binary/M1.mod'</span></code></pre></figure>
+    <p class="card-text">
+      We also need to update the final mass after relaxation to 23.7 M<sub>&#8857;</sub>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+</span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
+  </span><span class="c1">! other parts of star_job namelist omitted</span><span class="w">
+
+  </span><span class="c1">! Relax the mass</span><span class="w">
+    </span><span class="n">relax_initial_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">new_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">23.7</span></code></pre></figure>
+    <p class="card-text">
+      The final mass after running can be confirmed from the terminal output (6th column, first row):
+    </p>
+    <pre class='my-0 py-0'><code class='my-0 py-0'>__________________________________________________________________________________________________________________________________________________
+
+       step    lg_Tmax     Teff     lg_LH      lg_Lnuc     Mass       H_rich     H_cntr     N_cntr     Y_surf   eta_cntr   zones  retry
+   lg_dt_yr    lg_Tcntr    lg_R     lg_L3a     lg_Lneu     lg_Mdot    He_core    He_cntr    O_cntr     Z_surf   gam_cntr   iters
+     age_yr    lg_Dcntr    lg_L     lg_LZ      lg_Lphoto   lg_Dsurf   C_core     C_cntr     Ne_cntr    Z_cntr   v_div_cs       dt_limit
+__________________________________________________________________________________________________________________________________________________
+
+       1055   8.209733   3943.130   4.977102   5.120229  23.700000  18.373522   0.000000   0.003426   0.252000  -3.909521   1524      0
+  -2.476449   8.209733   2.890977   3.731701   3.810187 -99.000000   5.326478   0.993923   0.000079   0.006000   0.031750      5
+ 1.3338E+07   2.840863   5.120012   4.500233 -99.000000  -8.671538   0.000000   0.000230   0.001119   0.006077  0.000E+00  max increase</code></pre>
+  </div>
+</div>
+<p>
+  The entropy inside stars typically increases with radius. Entropy can be resembled with the ability to float – higher entropy material floats easier and therefore ends up on the surface. When assembling the two merging stars and deciding what the composition structure of the merger product should be, sorting it according to the specific entropy of the zones is, therefore, a method that has been used when modeling merger products (e.g., <a href="https://ui.adsabs.harvard.edu/abs/2002ApJ...568..939L/abstract" target=_blank>Lombardi et al. 2002</a>). 
+</p>
+
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Task 4: Adjusting the Composition</span>
+  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory 3_relax_composition. Begin with studying the inlist_project file and locate where the relaxation is treated. 
+</p>
+<ul class="lead">
+  <li>
+    Fill in and set up so that the simulation will start from the model with correct mass.
+  </li>
+  <li>
+    You can see that we need to provide a text file with a composition structure. You can either create it yourself if you have <code>python3</code> installed on your computer - then run the python script called <code>construct_merger_composition.py</code> inside your old work directory <code>1_evolve_binary</code>. You can also use pre-created composition files located in the folder <code>merger_composition_files</code>.
+  </li>
+  <li>
+    Compile and run the model. See how the composition of the star changes.
+  </li>
+</ul>
+
+<div class="card border-info mb-3">
+  <div class="card-header text-white bg-info">
+    <h5 class='card-title mb-0'>
+      Composition Creation Tip: Using <code class="text-white">construct_merger_composition.py</code>
+    </h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      Do you have <code>python3</code> installed (check with <kbd>which python3</kbd>) and want to create your own composition profile file? Excellent! The script <code>construct_merger_composition.py</code> should be located at the same level as the other working directories, directly inside <code>maxilab</code>. To use it, do the following (assuming you are in <code>maxilab</code>):
+    </p>
+    <ol class="card-text">
+      <li class='mb-2'>
+        Copy the script into <code>1_evolve_binary</code>:<br>
+        <kbd>cp construct_merger_composition.py 1_evolve_binary/</kbd>
+      </li>
+      <li class='mb-2'>
+        Navigate to <code>1_evolve_binary</code> and execute the script:<br>
+        <kbd>cd 1_evolve_binary</kbd><br>
+        <kbd>python3 construct_merger_composition.py</kbd>
+      </li>
+      <li>
+        Copy the resulting file, <code>merger_composition.txt</code> into the work directory where we need it, <code>3_relax_composition</code>:<br>
+        <kbd>cp 1_evolve_binary/merger_composition.txt 3_relax_composition/</kbd>
+      </li>
+    </ol>
+
+    <h5>What's this script doing?</h5>
+    <p class='card-text'>
+      Go ahead an look inside! It loads the two models into numpy arrays, concatenates them together, sorts them by specific entropy, and then writes the new structure out in a format that the composition relaxing routines can understand.
+    </p>
+  </div>
+</div>
+
+<div class="card border-info mb-3">
+  <div class="card-header text-white bg-info">
+    <h5 class='card-title mb-0'>
+      Composition Creation Tip: Using pre-made composition profiles
+    </h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      Don't have <code>python3</code> installed, or don't care to deal with it? That's okay, too. Just copy the profile you want from <code>maxilab/merger_composition_files</code> into <code>3_relax_composition</code>. You'll need to change the name of the file to simply <code>merger_composition</code> <strong class="font-weight-bold">OR</strong> adjust the name of the file read in (set in <code>inlist_project</code>) to match the file you copied in.
+    </p>
+  </div>
+</div>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_4" aria-expanded="true" aria-controls="sol3_4">
+      Show Solution 4
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_4">
+    <p class='card-text'>
+      To load the correct model, we want load the model we produced in <code>2_relax_mass</code>. Again, we could manually copy that file into <code>3_relax_composition</code>, or we could provide a path to the model in the original directory. The second option is more robust to running the directories in succession, so we'll show that again.
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+</span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
+
+  </span><span class="c1">! Load saved model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'../2_relax_mass/relaxed_mass.mod'</span></code></pre></figure>
+    <p class="card-text">
+      Now note the following lines that tell <code>star</code> to change the composition of the file:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+  </span><span class="c1">! Relax the composition of the star</span><span class="w">
+    </span><span class="n">relax_initial_composition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">num_steps_to_relax_composition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">250</span><span class="w">
+    </span><span class="n">relax_composition_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'merger_composition.txt'</span></code></pre></figure>
+    <p class="card-text">
+      <code>MESA star</code> will try to relax the composition of the star so that it matches the configuration specified in a file called <code>merger_composition.txt</code>. Either copy the result of running the <code>construct_merger_compositon.py</code> script into this working directory (see box above) or copy a composition profile from the <code>merger_composition_files</code> directory and rename it to <code>merger_composition.txt</code> (or change the value in the control to match the name of the file; again, see above).
+    </p>
+    <p class="card-text">
+      After compiling and running you should see a rather strange abundance profile in the <code>pgstar</code> abundances panel:
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/twin_panel_contact.png' alt='pgstar dashboard'>
+      <figcaption class="figure-caption text-left">
+        The final pgstar frames after relaxing the merger product's composition. Note that the abundance profile (see the upper right) is rather messy after sorting the zones by entropy.
+      </figcaption>
+    </figure>
+  </div>
+</div>
+<p>
+  Entropy sorting can give rise to an erratic composition structure, which can be seen in the pgstar window. This is a known behavior, but probably not completely physically realistic. However, as you notice during the composition relaxation, the merger product develops a deep convective envelope (look at the Kippenhahn diagram), which quickly will smoothen the strange composition profile in the next step when we evolve the model with time. 
+</p>
+<h5 class='ht-4'>Evolving the merger product</h5>
 
       </div>
     </div>      
