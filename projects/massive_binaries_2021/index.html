@@ -237,7 +237,7 @@
       Locate the 14 M<sub>&#8857;</sub> zero-age main sequence model in the <code>ZAMS_models</code> folder and make sure your simulation will use it to start from.
     </li>
     <li>
-      Update <code>inlist1</code> to reflect that this starting model uses a different metallicity than the default in <code>MESA</code>.
+      Update <code>inlist_donor</code> to reflect that this starting model uses a different metallicity than the default in <code>MESA</code>.
     </li>
     <li>
       Compile and run the code.
@@ -269,7 +269,7 @@
   </div>
   <div class="card-body">
     <p class='card-text'>
-      Did you download a whole folder or a zipped folder, and then try to use an executable like <kbd>./mk</kbd> or <kbd>./mk</kbd>, only to be greeted by a a message like <code>permission denied: ./mk</code>?
+      Did you download a whole folder or a zipped folder, and then try to use an executable like <kbd>./mk</kbd> or <kbd>./rn</kbd>, only to be greeted by a a message like <code>permission denied: ./mk</code>?
     </p>
 
     <p class='card-text'>
@@ -753,7 +753,7 @@
 </div>
 
 <p>
-  OB-type stars are through to provide most of the ionizing radiation in a stallar population. Let's compare our star to published main sequence OB stars from the literature. Below is a subset of a table taken from <a href="https://ui.adsabs.harvard.edu/abs/2002MNRAS.337.1309S/abstract" target=_blank>Smith et al. 2002</a> (see the full dataset in Table 1 of that paper) that shows how the emission rates of hydrogen-ionizing (<var>Q</var><sub>0</sub>) photons vary with the spectral type of stellar models.
+  OB-type stars are thought to provide most of the ionizing radiation in a stellar population. Let's compare our model to published spectral models of main sequence OB stars. Below is a subset of a table taken from <a href="https://ui.adsabs.harvard.edu/abs/2002MNRAS.337.1309S/abstract" target=_blank>Smith et al. 2002</a> (see the full dataset in Table 1 of that paper) that shows how the emission rates of hydrogen-ionizing (<var>Q</var><sub>0</sub>) photons vary with the spectral type of stellar models.
 </p>
 <div class='row'>
   <div class='col-8 offset-2'>
@@ -841,7 +841,7 @@
   </div>
 </div>
 <p class='lead'>
-  <span class='font-weight-bold text-primary'>Bonus Task 6: Compare to ZAMS Models</span> Look at Table 1 and decide <strong class='font-weight-bold'>which ZAMS stellar model has the most similar rate of H-ionizing photons as your stripped star?</strong> After making this comparison based on <var>Q</var><sub>0</sub> alone, compare how the stellar radius and effective temperature of the stripped star compares with its ZAMS counterpart. 
+  <span class='font-weight-bold text-primary'>Bonus Task 6: Compare to Main Sequence Models</span> Look at Table 1 and decide <strong class='font-weight-bold'>which main sequence stellar model has the most similar rate of H-ionizing photons as your stripped star?</strong> After making this comparison based on <var>Q</var><sub>0</sub> alone, compare how the stellar radius and effective temperature of the stripped model compares with the main sequence stellar model with the most similar <var>Q</var><sub>0</sub>.
 </p>
 
 <div class="card border-success mb-3">
@@ -869,7 +869,7 @@
 <hr class='my-5'>
 <h2 id="part2" class='mt-5'> Minilab 2: Stripped-envelope Supernova Progenitors </h2>
 <p>
-  The detection of only one intermediate mass stripped star has been published. It is called a "quasi Wolf Rayet star" and is part of the binary system HD 45166 (e.g., <a href="https://ui.adsabs.harvard.edu/abs/2008A%26A...485..245G/abstract" target=_blank>Groh et al., 2008</a>). Even though stripped stars themselves appear rare or are rather difficult to locate, many supernovae thought to result from the collapse of stripped stars have been identified. These stripped-envelope supernovae are, unsurprisingly, hydrogen-poor and constitute about a third of all core-collapse supernovae (<a href="https://ui.adsabs.harvard.edu/abs/2011MNRAS.412.1522S/abstract" target=_blank>Smith et al., 2011</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..120G/abstract" target=_blank>Graur et al., 2017a</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..121G/abstract" target=_blank>Graur et al., 2017b</a>). 
+  Even though only one intermediate mass stripped star has been published, many supernovae thought to result from the collapse of stripped stars have been identified. These stripped-envelope supernovae constitute about a third of all core-collapse supernovae and are, unsurprisingly, hydrogen-poor (<a href="https://ui.adsabs.harvard.edu/abs/2011MNRAS.412.1522S/abstract" target=_blank>Smith et al., 2011</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..120G/abstract" target=_blank>Graur et al., 2017a</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017ApJ...837..121G/abstract" target=_blank>Graur et al., 2017b</a>).
 </p>
 
 <h4 id='part2a' class='mt-4'>Objectives</h4>
@@ -911,8 +911,8 @@
   <span class='font-weight-bold text-primary'>Task 1: Prepare a Progenitor</span>
 </p>
 <ul class='lead'>
-  <li>Navigate back to the original work directory from minilab 1 (before we implemented the standard mass loss scheme).</li>
-  <li>Change the stopping condition to core carbon-depletion, which we will approximate as when the central abundance of <sup>12</sup>C drops below 10<sup>–2</sup>. This isn't technically "right before" core collapse, but we don't anticipate the outer regions of the star changing substantially between this time and core collapse.</li>
+  <li>Navigate back to the original work directory from minilab 1 (before we updated the mass loss scheme).</li>
+  <li>Change the stopping condition to core carbon-depletion, which we will approximate as when the central mass fraction of <sup>12</sup>C drops below 10<sup>–2</sup>. This isn't technically "right before" core collapse, but we don't anticipate the outer regions of the star changing substantially between this time and core collapse.</li>
   <li>Identify and implement the inlist controls that will print the <span class="font-weight-bold">total masses</span> of <sup>1</sup>H and <sup>4</sup>He in the star to the terminal with each time step. Alternatively, edit the text summary in the pgstar window to include these two pieces of data. We'll use this data to predict which type of supernova the stripped star would produce.</li>
   <li><span class="font-weight-bold">Restart</span> (i.e., <span class="font-weight-bold text-danger">do not start a new run</span>) your model from where it stopped last (this saves a lot of time by skipping the main sequence and helium depletion).</li>
 </ul>
@@ -1003,7 +1003,7 @@
   <div class="card-body">
     <h4 class="card-title text-success">Correct</h4>
     <p class="card-text">
-      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–8</sup> M<sub>&#8857;</sub>, which firmly puts us in type IIbc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
+      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–8</sup> M<sub>&#8857;</sub>, which firmly puts us in type Ibc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
     </p>
   </div>
 </div><div class="card border-danger collapse taxonomy" id="response-2-2-c">
@@ -1016,7 +1016,7 @@
 </div>
 
 <p class='lead mt-5'>
-  <span class='font-weight-bold text-primary'>Task 3: Back to Vink 2017 Winds</span> Perform task 1 again, but in the work directory with the Vink 2017 wind scheme implemented. Update your inlist(s) in the same way you did for the original work directory (see the <a href="#sol2_1_label">task 1 solution</a> for guidance). Again, <span class="font-weight-bold">restart</span> the run rather than starting it from the beginning.
+  <span class='font-weight-bold text-primary'>Task 3: Back to Weaker Winds</span> Perform task 1 again, but in the work directory with the updated weaker wind scheme implemented. Update your inlist(s) in the same way you did for the original work directory (see the <a href="#sol2_1_label">task 1 solution</a> for guidance). Again, <span class="font-weight-bold">restart</span> the run rather than starting it from the beginning.
 </p>
 <p class="lead">
   This model should enter a second phase of mass transfer. <span class="font-weight-bold text-warning">You do not need to follow it to completion, as it will be quite slow.</span> Instead, stop the model once it is in this second phase of mass transfer and not undergoing rapid changes.
@@ -1082,7 +1082,7 @@
   <div class="card-body">
     <h4 class="card-title text-success">Correct</h4>
     <p class="card-text">
-      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> left on the star (but not much, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it wil still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
+      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> of <sup>1</sup>H left on the star (but not much more, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it wil still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
     </p>
   </div>
 </div>
@@ -1121,7 +1121,7 @@
     Use the <var>V</var>-band history panel in the pgstar dashboard to find the final <var>V</var>-magnitude of your progenitor model (still in the Vink 2017 wind scheme model).
   </li>
   <li>
-    Using the distance modulus relation,
+    Using the relation between distance, apparent magnitude, and absolute magnitude,
     \[M_V = m_V - 5\log_{10}\left(\frac{d}{1\,\mathrm{pc}}\right) + 5,\]
     where <var>M<sub>V</sub></var> is the absolte <var>V</var>-band magnitude, <var>m<sub>V</sub></var> is the apparent <var>V</var>-band magnitude, and <var>d</var> is the distance, compute the furthest distance away that presupernova imaging could detect this progenitor. Assume available imaging is limited to <var>m<sub>V</sub></var> < 25.
   </li>
@@ -1149,7 +1149,7 @@
     </p>
 
     <p>
-      At the end of the evolution, though, we do have a <var>V</var>-band magnitude of approximately –6.75. If we set <var>M<sub>V</sub></var> to this value and assume <var>m<sub>V</sub></var> = 25 and plug these into the distance modulus formula to solve for a distance, we find it is about 22 Mpc.
+      At the end of the evolution, though, we do have a <var>V</var>-band magnitude of approximately –6.75. If we set <var>M<sub>V</sub></var> to this value and assume <var>m<sub>V</sub></var> = 25 and plug these into the relation above and solve for distance, we find it is about 22 Mpc.
     </p>
 
     <p>
@@ -1167,10 +1167,13 @@
 </p>
 <ul class="lead">
   <li>
-    Make a copy of your latest work directory (the one with the Vink 2017 wind prescription) and prepare it for modeling a different star. Your "table" will be assigned an initial mass (<var>M</var><sub>1</sub>) and each member of your "table" will pick an initial orbital period from the list in the google sheet. Make sure that the initial mass ratio between the two stars in the binary is <var>q</var>=<var>M</var><sub>2</sub>/<var>M</var><sub>1</sub> = 0.5 - 0.9. Don’t forget to find the new ZAMS model and import it in your inlist.
+    Make a copy of your latest run directory and prepare it for modeling a different stripped star. Your table will be assigned initial masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>), but pick your own initial orbital period from the list in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2"). Don't forget to find the new ZAMS model and load it in your inlist.
   </li>
   <li>
-    Run your model and report its absolute <var>V</var>-band magnitude and predicted supernova type once it either reaches central carbon depletion or enters the second phase of mass transfer. Recall that you may need to use two stopping conditions and a restart in between, or be clever and create a more complex stopping conditions in <code>run_star_extras.f90</code>.
+    The stopping condition for central carbon depletion will no longer work because of the initial composition of the star. You can remove it or stop at helium depletion and restart as previously. In either case, manually stop the run once it is in the second phase of mass transfer.
+  </li>
+  <li>
+    Run your model and report the absolute <var>V</var>-band magnitude of the donor star and your supernova type prediction once it enters its second phase of mass transfer in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a>.
   </li>
 </ul>
 
@@ -1332,7 +1335,7 @@
 <p>
   The X-ray luminosity, <var>L</var><sub>X</sub> can be approximated by the function
   \[L_X = \epsilon\frac{GM_{\rm BH}\dot{M}_{\rm acc}}{R_{\rm acc}},\]
-  where <var>M</var><sub>BH</sub> is the mass of the blackhole, <var>M&#775;</var> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>ε</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>BH</sub>/<var>c</var><sup>2</sup>.
+  where <var>M</var><sub>BH</sub> is the mass of the black hole, <var>M&#775;</var><sub>acc</sub> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>𝜖</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>BH</sub>/<var>c</var><sup>2</sup>.
 </p>
 
 <p class='lead mt-4'>
@@ -1340,7 +1343,7 @@
 </p>
 <ul class="lead">
   <li>
-    Following the simplified calculation for X-ray luminosity above, and assuming that ε = 0.1, write a function in <code>run_binary_extras.f90</code> that adds a new column called <code>log_LX</code> to the <code>binary_history.data</code> file.
+    Following the simplified calculation for X-ray luminosity above, and assuming that 𝜖 = 0.1, write a function in <code>run_binary_extras.f90</code> that adds a new column called <code>log_LX</code> to the <code>binary_history.data</code> file.
   </li>
   <li>
     Un-comment the X-ray luminosity in the pgstar window so you can follow the X-ray emission rate with time (similar to <a href="#task1_5">Bonus Task 5</a> from minilab 1).
@@ -1766,14 +1769,22 @@ ________________________________________________________________________________
 
 <p class='lead mt-4'>
   <span class='font-weight-bold text-primary'>Task 4: Adjusting the Composition</span>
-  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory 3_relax_composition. Begin with studying the inlist_project file and locate where the relaxation is treated. 
+  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory 3_relax_composition. Begin with studying the <code>inlist_project</code> file and locate where the relaxation is treated. 
 </p>
 <ul class="lead">
   <li>
     Fill in and set up so that the simulation will start from the model with correct mass.
   </li>
   <li>
-    You can see that we need to provide a text file with a composition structure. You can either create it yourself if you have <code>python3</code> installed on your computer - then run the python script called <code>construct_merger_composition.py</code> inside your old work directory <code>1_evolve_binary</code>. You can also use pre-created composition files located in the folder <code>merger_composition_files</code>.
+    You can see that we need to provide a text file with a composition structure. You have two options here:
+    <ul>
+      <li>
+        Create it yourself if you have <code>python</code> installed on your computer - then run the python script called <code>construct_merger_composition.py</code> inside your old work directory <code>1_evolve_binary</code>. <b class="font-weight-bold">OR</b>
+      </li>
+      <li>
+        Use pre-created composition files located in the folder <code>merger_composition_files</code>. For this exercise, you'll want to use <code>merger_composition_16_8_HG.txt</code>, which corresponds to coalescence as the primary star crosses the Hertzsprung Gap.
+      </li>
+    </ul> 
   </li>
   <li>
     Compile and run the model. See how the composition of the star changes.
@@ -1788,7 +1799,7 @@ ________________________________________________________________________________
   </div>
   <div class="card-body">
     <p class='card-text'>
-      Do you have <code>python3</code> installed (check with <kbd>which python3</kbd>) and want to create your own composition profile file? Excellent! The script <code>construct_merger_composition.py</code> should be located at the same level as the other working directories, directly inside <code>maxilab</code>. To use it, do the following (assuming you are in <code>maxilab</code>):
+      Do you have <code>python</code> installed (along with <code>numpy</code>) and want to create your own composition profile file? Excellent! The script <code>construct_merger_composition.py</code> should be located at the same level as the other working directories, directly inside <code>maxilab</code>. To use it, do the following (assuming you are in <code>maxilab</code>):
     </p>
     <ol class="card-text">
       <li class='mb-2'>
@@ -1798,7 +1809,7 @@ ________________________________________________________________________________
       <li class='mb-2'>
         Navigate to <code>1_evolve_binary</code> and execute the script:<br>
         <kbd>cd 1_evolve_binary</kbd><br>
-        <kbd>python3 construct_merger_composition.py</kbd>
+        <kbd>python construct_merger_composition.py</kbd>
       </li>
       <li>
         Copy the resulting file, <code>merger_composition.txt</code> into the work directory where we need it, <code>3_relax_composition</code>:<br>
@@ -1821,7 +1832,7 @@ ________________________________________________________________________________
   </div>
   <div class="card-body">
     <p class='card-text'>
-      Don't have <code>python3</code> installed, or don't care to deal with it? That's okay, too. Just copy the profile you want from <code>maxilab/merger_composition_files</code> into <code>3_relax_composition</code>. You'll need to change the name of the file to simply <code>merger_composition</code> <strong class="font-weight-bold">OR</strong> adjust the name of the file read in (set in <code>inlist_project</code>) to match the file you copied in.
+      Don't have <code>python</code> and <code>numpy</code> installed, or don't care to deal with it? That's okay, too. Just copy the profile you want from <code>maxilab/merger_composition_files</code> into <code>3_relax_composition</code>. You'll need to change the name of the file to simply <code>merger_composition</code> <strong class="font-weight-bold">OR</strong> adjust the name of the file read in (set in <code>inlist_project</code>) to match the file you copied in.
     </p>
   </div>
 </div>
