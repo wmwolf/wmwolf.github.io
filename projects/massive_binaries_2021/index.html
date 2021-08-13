@@ -32,23 +32,31 @@
   <a class="nav-link" href="#overview">Overview</a>
   <a class="nav-link part-header" href="#part1">Minilab 1: Envelope Stripping in a Binary</a>
   <nav class="nav nav-pills flex-column" id='part1-subparts'>
-    <a class="nav-link ml-3 my-1" href="#part1a">Objectives</a>
-    <a class="nav-link ml-3 my-1" href="#part1b">Intro to Binary Module</a>
-    <a class="nav-link ml-3 my-1" href="#part1c">Envelope Stripping</a>
-    <a class="nav-link ml-3 my-1" href="#part1d">Updating M&#775;</a>
-    <a class="nav-link ml-3 my-1" href="#part1e">Ionizing Radiation <em>(Bonus)</em></a>
+    <a class="nav-link ml-3 my-0" href="#part1a">Objectives</a>
+    <a class="nav-link ml-3 my-0" href="#part1b">Intro to Binary Module</a>
+    <a class="nav-link ml-3 my-0" href="#part1c">Envelope Stripping</a>
+    <a class="nav-link ml-3 my-0" href="#part1d">Updating M&#775;</a>
+    <a class="nav-link ml-3 my-0" href="#part1e">Ionizing Radiation <em>(Bonus)</em></a>
   </nav>
   <a class="nav-link part-header" href="#part2">Minilab 2: Stripped-envelope Supernova Progenitors</a>
   <nav class="nav nav-pills flex-column" id="part2-subparts">
-    <a class="nav-link ml-3 my-1" href="#part2a">Objectives</a>
-    <a class="nav-link ml-3 my-1" href="#part2b">Stripped-envelope Supernovae</a>
-    <a class="nav-link ml-3 my-1" href="#part2c">Supernova Progenitors</a>
-    <a class="nav-link ml-3 my-1" href="#part2d">High-mass X-ray Binaries <em>(Bonus)</em></a>
+    <a class="nav-link ml-3 my-0" href="#part2a">Objectives</a>
+    <a class="nav-link ml-3 my-0" href="#part2b">Stripped-envelope Supernovae</a>
+    <a class="nav-link ml-3 my-0" href="#part2c">Supernova Progenitors</a>
+    <a class="nav-link ml-3 my-0" href="#part2d">High-mass X-ray Binaries <em>(Bonus)</em></a>
   </nav>
   <a class="nav-link part-header" href="#part3">Maxilab: Massive Binary Mergers</a>
   <nav class="nav nav-pills flex-column" id="part3-subparts">
-    <a href="#part3a" class="nav-link ml-3 my-1">Objectives</a>
-    <a href="#part3b" class="nav-link ml-3 my-1">Modeling a Merged Star</a>
+    <a href="#part3a" class="nav-link ml-3 my-0">Objectives</a>
+    <a href="#part3b" class="nav-link ml-3 my-0">Modeling a Merged Star</a>
+    <nav class="nav nav-pills flex-column" id="part3ab-subparts">
+      <a href="#part3b1" class="nav-link ml-4 my-0">Evolving to Coalescence</a>
+      <a href="#part3b2" class="nav-link ml-4 my-0">Constructing a Fake Merger Product</a>
+      <a href="#part3b3" class="nav-link ml-4 my-0">Evolving the Merger Product</a>
+      <a href="#part3b4" class="nav-link ml-4 my-0">Final Evolutionary Stages</a>
+    </nav>
+    <a href="#part3c" class="nav-link ml-3 my-0">Blue Supergiants as Merger Products</a>
+    <a href="#part3d" class="nav-link ml-3 my-0">Coalescence at Different Evolutionary Stages</a>
   </nav>
 </nav>
 
@@ -153,7 +161,7 @@
   </ul>    
 </p>
 <p class='lead'>
-  <span class='font-weight-bold'> Starting from a full folder download (Dropbox/Zenodo</span>
+  <span class='font-weight-bold'> Starting from a full folder download (Dropbox/Zenodo)</span>
   <ul class='lead'>
     <li>
       Find the appropriate folder on Dropbox (during the summer school) or Zenodo (afterward) and download it.
@@ -1335,7 +1343,7 @@
 <p>
   The X-ray luminosity, <var>L</var><sub>X</sub> can be approximated by the function
   \[L_X = \epsilon\frac{GM_{\rm BH}\dot{M}_{\rm acc}}{R_{\rm acc}},\]
-  where <var>M</var><sub>BH</sub> is the mass of the black hole, <var>M&#775;</var><sub>acc</sub> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>𝜖</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>BH</sub>/<var>c</var><sup>2</sup>.
+  where <var>M</var><sub>BH</sub> is the mass of the black hole, <var>Ṁ</var><sub>acc</sub> is the accretion rate, <var>R</var><sub>acc</sub> is the radius at which the accretion occurs, and <var>𝜖</var> describes how efficiently the conversion from accretion to luminosity is. For black holes, we can assume that accretion occurs at <var>R</var><sub>acc</sub> = 3<var>R</var><sub>Schwarzschild</sub>, where <var>R</var><sub>Schwarzschild</sub> = 2<var>G</var><var>M</var><sub>BH</sub>/<var>c</var><sup>2</sup>.
 </p>
 
 <p class='lead mt-4'>
@@ -1578,9 +1586,9 @@
   </li>
 </ul>
 <h4 id="part3b" class='mt-4'>Modeling a Merged Star</h4>
-<h5>Evolving a binary until coalescence is initiated</h5>
+<h5 id='part3b1' class='mt-4'>Evolving a binary until coalescence is initiated</h5>
 <p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Task 1: Get Set Up</span> 
+  <span class='font-weight-bold text-primary' id='task3_1'>Task 1: Get Set Up</span> 
 </p>
 <ul class="lead">
   <li>
@@ -1708,7 +1716,7 @@
     </p>
   </div>
 </div>
-<h5>Constructing a Fake Merger Product</h5>
+<h5 id='part3b2' class='mt-4'>Constructing a Fake Merger Product</h5>
 <p>
   <code>MESA</code> has capabilities to create and evolve many different types of structures, not all necessarily physically motivated. To mimic a merger product, let’s use this capability and fake the resulting star. 
 </p>
@@ -1716,7 +1724,7 @@
   To be able to evolve a merger product, we must first create the model to start from. To do this, we begin with making a model with the right mass, and then improving it to also have the composition we want. 
 </p>
 <p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Task 3: Faking a Merger</span>
+  <span class='font-weight-bold text-primary' id='task3_3'>Task 3: Faking a Merger</span>
   We need to create a starting model that has the total mass of the merger product. To do that, use the work directory <code>2_relax_mass</code>. Start with studying the <code>inlist_project</code> file.
 </p>
 <p class="lead">
@@ -1768,7 +1776,7 @@ ________________________________________________________________________________
 </p>
 
 <p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Task 4: Adjusting the Composition</span>
+  <span class='font-weight-bold text-primary' id='task3_4'>Task 4: Adjusting the Composition</span>
   You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory 3_relax_composition. Begin with studying the <code>inlist_project</code> file and locate where the relaxation is treated. 
 </p>
 <ul class="lead">
@@ -1877,7 +1885,248 @@ ________________________________________________________________________________
 <p>
   Entropy sorting can give rise to an erratic composition structure, which can be seen in the pgstar window. This is a known behavior, but probably not completely physically realistic. However, as you notice during the composition relaxation, the merger product develops a deep convective envelope (look at the Kippenhahn diagram), which quickly will smoothen the strange composition profile in the next step when we evolve the model with time. 
 </p>
-<h5 class='ht-4'>Evolving the merger product</h5>
+<h5 id='part3b3' class='mt-4'>Evolving the merger product</h5>
+
+<p class="lead">
+  <span class="text-primary font-weight-bold" id='task3_5'>Task 5: Evolve the Merger Product</span>
+  Now your model is ready to be evolved with time, so pick the resulting model from your composition relaxation, <code>merger_start.mod</code>, and place it inside the directory <code>4_evolve_merger</code>. Import the model as a starting model. Set the model to stop when the central helium mass fraction reaches 0.5. Compile and run your model.
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_5" aria-expanded="true" aria-controls="sol3_5">
+      Show Solution 5
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_5">
+    <p class='card-text'>
+      From within <code>3_relax_composition</code>, copy the final model to the next directory:<br>
+      <kbd>cp merger_start.mod ../4_evolve_merger/</kbd>
+    </p>
+    <p class="card-text">
+      and then navigate to that directory:<br>
+      <kbd>cd ../4_evolve_merger</kbd>
+    </p>
+    <p class="card-text">
+      To load that model, add/update the usual controls in the <code>star_job</code> namelist in <code>inlist_project</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+  </span><span class="c1">! Load saved model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'merger_start.mod'</span></code></pre></figure>
+    <p class="card-text">
+      (Or we could directly link to the previous directory by pointing to <code>../3_relax_composition/merger_start.mod</code>). The stopping condition is then (in the <code>controls</code> namelist)
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+   </span><span class="c1">! Stopping condition: central he4 mass fraction</span><span class="w">
+     </span><span class="n">xa_central_lower_limit_species</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'he4'</span><span class="w">
+     </span><span class="n">xa_central_lower_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="w">  </span></code></pre></figure>
+    <p class="card-text">
+      And as usual, compile and run with <kbd>./mk && ./rn</kbd>
+    </p>
+  </div>
+</div>
+<p class="lead">
+  <span class="text-primary font-weight-bold">Task 6: Analyze the Merger Product</span>
+  Answer the following questions about the merger product evolution:
+</p>
+<ul class="lead">
+  <li>What happened to the merger product?</li>
+  <li>What regions of the star are convective?</li>
+  <li>What is the effective temperature? What is the radius? What is its surface gravity?</li>
+  <li>Do you think the merger product could be confused with a single main sequence star?</li>
+</ul>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_6" aria-expanded="true" aria-controls="sol3_6">
+      Show Solution 6
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_6">
+    <p class='card-text'>
+      Let's take a look at one of the final frames from the pgstar dashboard
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/mm_t6_1.png' alt='tableau of plots'>
+      <figcaption class="figure-caption text-left">
+        Frame from the pgstar dashboard near the end of the merger evolution.
+      </figcaption>
+    </figure>
+    <ul class="card-text">
+      <li>
+        <span class="text-info font-weight-bold">What happened to the merger product?</span> The star contracted and heated up. The composition profile has smoothened.
+      </li>
+      <li>
+        <span class="text-info font-weight-bold">What regions of the star are convective?</span> During central helium burning, the helium-burning core is convective as well as the hydrogen-burning shell. The convective layer covering the hydrogen-burning shell extends over &#8776; 8 M<sub>&#8857;</sub> and therefore reaches into the non-burning envelope as well.
+      </li>
+      <li>
+        <span class="text-info font-weight-bold">What is the effective temperature? What is the radius? What is its surface gravity?</span> The final effective temperature is approximately 24,000 K, the radius is about 23 R<sub>&#8857;</sub>, and the surface gravity is about log <var>g</var> &#8776; 3.
+      </li>
+      <li>
+        <span class="text-info font-weight-bold">Do you think the merger product could be confused with a single main sequence star?</span> Apart from the surface gravity being somewhat low for main sequence stars, the effective temperature and radius match well with the expectations for main sequence stars. The luminosity is also similar. This star <em>could</em> most likely be confused with a single main sequence star.
+      </li>
+    </ul>
+  </div>
+</div>
+<p>
+  The contraction of merger products is thought to result from the mass gain: suddenly the helium core constitutes a much lower fraction of the total stellar mass compared to before. A thick convective layer has also been discovered in stellar evolutionary models that burn helium as blue supergiants (e.g., <a href="https://ui.adsabs.harvard.edu/abs/2020A%26A...638A..55K/abstract" target=blank>Klencki et al. 2020</a>). These characteristics of the interior structures of merger products differ from what is expected for single stars with the same temperatures and luminosities.
+</p>
+<p class="lead">
+  <span class="text-primary font-weight-bold">Bonus Task 7: How to Recognize It?</span> The helium-core burning stage is the second longest evolutionary stage of a star, after the main sequence when the star burns hydrogen in the center. Assuming merger products contract like yours, can you think of ways to distinguish them from regular, single, main-sequence stars?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_7" aria-expanded="true" aria-controls="sol3_7">
+      Show Solution 7
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_7">
+    <p class='card-text'>
+      On the surface, the merger products seem similar to main sequence stars, possibly with a little low surface gravity. With data from large spectroscopic surveys it may be possible to identify a subgroup of hot stars with lower surface gravity. However, this could be hard. Asteroseismology could provide the best constraints, since with pulsations it could be possible to characterize the core size and possible convective layers.
+    </p>
+  </div>
+</div>
+<h5 class="mt-4" id="part3b4">Final Evolutionary Stages</h5>
+<p>
+  The merger product is massive enough to eventually undergo core collapse. How does this supernova progenitor look like? Here are some rough characteristic effective temperatures for massive stars (adopted from <a href="https://ui.adsabs.harvard.edu/abs/2009ApJ...703..441D/abstract" target=_blank>Drout et al. 2009</a>):
+</p>
+<ul>
+  <li>
+    <span class="text-primary font-weight-bold">Blue Supergiant (BSG)</span>: > 7,500 K
+  </li>
+  <li>
+    <span class="text-warning font-weight-bold">Yellow Supergiant (YSG)</span>: 4,800 K – 7,500 K
+  </li>
+  <li>
+    <span class="text-danger font-weight-bold">Red Supergiant (RSG)</span>: < 4,800 K
+  </li>
+</ul>
+
+<p class="lead" id='task3_8'>
+  <span class="text-primary font-weight-bold">
+    Task 8: Evolve towards death
+  </span> 
+  Change the stopping condition in your model to central carbon depletion and <em>restart</em> your merger product. What happens to the star? According to the giant star definitions above, what type of star do you think it is at death?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_8" aria-expanded="true" aria-controls="sol3_8">
+      Show Solution 8
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_8">
+    <p class='card-text'>
+      To change the stopping condition, we update the stopping condition from <a href="#task3_5">Task 5</a> to the following:
+    </p>
+    <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
+   </span><span class="c1">! Stopping condition: central he4 mass fraction</span><span class="w">
+     </span><span class="n">xa_central_lower_limit_species</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'c12'</span><span class="w">
+     </span><span class="n">xa_central_lower_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-3</span><span class="w">  </span><span class="c1">! or something else sufficiently small</span></code></pre></figure>
+    <p class="card-text">
+      And then we <span class="font-weight-bold">restart</span> rather than start fresh with <kbd>./re</kbd>.
+    </p>
+    <p class="card-text">
+      To analyze the evolution and final fate of the merger product, let's look at the final fram of the pgstar dashboard:
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/mm_t7_1.png' alt='tableau of plots'>
+      <figcaption class="figure-caption text-left">
+        Frame from the pgstar dashboard after carbon depletion.
+      </figcaption>
+    </figure>
+    <p class="card-text">
+      The star expands and cools again, reaching ~ 1,000R<sub>&#8857;</sub> and 3,800 K. The star develops again a deep convective envelope. At death, this merger product should be a <span class="text-danger font-weight-bold">RSG</span>. Maybe there is extra ejecta mass?
+    </p>
+  </div>
+</div>
+<h4 class="mt-4" id='part3c'>Blue Supergiants as Merger Products – from Life to Death</h4>
+<p>
+  Do all merger products behave like the model you just created? This could mean that regular single stellar population synthesis models under-predict the number of BSGs, since massive single stars are thought to burn helium as RSGs, while your merger product burns helium as a BSG. Merger products have even been suggested as responsible for the blue supergiant progenitors of some supernovae, like SN 1987A (e.g., <a href="https://ui.adsabs.harvard.edu/abs/1990A%26A...227L...9P/abstract" target=_blank>Podsiadlowski et al., 1990</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.4649M/abstract">Menon et al., 2017</a>). Let’s explore how common these blue supergiant phases may be and whether they can last to the end stages of stellar life.
+</p>
+<p class="lead">
+  <span class="text-primary font-weight-bold">
+    Task 9: Change Component Masses
+  </span> 
+  Make a new merger product with different masses: each table is assigned a value for the initial mass of the most massive star in the system and each student can choose a mass for the companion from the table in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab Ylva – Maxilab). Follow the same steps as previously and use color to mark in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> the stellar type of your merger product (1) during helium core burning, and (2) at death. 
+</p>
+<p class='lead'>
+  <b class='font-weight-bold'>Note:</b> your new model may not be as well-behaved as the previous merger product. Try to find working conditions by adapting the period, changing the resolution, updating the steps of the relaxation, etc. Time to be creative!
+</p>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint3_9a" aria-expanded="true" aria-controls="hint3_9a">
+      Show Hint: Workflow
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint3_9a">
+    <p class="card-text">
+      Once you have identified the primary and secondary masses, assemble the ZAMS models you need from the <code>ZAMS_models</code> directory. Then follow the steps from tasks <a href='#task3_1'>1</a>, <a href='#task3_3'>3</a>, <a href="#task3_4">4</a>, <a href='#task3_5'>5</a>, and <a href='#task3_8'>8</a>, being careful to update any models and/or composition files that you need to copy from directory to directory.
+    </p>
+    <p class="card-text">
+      When you are ready to report your SN progenitor types in the google sheet, first report the giant classification during core He burning in the top table by changing the color of the cell the appropriate color (<span class="text-primary">blue</span>, <span class="text-warning">yellow</span>, or <span class="text-danger">red</span>). Then after adjusting your stopping condition and restarting, report the same for the model at core carbon depletion. Don't type any text; just recolor the cell itself using the formatting tools.
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/google_sheet.png' alt='two tables in a spreadsheet'>
+      <figcaption class="figure-caption text-left">
+        The tab of the google sheet we are using for this exercise. Note that the top table is for classificaitons during core He burning, and the bottom is for clasifications at core carbon depletion.
+      </figcaption>
+    </figure>
+  </div>
+</div>
+<h4 class="mt-4" id='part3d'>
+  Coalescence at Different Evolutionary Stages
+</h4>
+<p>
+  Binary stars can merge, for example, because of too long or too short an orbital period, or because of extreme mass ratio. We have explored scenarios when the merger occurs because the binary has a very wide orbit - now let's look at how the merger product evolves if the stars merged already during the main sequence evolution.
+</p>
+<p class="lead">
+  <span class="text-primary font-weight-bold">
+    Task 10: Evolve a Main Sequence Merger
+  </span> 
+  Start from your first merger model (with 16 M<sub>&#8857;</sub> and 8<sub>&#8857;</sub> stars), but change the initial period to 1.5 days and follow the same steps (tasks 1–5). There is a pre-computed composition file for this main sequence merger in the folder <code>merger_composition_files</code> called <code>merger_composition_16_8_MS.txt</code>, but you can also compute your own with the python script.
+</p>
+<p class='lead'>
+  Does the merger product still burn helium as a blue supergiant? Does the evolution in the HR diagram remind you of something?
+</p>
+<p class='lead'>
+  <b class='font-weight-bold'>Note:</b> this model takes a minute to find a good starting point, but it will get going.
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_10" aria-expanded="true" aria-controls="sol3_10">
+      Show Solution 10
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_10">
+    <p class='card-text'>
+      With this short initial orbital period, the stars coalesce when they are both burning hydrogen in their cores. Thus, the resulting merger product also starts with a hydrogen-burning core. Check out the last pgstar frames from the initial binary evolution below.
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/ms_binaries.png' alt='two pgstar dashboards side-by-side'>
+      <figcaption class="figure-caption text-left">
+        The end of binary evolution right before coalescence. Note how both stars still have hydrogen-rich cores and are thus main sequence stars.
+      </figcaption>
+    </figure>
+    <p class="card-text">
+      After rescaling the mass and relaxing the composition, the resulting merger product is also just fusing hydrogen in its core rather than helium. For an example, see the frame below captured during the relaxation process:
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/ms_merger.png' alt='pgstar dashboard'>
+      <figcaption class="figure-caption text-left">
+        The merger product during composition relaxation. Note how it is still fusing hydrogen in its core.
+      </figcaption>
+    </figure>
+    <p class="card-text">
+      After the merger product exhausts its core hydrogen supply, subsequent helium burning is slow in <code>MESA</code> due to a prodigious wind mass loss rate. However, through this phase of burning, the HR diagram already shows us the interesting result: <em>the evolution is similar to a single massive star</em>. It starts off as a hydrogen-burning giant, and then upon depletion, crosses the hertzsprung gap and becomes a red supergiant during core helium burning.
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/ms_merger_final.png' alt='pgstar dashboard'>
+      <figcaption class="figure-caption text-left">
+        Post-merger evolution during the core helium burning phase. Note how the evolution in the HR diagram is very similar to that of a single star as it evolves through and out of the main sequence.
+      </figcaption>
+    </figure>
+
+  </div>
+</div>
 
       </div>
     </div>      
