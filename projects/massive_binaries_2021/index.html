@@ -1135,7 +1135,31 @@
   </div>
 </div>
 
-<h4 id='part2c' class='mt-4'>Supernova Progenitors</h4>
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Bonus Task 5: What About Type Ic Supernovae?</span>
+  If the second phase of mass transfer initiated during the helium shell burning of the stripped star does not last long enough for a significant amount of helium to be stripped off, how can type Ic supernovae be created?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_5" aria-expanded="true" aria-controls="sol2_5">
+      Show Solution 5
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol2_5">
+    <p class='card-text'>
+      There are at least two possible pathways:
+    </p>
+    <ul class="card-text">
+      <li>
+        They can come from single stars with very strong stellar winds (WC stars).
+      </li>
+      <li>
+        Low-mass versions can be created if mass transfer starts earlier for the stripped star, maybe during the central helium burning phase. This can occur if the star is stripped via common-envelope ejection. Then the post-interaction orbital period can be so short that the stripped star fills its tiny Roche lobe during central helium burning.
+      </li>
+    </ul>
+  </div>
+</div>
+<h4 id='part2c' class='mt-5'>Supernova Progenitors</h4>
 <p>
   To identify what type of star is responsible for a certain type of supernova, archival images of the progenitor can sometimes be found. If the progenitor can be found, it is brighter than the magnitude limit of the observations. iPTF13bvn was a stripped envelope supernova for which the progenitor was detected (<a href="https://ui.adsabs.harvard.edu/abs/2013ApJ...775L...7C/abstract" target=_blank>Cao et al., 2013</a>). It was found to have V-band magnitude of &#8776;25 and the host galaxy is located at &#8776;25 Mpc distance. 
 </p>
@@ -1143,8 +1167,8 @@
   <code>MESA</code> can provide decent estimates for the absolute magnitudes of a large number of stars using a grid of synthetic spectra (<a href="https://ui.adsabs.harvard.edu/abs/1998A%26AS..130...65L/abstract" target=_blank>Lejeune et al., 1998</a>). However, as you have discovered, stripped stars are not standard stars and are therefore not part of standard spectral libraries. 
 </p>
 
-<p class='lead mt-5'>
-  <span class='font-weight-bold text-primary'>Task 5: Detection Distance</span> Assuming that the model you just created is a good representation of a supernova progenitor, to what maximum distance would it be detectable if available images were limited to the magnitude <var>V</var> < 25 mag?
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Task 6: Detection Distance</span> Assuming that the model you just created is a good representation of a supernova progenitor, to what maximum distance would it be detectable if available images were limited to the magnitude <var>V</var> < 25 mag?
 </p>
 <ul class="lead">
   <li>
@@ -1162,11 +1186,11 @@
 
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_5" aria-expanded="true" aria-controls="sol2_5">
-      Show Solution 5
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_6" aria-expanded="true" aria-controls="sol2_6">
+      Show Solution 6
     </button>
   </div>
-  <div class="card-body collapse" id="sol2_5">
+  <div class="card-body collapse" id="sol2_6">
     <p class='card-text'>
       The panel of interest is in the lower right of the dashboard. It's below the HR diagram, but to the left of the history panels.
     </p>
@@ -1194,8 +1218,9 @@
   The brightness in the <var>V</var>-band of the supernova progenitor is not only determined by the distance, but also by the temperature of the star -- a cooler star emits a larger fraction of its photons in the optical band compared to a hotter star. Since your stripped star model dies during mass transfer, the Roche radius and therefore also the orbital period determines how large and cool the stripped star will be at core-collapse. 
 </p>
 
-<p class='lead mt-5'>
-  <span class='font-weight-bold text-primary'>Task 6: Varying Parameters</span>
+
+<p class='lead mt-4'>
+  <span class='font-weight-bold text-primary'>Task 7: Varying Parameters</span>
   Now let's do a parameter-space study to see how the supernova type varies with mass and initial orbital period.
 </p>
 <ul class="lead">
@@ -1209,7 +1234,6 @@
     Run your model and report the absolute <var>V</var>-band magnitude of the donor star and your supernova type prediction once it enters its second phase of mass transfer in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a>.
   </li>
 </ul>
-
 
 <h4 id='part2d' class='mt-5'>
   <span class="font-weight-bold">BONUS:</span> High-mass X-ray Binaries
@@ -1226,7 +1250,7 @@
 </p>
 
 <p class='lead'>
-  <span class='font-weight-bold text-primary'>Bonus Task 7: Updating Black Hole Accretion</span> Search <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code> for an inlist options to accomplish the following and implement them in <code>inlist_project</code> <span class="font-weight-bold">in your working directory from Tasks 3–5 (before the parameter space study)</span>:
+  <span class='font-weight-bold text-primary'>Bonus Task 8: Updating Black Hole Accretion</span> Search <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code> for an inlist options to accomplish the following and implement them in <code>inlist_project</code> <span class="font-weight-bold">in your working directory from Tasks 3–5 (before the parameter space study)</span>:
 </p>
 <ul class="lead">
   <li>
@@ -1248,11 +1272,11 @@
 
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_7a" aria-expanded="true" aria-controls="hint2_7a">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_8a" aria-expanded="true" aria-controls="hint2_8a">
       Show Hint: Limiting Retention to Eddington Accretion Rate
     </button>
   </div>
-  <div class="card-body collapse" id="hint2_7a">
+  <div class="card-body collapse" id="hint2_8a">
     <p class="card-text">
       The name of the control is <code>limit_retention_by_mdot_edd</code>. From <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code>:
     </p>
@@ -1298,11 +1322,11 @@
 </div>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_7b" aria-expanded="true" aria-controls="hint2_7b">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_8b" aria-expanded="true" aria-controls="hint2_8b">
       Show Hint: Activating Wind Accretion
     </button>
   </div>
-  <div class="card-body collapse" id="hint2_7b">
+  <div class="card-body collapse" id="hint2_8b">
     <p class="card-text">
       The name of the controls are <code>do_wind_mass_transfer_1/2</code> and <code>max_wind_transfer_fraction_1/2</code>. From <code>$MESA_DIR/binary/defaults/binary_controls.defaults</code>:
     </p>
@@ -1339,11 +1363,11 @@
 </div>
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_7" aria-expanded="true" aria-controls="sol2_7">
-      Show Solution 7
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_8" aria-expanded="true" aria-controls="sol2_8">
+      Show Solution 8
     </button>
   </div>
-  <div class="card-body collapse" id="sol2_7">
+  <div class="card-body collapse" id="sol2_8">
     <p class='card-text'>
       The following line should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
@@ -1372,7 +1396,7 @@
 </p>
 
 <p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Bonus Task 8: Tracking X-ray Luminosity</span>
+  <span class='font-weight-bold text-primary'>Bonus Task 9: Tracking X-ray Luminosity</span>
 </p>
 <ul class="lead">
   <li>
@@ -1388,11 +1412,11 @@
 
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_8a" aria-expanded="true" aria-controls="hint2_8a">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_9a" aria-expanded="true" aria-controls="hint2_9a">
       Show Hint: Adding a History Column in Binary
     </button>
   </div>
-  <div class="card-body collapse" id="hint2_8a">
+  <div class="card-body collapse" id="hint2_9a">
     <p class="card-text">
       The process for adding a history column in <code>run_binary_extras.f90</code> is nearly identical to the way it is done in <code>run_star_extras.f90</code>. The main difference is that you need to use the <code>binary_info</code> object rather than the <code>star_info</code> object.
     </p>
@@ -1400,11 +1424,11 @@
 </div>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_8b" aria-expanded="true" aria-controls="hint2_8b">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_9b" aria-expanded="true" aria-controls="hint2_9b">
       Show Hint: Working with the Binary Info Object
     </button>
   </div>
-  <div class="card-body collapse" id="hint2_8b">
+  <div class="card-body collapse" id="hint2_9b">
     <p class="card-text">
       Just as you can find components of the <code>star_info</code> object in <code>$MESA_DIR/star_data/public/star_data.inc</code>, the analagous location in <code>binary</code> is <code>$MESA_DIR/binary/public/binary_data.inc</code>.
     </p>
@@ -1419,11 +1443,11 @@
 
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_8" aria-expanded="true" aria-controls="sol2_8">
-      Show Solution 8
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_9" aria-expanded="true" aria-controls="sol2_9">
+      Show Solution 9
     </button>
   </div>
-  <div class="card-body collapse" id="sol2_8">
+  <div class="card-body collapse" id="sol2_9">
     <p class='card-text'>
       To add the history column, we only need to edit one function, <code>how_many_extra_binary_history_columns</code>:
     </p>
@@ -1483,16 +1507,16 @@
     </p>
   </div>
 </div>
-<p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Bonus Task 9: Mass Transfer Efficiency</span> What happens to the mass transfer? Is it conservative (100% of the mass lost from the donor is accreted by the black hole) or non-conservative? How does this compare to the previous models?
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Bonus Task 10: Mass Transfer Efficiency</span> What happens to the mass transfer? Is it conservative (100% of the mass lost from the donor is accreted by the black hole) or non-conservative? How does this compare to the previous models?
 </p>
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_9" aria-expanded="true" aria-controls="sol2_9">
-      Show Solution 9
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_10" aria-expanded="true" aria-controls="sol2_10">
+      Show Solution 10
     </button>
   </div>
-  <div class="card-body collapse" id="sol2_9">
+  <div class="card-body collapse" id="sol2_10">
     <p class='card-text'>
       Let's compare the original accretion settings to the Eddington-limited + wind accretion scenario:
     </p>
@@ -1516,8 +1540,8 @@
     </p>
   </div>
 </div>
-<p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Bonus Task 10: X-ray Analysis</span> What different rough X-ray luminosities do you find that the black hole accretion produces for the following stages?
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Bonus Task 11: X-ray Analysis</span> What different rough X-ray luminosities do you find that the black hole accretion produces for the following stages?
 </p>
 <ul class="lead">
   <li>Main sequence + black hole stage</li>
@@ -1527,11 +1551,11 @@
 </ul>
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_10" aria-expanded="true" aria-controls="sol2_10">
-      Show Solution 10
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_11" aria-expanded="true" aria-controls="sol2_11">
+      Show Solution 11
     </button>
   </div>
-  <div class="card-body collapse" id="sol2_10">
+  <div class="card-body collapse" id="sol2_11">
     <p class='card-text'>
       Now let's look at the history of the X-ray luminosity along with the mass transfer rate.
     </p>
@@ -1561,16 +1585,16 @@
     </ul>
   </div>
 </div>
-<p class='lead mt-4'>
-  <span class='font-weight-bold text-primary'>Bonus Task 11: Ultraluminous X-ray Sources</span> Ultraluminous X-ray sources (ULXs) have X-ray luminosities above 10<sup>39</sup> erg/s. Does your model ever reach such a stage? What kinds of systems do you expect can become ULXs, and/or what assumptions would need to be relaxed to get a ULX?
+<p class='lead mt-5'>
+  <span class='font-weight-bold text-primary'>Bonus Task 12: Ultraluminous X-ray Sources</span> Ultraluminous X-ray sources (ULXs) have X-ray luminosities above 10<sup>39</sup> erg/s. Does your model ever reach such a stage? What kinds of systems do you expect can become ULXs, and/or what assumptions would need to be relaxed to get a ULX?
 </p>
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_11" aria-expanded="true" aria-controls="sol2_11">
-      Show Solution 11
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_12" aria-expanded="true" aria-controls="sol2_12">
+      Show Solution 12
     </button>
   </div>
-  <div class="card-body collapse" id="sol2_11">
+  <div class="card-body collapse" id="sol2_12">
     <p class='card-text'>
       As evidenced in the last solution, this model never does become as bright as a ULX. To be able to reach higher X-ray luminosities, there are at least three possibilities:
     </p>
@@ -1741,7 +1765,7 @@
     </p>
   </div>
 </div>
-<h5 id='part3b2' class='mt-4'>Constructing a Fake Merger Product</h5>
+<h5 id='part3b2' class='mt-5'>Constructing a Fake Merger Product</h5>
 <p>
   <code>MESA</code> has capabilities to create and evolve many different types of structures, not all necessarily physically motivated. To mimic a merger product, let’s use this capability and fake the resulting star. 
 </p>
@@ -1910,7 +1934,7 @@ ________________________________________________________________________________
 <p>
   Entropy sorting can give rise to an erratic composition structure, which can be seen in the pgstar window. This is a known behavior, but probably not completely physically realistic. However, as you notice during the composition relaxation, the merger product develops a deep convective envelope (look at the Kippenhahn diagram), which quickly will smoothen the strange composition profile in the next step when we evolve the model with time. 
 </p>
-<h5 id='part3b3' class='mt-4'>Evolving the merger product</h5>
+<h5 id='part3b3' class='mt-5'>Evolving the merger product</h5>
 
 <p class="lead">
   <span class="text-primary font-weight-bold" id='task3_5'>Task 5: Evolve the Merger Product</span>
@@ -1950,7 +1974,7 @@ ________________________________________________________________________________
     </p>
   </div>
 </div>
-<p class="lead">
+<p class="lead mt-5">
   <span class="text-primary font-weight-bold">Task 6: Analyze the Merger Product</span>
   Answer the following questions about the merger product evolution:
 </p>
@@ -2010,7 +2034,7 @@ ________________________________________________________________________________
     </p>
   </div>
 </div>
-<h5 class="mt-4" id="part3b4">Final Evolutionary Stages</h5>
+<h5 class="mt-5" id="part3b4">Final Evolutionary Stages</h5>
 <p>
   The merger product is massive enough to eventually undergo core collapse. How does this supernova progenitor look like? Here are some rough characteristic effective temperatures for massive stars (adopted from <a href="https://ui.adsabs.harvard.edu/abs/2009ApJ...703..441D/abstract" target=_blank>Drout et al. 2009</a>):
 </p>
@@ -2063,7 +2087,7 @@ ________________________________________________________________________________
     </p>
   </div>
 </div>
-<h4 class="mt-4" id='part3c'>Blue Supergiants as Merger Products – from Life to Death</h4>
+<h4 class="mt-5" id='part3c'>Blue Supergiants as Merger Products – from Life to Death</h4>
 <p>
   Do all merger products behave like the model you just created? This could mean that regular single stellar population synthesis models under-predict the number of BSGs, since massive single stars are thought to burn helium as RSGs, while your merger product burns helium as a BSG. Merger products have even been suggested as responsible for the blue supergiant progenitors of some supernovae, like SN 1987A (e.g., <a href="https://ui.adsabs.harvard.edu/abs/1990A%26A...227L...9P/abstract" target=_blank>Podsiadlowski et al., 1990</a>, <a href="https://ui.adsabs.harvard.edu/abs/2017MNRAS.469.4649M/abstract">Menon et al., 2017</a>). Let’s explore how common these blue supergiant phases may be and whether they can last to the end stages of stellar life.
 </p>
@@ -2097,7 +2121,7 @@ ________________________________________________________________________________
     </figure>
   </div>
 </div>
-<h4 class="mt-4" id='part3d'>
+<h4 class="mt-5" id='part3d'>
   Coalescence at Different Evolutionary Stages
 </h4>
 <p>
@@ -2152,7 +2176,7 @@ ________________________________________________________________________________
 
   </div>
 </div>
-<h4 class="mt-4" id="part3e">Rotation of Merger Products <span class="font-italic">(Bonus)</span></h4>
+<h4 class="mt-5" id="part3e"><span class="font-weight-bold">BONUS:</span> Rotation of Merger Products</h4>
 <p>
   After the coalescence of two stars, som eangular momentum is thought to remain, causing the merger product to spin. Let's invoke rotation in the merger product before evolving it further.
 </p>
@@ -2245,7 +2269,33 @@ ________________________________________________________________________________
     </p>
   </div>
 </div>
-
+<p class="lead mt-5">
+  <span class="text-primary font-weight-bold">
+    Bonus Task 12: Spindown
+  </span> 
+  What was the initial equatorial rotation rate of the merger product? What is it at the end of the central hydrogen burning phase?
+</p>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_12" aria-expanded="true" aria-controls="sol3_12">
+      Show Solution 12
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_12">
+    <p class='card-text'>
+      To estimate the desired velocities, take a look at the final frame of the pgstar dashboard, shown below.
+    </p>
+    <figure class='figure'>
+      <img class='figure-img img-fluid rounded' src='images/rot_merger.png' alt='pgstar dashboard'>
+      <figcaption class="figure-caption text-left">
+        Post-merger evolution during the core hydrogen burning phase showing the slowing equatorial rotation rate.
+      </figcaption>
+    </figure>
+    <p class="card-text">
+      Look at the history panels in the lower right. The lower one is the new panel we just added, and it shows that the initial equatorial rotation rate is approximately <b class="font-weight-bold">150 km/s</b>, while at TAMS (around model 40, when radius finishes its initial expansion), it has spun down to around <b class="font-weight-bold">25 km/s</b>. 
+    </p>
+  </div>
+</div>
 
       </div>
     </div>      
