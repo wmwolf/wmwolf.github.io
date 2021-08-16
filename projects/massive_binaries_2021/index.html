@@ -28,37 +28,46 @@
   <div class="container">
     <div class="row">
       <div class="col-md-3 sticky-top align-self-start d-none d-md-block" id="super-side-nav">
-        <nav class="nav nav-pills flex-column" id='side-nav'>
-  <a class="nav-link" href="#overview">Overview</a>
-  <a class="nav-link part-header" href="#part1">Minilab 1: Envelope Stripping in a Binary</a>
-  <nav class="nav nav-pills flex-column" id='part1-subparts'>
-    <a class="nav-link ml-3 my-0" href="#part1a">Objectives</a>
-    <a class="nav-link ml-3 my-0" href="#part1b">Intro to Binary Module</a>
-    <a class="nav-link ml-3 my-0" href="#part1c">Envelope Stripping</a>
-    <a class="nav-link ml-3 my-0" href="#part1d">Updating M&#775;</a>
-    <a class="nav-link ml-3 my-0" href="#part1e">Ionizing Radiation <em>(Bonus)</em></a>
-  </nav>
-  <a class="nav-link part-header" href="#part2">Minilab 2: Stripped-envelope Supernova Progenitors</a>
-  <nav class="nav nav-pills flex-column" id="part2-subparts">
-    <a class="nav-link ml-3 my-0" href="#part2a">Objectives</a>
-    <a class="nav-link ml-3 my-0" href="#part2b">Stripped-envelope Supernovae</a>
-    <a class="nav-link ml-3 my-0" href="#part2c">Supernova Progenitors</a>
-    <a class="nav-link ml-3 my-0" href="#part2d">High-mass X-ray Binaries <em>(Bonus)</em></a>
-  </nav>
-  <a class="nav-link part-header" href="#part3">Maxilab: Massive Binary Mergers</a>
-  <nav class="nav nav-pills flex-column" id="part3-subparts">
-    <a href="#part3a" class="nav-link ml-3 my-0">Objectives</a>
-    <a href="#part3b" class="nav-link ml-3 my-0">Modeling a Merged Star</a>
-    <nav class="nav nav-pills flex-column" id="part3ab-subparts">
-      <a href="#part3b1" class="nav-link ml-4 my-0">Evolving to Coalescence</a>
-      <a href="#part3b2" class="nav-link ml-4 my-0">Constructing a Fake Merger Product</a>
-      <a href="#part3b3" class="nav-link ml-4 my-0">Evolving the Merger Product</a>
-      <a href="#part3b4" class="nav-link ml-4 my-0">Final Evolutionary Stages</a>
+        <ul class="nav nav-pills flex-column" id='side-nav'>
+  <li class='nav-item'>
+    <a class="nav-link part-header" href="#overview">Overview</a>
+  </li>
+  <li class='nav-item'>
+    <a class="nav-link part-header" href="#part1">Minilab 1: Envelope Stripping in a Binary</a>
+    <nav class="nav nav-pills flex-column sub-parts" id='part1-subparts'>
+      <a class="nav-link ml-3 my-0" href="#part1a">Objectives</a>
+      <a class="nav-link ml-3 my-0" href="#part1b">Intro to Binary Module</a>
+      <a class="nav-link ml-3 my-0" href="#part1c">Envelope Stripping</a>
+      <a class="nav-link ml-3 my-0" href="#part1d">Updating M&#775;</a>
+      <a class="nav-link ml-3 my-0" href="#part1e">Ionizing Radiation <em>(Bonus)</em></a>
     </nav>
-    <a href="#part3c" class="nav-link ml-3 my-0">Blue Supergiants as Merger Products</a>
-    <a href="#part3d" class="nav-link ml-3 my-0">Coalescence at Different Evolutionary Stages</a>
-  </nav>
-</nav>
+  </li>
+  <li class='nav-item'>
+    <a class="nav-link part-header" href="#part2">Minilab 2: Stripped-envelope Supernova Progenitors</a>
+    <nav class="nav nav-pills flex-column sub-parts" id="part2-subparts">
+      <a class="nav-link ml-3 my-0" href="#part2a">Objectives</a>
+      <a class="nav-link ml-3 my-0" href="#part2b">Stripped-envelope Supernovae</a>
+      <a class="nav-link ml-3 my-0" href="#part2c">Supernova Progenitors</a>
+      <a class="nav-link ml-3 my-0" href="#part2d">High-mass X-ray Binaries <em>(Bonus)</em></a>
+    </nav>
+  </li>
+  <li class='nav-item'>
+    <a class="nav-link part-header" href="#part3">Maxilab: Massive Binary Mergers</a>
+    <nav class="nav nav-pills flex-column sub-parts" id="part3-subparts">
+      <a href="#part3a" class="nav-link ml-3 my-0">Objectives</a>
+      <a href="#part3b" class="nav-link ml-3 my-0">Modeling a Merged Star</a>
+      <nav class="nav nav-pills flex-column" id="part3ab-subparts">
+        <a href="#part3b1" class="nav-link ml-4 my-0">Evolving to Coalescence</a>
+        <a href="#part3b2" class="nav-link ml-4 my-0">Constructing a Fake Merger Product</a>
+        <a href="#part3b3" class="nav-link ml-4 my-0">Evolving the Merger Product</a>
+        <a href="#part3b4" class="nav-link ml-4 my-0">Final Evolutionary Stages</a>
+      </nav>
+      <a href="#part3c" class="nav-link ml-3 my-0">Blue Supergiants as Merger Products</a>
+      <a href="#part3d" class="nav-link ml-3 my-0">Coalescence at Different Evolutionary Stages</a>
+      <a href="#part3e" class="nav-link ml-3 my-0">Rotation of Merger Products <span class="font-italic">(Bonus)</span></a>
+    </nav>
+  </li>
+</ul>
 
       </div>
       <div class="col-12 col-md-9"  id="binaries-instructions">
@@ -98,10 +107,10 @@
 
 <h4>Science Background</h4>
 <p>
-  Massive stars are important for many fields of astrophysics: they are thought to have provided most of the ionizing radiation that caused cosmic reionization, their remnants merge in gravitational wave events, and they even produced the oxygen we breathe. Understanding the evolution of massive stars is therefore a key component, for example, when interpreting the radiation from distant galaxies or estimating the merger rates of neutron stars.
+  Massive stars are important for many fields of astrophysics: they are thought to have provided most of the ionizing radiation that caused cosmic reionization, their remnants merge in gravitational wave events, and they even produce the oxygen we breathe. Understanding the evolution of massive stars is therefore a key component, for example, when interpreting the radiation from distant galaxies or estimating the merger rates of neutron stars.
 </p>
 <p>
-  However, massive stars are not born alone. In fact, they spend their lives in so close of an orbit with at least one companion star that dramatic interaction is bound to happen as the stars evolve and swell. Through interaction, many solar masses of material can be exchanged between the two stars, X-rays can be produced, and the stars can even coalesce. In this lab, we will use MESA’s binary module to model a variety of interactions in massive binaries.
+  However, massive stars are not born alone. In fact, they spend their lives in so close of an orbit with at least one companion star that dramatic interactions are bound to happen as the stars evolve and swell. Through interaction, many solar masses of material can be exchanged between the two stars, X-rays can be produced, and the stars can even coalesce. In this lab, we will use MESA’s binary module to model a variety of interactions in massive binaries.
 </p>
 
 <h4>The Labs in Summary</h4>
@@ -130,12 +139,17 @@
 <h4 id="part1b" class='mt-4'>Introduction to <code>MESA binary</code></h4>
 <p class='lead'>
   <span class='font-weight-bold text-primary'>Task 0: Download Materials</span>
-  For both of the minilabs, we will use the same basic work directory and models that we will slightly modify. Depending on when you complete this exercise, you might find these files on the summer school dropbox, or later, at the Zenodo repository. For convenience, they are available for download from this tutorial:
+  For both of the minilabs, we will use the same basic work directory that we will slightly modify. Additionally, for <b class="font-weight-bold">all</b> labs, we'll use a suite of pre-computed ZAMS models. Depending on when you complete this exercise, you might find these files on the summer school dropbox, or later, at the Zenodo repository. For convenience, both the work directory and the suite of ZAMS models are available below
 </p>
 <div class="text-center">
-  <a href="Gotberg_minilab1_2.tar.gz" download>
+  <a href="minilab1.tar.gz" download>
     <button class='btn btn-primary btn-lg'>
       Download Minilab Files
+    </button>
+  </a>
+  <a href="ZMAS_models.tar.gz" download>
+    <button class='btn btn-primary btn-lg'>
+      Download ZAMS Models
     </button>
   </a>
 </div>
@@ -232,7 +246,7 @@
 
 <h4 id='part1c' class='mt-4'>Envelope Stripping with a Black Hole Companion</h4>
 <p>
-  About a third of all massive stars are expected to lose their hydrogen-rich envelopes either via mass transfer or the successful ejection of a common envelope. Here, we start exploring envelope-stripping via Roche-lobe overflow (RLOF, mass transfer) in a binary initially composed of a 14 M<sub>&#8857;</sub> star that orbits an 8<sub>&#8857;</sub> black hole every 20 days. To speed up the models, we will model stars at the sub-solar metallicity <var>Z</var> = 0.006 (similar to the metallicity in the Large Magellanic Cloud). 
+  About a third of all massive stars are expected to lose their hydrogen-rich envelopes either via mass transfer or the successful ejection of a common envelope. Here, we start exploring envelope-stripping via Roche-lobe overflow (RLOF, mass transfer) in a binary initially composed of a 14 M<sub>&#8857;</sub> star that orbits an 8 M+<sub>&#8857;</sub> black hole every 20 days. To speed up the models, we will model stars at the sub-solar metallicity <var>Z</var> = 0.006 (similar to the metallicity in the Large Magellanic Cloud). 
 </p>
 
 <p class='lead'>
@@ -951,7 +965,18 @@
     </p>
   </div>
 </div>
-
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint2_1c" aria-expanded="true" aria-controls="hint2_1c">
+      Show Hint: Restarting
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint2_1c">
+    <p class="card-text">
+      You can restart from the last saved photo by simply executing <kbd>./re</kbd>. If instead you know the specific photo you want to restart from, you can execute something like <kbd>./re <var>PHOTO_FILE_NAME</var></kbd>, where <code><var>PHOTO_FILE_NAME</var></code> is something like <code>x850</code> (you can see all photos in the <code>photos</code> folder).
+    </p>
+  </div>
+</div>
 <div class="card border-success mb-3" id='sol2_1_label'>
   <div class="card-header bg-success text-white make-clickable">
     <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol2_1" aria-expanded="true" aria-controls="sol2_1">
@@ -2127,6 +2152,100 @@ ________________________________________________________________________________
 
   </div>
 </div>
+<h4 class="mt-4" id="part3e">Rotation of Merger Products <span class="font-italic">(Bonus)</span></h4>
+<p>
+  After the coalescence of two stars, som eangular momentum is thought to remain, causing the merger product to spin. Let's invoke rotation in the merger product before evolving it further.
+</p>
+<p class="lead">
+  <span class="text-primary font-weight-bold">
+    Bonus Task 11: Invoke Rotation
+  </span> 
+</p>
+<ul class="lead">
+  <li>
+    To make sure that the model we invoke rotation in has fully adjusted, start with evolving <code>merger_start.mod</code> for 10 model numbers and save a model at the end of the run.
+  </li>
+  <li>
+    Look through <code>star_job.defaults</code> for how to make the star rotate. Change the rotation flag to a new rotation flag. Set the spin rate (in Ω/Ω<sub>crit</sub>) to 0.5. Assume 60 steps of relaxation for the model to reach the right spin rate.
+  </li>
+  <li>
+    Activate a panel showing rotation in the pgstar window. Find it by searching for <code>ROTATION</code>.
+  </li>
+  <li>
+    Start a new run from your saved model.
+  </li>
+</ul>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_11" aria-expanded="true" aria-controls="sol3_11">
+      Show Solution 11
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol3_11">
+    <p class='card-text'>
+      To save the non-rotating, but adjusted model, we need to set a stopping condition that makes it stop after 10 timesteps. It's easiest to do this by zeroing out the model number and setting a stopping condition of a maximum model number of 10. Note that all of this is happening in <code>4_evolve_merger</code>, using a model that has already had its mass and composition relaxed.
+    </p>
+
+    <p class="card-text">
+      in <code>star_job</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! inlist_project</span><span class="w">
+  </span><span class="c1">! zero out model number</span><span class="w">
+    </span><span class="n">set_initial_model_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">initial_model_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
+    <p class="card-text">
+      and in <code>controls</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! inlist_project</span><span class="w">
+  </span><span class="c1">! stop after 10 timesteps</span><span class="w">
+    </span><span class="n">max_model_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span></code></pre></figure>
+    <p class="card_text">
+      We also need to save a model at the end of this run. You can call it anything, but we'll assume you called it <code>rot_prep.mod</code>. In <code>star_job</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! inlist_project</span><span class="w">
+  </span><span class="c1">! save model in preparation of turning on rotation</span><span class="w">
+    </span><span class="n">save_model_when_terminate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">save_model_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'rot_prep.mod'</span></code></pre></figure>
+    <p class="card-text">
+      We'll want to run this model (<kbd>./rn</kbd>) to save the adjusted model. We'll then load that model in the next step. So now we'll adjust the name of the loaded and saved models, as well as adding the necessary rotation controls, all in <code>star_job</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! inlist_project</span><span class="w">
+  </span><span class="c1">! Load saved model</span><span class="w">
+    </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'rot_prep.mod'</span><span class="w">
+
+  </span><span class="c1">! save model in preparation of turning on rotation</span><span class="w">
+    </span><span class="n">save_model_when_terminate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">save_model_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'end.mod'</span><span class="w">
+
+  </span><span class="c1">! Invoke rotation</span><span class="w">
+    </span><span class="c1">! first turn rotation on</span><span class="w">
+    </span><span class="n">change_rotation_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">new_rotation_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+
+    </span><span class="c1">! now set rotation in rate in terms of the critical rotation rate</span><span class="w">
+    </span><span class="n">set_omega_div_omega_crit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">new_omega_div_omega_crit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
+
+    </span><span class="c1">! allow adjustment to rotation rate to happen over many timesteps</span><span class="w">
+    </span><span class="n">relax_omega_div_omega_crit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+    </span><span class="n">num_steps_to_relax_rotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span></code></pre></figure>
+    <p class="card_text">
+      A rotation panel is already provided in <code>inlist_pgstar</code>; you only need to replace an empty string with the commented string next to it:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! inlist_pgstar</span><span class="w">
+  </span><span class="c1">! ! ! ! ! DISPLAY ROTATION  ! ! ! ! ! ! </span><span class="w">
+  </span><span class="c1">! The second panel</span><span class="w">
+  </span><span class="n">History_Panels1_yaxis_name</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'surf_avg_v_rot'</span><span class="w">
+  </span><span class="n">History_Panels1_other_yaxis_name</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="w">
+  </span><span class="c1">! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !</span></code></pre></figure>
+    <p class="card-text">
+      And then you are ready to run this new model that loads the adjusted one with <kbd>./rn</kbd>.
+    </p>
+  </div>
+</div>
+
 
       </div>
     </div>      

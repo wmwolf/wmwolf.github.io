@@ -14,6 +14,14 @@
   width:100%
 }
 
+#side-nav nav.sub-parts{
+     display:none;
+}
+
+#side-nav a.part-header.active+nav.sub-parts{
+     display:block;
+}
+
 .buffer {
   height:100px;
 }
