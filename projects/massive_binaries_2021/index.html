@@ -147,7 +147,7 @@
       Download Minilab Files
     </button>
   </a>
-  <a href="ZMAS_models.tar.gz" download>
+  <a href="ZAMS_models.tar.gz" download>
     <button class='btn btn-primary btn-lg'>
       Download ZAMS Models
     </button>
@@ -1225,13 +1225,13 @@
 </p>
 <ul class="lead">
   <li>
-    Make a copy of your latest run directory and prepare it for modeling a different stripped star. Your table will be assigned initial masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>), but pick your own initial orbital period from the list in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2"). Don't forget to find the new ZAMS model and load it in your inlist.
+    Make a copy of your latest run directory and prepare it for modeling a different stripped star. Claim a combination of stellar masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>) and initial orbital period in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2") by entering your name or some other identifier in the top table. Don't forget to find the new ZAMS model and load it in your inlist.
   </li>
   <li>
     The stopping condition for central carbon depletion will no longer work because of the initial composition of the star. You can remove it or stop at helium depletion and restart as previously. In either case, manually stop the run once it is in the second phase of mass transfer.
   </li>
   <li>
-    Run your model and report the absolute <var>V</var>-band magnitude of the donor star and your supernova type prediction once it enters its second phase of mass transfer in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a>.
+    Run your model and report the absolute <var>V</var>-band magnitude of the donor star, the final total hydrogen mass in the model, and your supernova type prediction once it enters its second phase of mass transfer in the lower tables of the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a>.
   </li>
 </ul>
 
@@ -1257,7 +1257,7 @@
     Limit accretion onto the black hole by the Eddington accretion rate.
   </li>
   <li>
-    Activate accretion of the wind from the donor. Limit this accretion to a maximum of 10% of the stellar wind mass loss (this number is not based in any rigorous reasoning).
+    Activate accretion of the wind from the donor. Limit this accretion to a maximum of 10% of the stellar wind mass loss (this number is not based in any rigorous reasoning). Note that in addition to the control you [hopefully] found, we also have to set <code>use_radiation_corrected_transfer_rate = .false.</code> in <code>inlist_project</code> to make sure that 10% of the wind mass is accreted.
   </li>
   <li>
     Remove the stopping condition based on core composition.
