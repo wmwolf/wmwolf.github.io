@@ -1036,7 +1036,7 @@
   <div class="card-body">
     <h4 class="card-title text-success">Correct</h4>
     <p class="card-text">
-      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–8</sup> M<sub>&#8857;</sub>, which firmly puts us in type Ibc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
+      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–9</sup> M<sub>&#8857;</sub>, which firmly puts us in type Ibc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
     </p>
   </div>
 </div><div class="card border-danger collapse taxonomy" id="response-2-2-c">
@@ -1115,7 +1115,7 @@
   <div class="card-body">
     <h4 class="card-title text-success">Correct</h4>
     <p class="card-text">
-      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> of <sup>1</sup>H left on the star (but not much more, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it wil still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
+      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> of <sup>1</sup>H left on the star (but not much more, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it will still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
     </p>
   </div>
 </div>
@@ -1225,7 +1225,7 @@
 </p>
 <ul class="lead">
   <li>
-    Make a copy of your latest run directory and prepare it for modeling a different stripped star. Claim a combination of stellar masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>) and initial orbital period in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2") by entering your name or some other identifier in the top table. Don't forget to find the new ZAMS model and load it in your inlist.
+    Make a copy of your latest run directory (with the custom wind routine) and prepare it for modeling a different stripped star. Claim a combination of stellar masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>) and initial orbital period in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2") by entering your name or some other identifier in the top table. Don't forget to find the new ZAMS model and load it in your inlist.
   </li>
   <li>
     The stopping condition for central carbon depletion will no longer work because of the initial composition of the star. You can remove it or stop at helium depletion and restart as previously. In either case, manually stop the run once it is in the second phase of mass transfer.
@@ -1369,8 +1369,9 @@
   </div>
   <div class="card-body collapse" id="sol2_8">
     <p class='card-text'>
-      The following line should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
+      The following lines should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+   </span><span class="n">use_radiation_corrected_transfer_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
     <p class="card-text">
       and
     </p>
