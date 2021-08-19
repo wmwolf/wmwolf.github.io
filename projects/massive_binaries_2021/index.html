@@ -210,9 +210,9 @@
         inlist
       </a>
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="inlist_project" data-description="Another <code>binary</code> inlist that <code>inlist</code> points to. The name isn't special; it just matches what extra inlist is loaded by <code>inlist</code>. Note that this inlist still pertains to the <code>binary</code> module, and <em>not</em> the <code>star</code> module, like you may be accustomed to.">inlist_project</a>
-      <a href="#part1b" class="list-group-item list-group-item-action"data-name="inlist_pgstar" data-description="Inlists that set the normal physical parameters for <code>MESA star</code> models that will correspond with the two stars in the binaries. These can point to other inlists (like <code>inlist_donor</code> and <code>inlist_pgstar_binary</code> in our example). The names of these files are controlled by the <code>inlist_names</code> array in the <code>binary_job</code> namelist.">inlist1 and inlist2</a>
+      <a href="#part1b" class="list-group-item list-group-item-action"data-name="inlist1 and inlist2" data-description="Inlists that set the normal physical parameters for <code>MESA star</code> models that will correspond with the two stars in the binaries. These can point to other inlists (like <code>inlist_donor</code> and <code>inlist_pgstar_binary</code> in our example). The names of these files are controlled by the <code>inlist_names</code> array in the <code>binary_job</code> namelist.">inlist1 and inlist2</a>
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="mk" data-description="Same as in <code>star</code>: Executable script that recompiles the local copy of <code>star</code>. You only need to execute this if you make changes to files in the <code>src</code> directory or upgrade <samp>MESA</samp>.">mk</a>
-      <a href="#part1b" class="list-group-item list-group-item-action" data-name="rn" data-description="Same as in <code>star</code>: Executable that, after compilation with <code>mk</code> starts the simulation defined by <code>inlist</code> and any custom code in <code>src/run_star_extras.f</code>.">rn</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="rn" data-description="Same as in <code>star</code>: Executable that, after compilation with <code>mk</code> starts the simulation defined by <code>inlist</code> and any custom code in <code>src/run_star_extras.f90</code>.">rn</a>
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="re" data-description="Executable that restarts an interrupted or completed run from a pair of earlier photos. It takes one argument, which is a photo file found in all three of <code>photos</code>, <code>photos1</code> and <code<photos2</code>, which contain data for the binary as a whole, star 1, and star 2, respectively.">re</a>
       
     </div>
@@ -225,7 +225,7 @@
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="binary" data-description="The actual executable that evolves the binary stellar model. Usually this is wrapped by <code>rn</code> and <code>re</code>. You should almost never call it directly.">binary</a>
       <a href="#part1b" class="list-group-item list-group-item-action"data-name="LOGS1 and LOGS2" data-description="Standard <code>MESA star</code> logs directories for star 1 and star 2, respectively. Additional history data for the binary itself is stored in <code>binary_history.data</code>">LOGS1 and LOGS2</a>
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="photos1 and photos2" data-description="Directories that holds snapshots of the simulation stored in binary. These are used to restart the simulation, but they are <strong>not</strong> for long-term storage of the model, as their format changes from version to version. Each star has its own unique photos directories, which also contain snapshots of binary information.">photos1 and photos2</a>
-      <a href="#part1b" class="list-group-item list-group-item-action" data-name="src" data-description="Directory that contains source code for the executable built by <code>mk</code>. Most is just read in from the main <code>MESA_DIR</code>, but you can add your own code to <code>run_star_extras.f</code> and <code>run_binary_extras.f</code>.">src</a>
+      <a href="#part1b" class="list-group-item list-group-item-action" data-name="src" data-description="Directory that contains source code for the executable built by <code>mk</code>. Most is just read in from the main <code>MESA_DIR</code>, but you can add your own code to <code>run_star_extras.f90</code> and <code>run_binary_extras.f</code>.">src</a>
       <a href="#part1b" class="list-group-item list-group-item-action" data-name="make" data-description="Directory that contains the makefile and byproducts of the compilation process. You rarely need to fiddle with this.">make</a>
       
     </div>
@@ -420,11 +420,11 @@
   </div>
   <div class="card-body">
     <p>
-      The <code>inlist_pgstar_binary</code> inlist is instructing your model to dutifuly output pngs of pgstar frames to the folder <code>grid_png</code>. While you shouldn't need past frames to answer the questions in this task, you still might find it useful to create a movie out of these. Fortunately, that ability is baked in to the <code>MESA</code> SDK! Simply use the script <code>images_to_movies</code>.
+      The <code>inlist_pgstar_binary</code> inlist is instructing your model to dutifuly output pngs of pgstar frames to the folder <code>grid_png</code>. While you shouldn't need past frames to answer the questions in this task, you still might find it useful to create a movie out of these. Fortunately, that ability is baked in to the <code>MESA</code> SDK! Simply use the script <code>images_to_movie</code>.
     </p>
 
     <p>
-      <code>images_to_movies</code> takes a glob string and a name for an output video file. The glob string should be something like <code>'grid_png/grid_*.png'</code> (the quotes are evidently important!), which can match the files you wish to use as frames. Then the output file should end in <code>mp4</code> to indicate making an mp4 movie, so something like <code>to_he_exhaustion.mp4</code>. So putting it all together:
+      <code>images_to_movie</code> takes a glob string and a name for an output video file. The glob string should be something like <code>'grid_png/grid_*.png'</code> (the quotes are evidently important!), which can match the files you wish to use as frames. Then the output file should end in <code>mp4</code> to indicate making an mp4 movie, so something like <code>to_he_exhaustion.mp4</code>. So putting it all together:
     </p>
     <p>
       <kbd>images_to_movie 'grid_png/grid_*.png' to_he_exhaustion.mp4</kbd>
@@ -442,7 +442,7 @@
   If stellar winds are strong, they can significantly alter the stellar properties of a star, revealing deeper, chemically enriched layers. For stripped stars, the amount of hydrogen left over after mass transfer not only affects the stellar properties, but also the possibility to interact again and the supernova type (see <a href="#part2">minilab 2</a>). 
 </p>
 <p class='lead'>
-  <span class='font-weight-bold text-primary'>Task 3: Implement a Custom Wind</span> Make a copy of your first work directory that you used for the first two tasks. In the new directory, implement the Vink (2017) wind mass loss rate for stripped stars with mass <10 M<sub>&#8857;</sub> in the run_star_extras.f90 file and activate the <code>other_wind</code> hook. Note that we have prepared a function into which you can implement the new wind mass loss scheme. 
+  <span class='font-weight-bold text-primary'>Task 3: Implement a Custom Wind</span> Make a copy of your first work directory that you used for the first two tasks. In the new directory, implement the Vink (2017) wind mass loss rate for stripped stars with mass <10 M<sub>&#8857;</sub> in the <code>run_star_extras.f90</code> file and activate the <code>other_wind</code> hook. Note that we have prepared a function into which you can implement the new wind mass loss scheme. 
 </p>
 
 <div class="card border-primary mb-3">
@@ -902,7 +902,7 @@
       Adjust stopping conditions and data reported to the terminal by <code>MESA star</code> to try to produce stripped-envelope supernova progenitor models,
     </li>
     <li>
-      Perform a parameter-space study to charaterize the likelihood of observatibity of stripped-envelope supernova progenitors in surveys,
+      Perform a parameter-space study to charaterize the likelihood of observability of stripped-envelope supernova progenitors in surveys,
     </li>
     <li>
       (Optionally) Use controls in the <code>binary</code> to more accurately model the mass transfer rate onto the black hole companion, and
@@ -1524,7 +1524,7 @@
     <figure class='figure text-center'>
       <img class='figure-img img-fluid rounded' src='images/mass_no_limit.png' alt='graphs showing mass of star decreasing and mass of black hole increasing with time'>
       <figcaption class="figure-caption text-left">
-        Mass histories for stellar model (star 1) and black hole (star 2) when <em>not</em> limiting retention by the Eddington rate. This mass transfer is <strong>conservative</strong> because we specifically disallowed any losses in <code>inlist_project</code> (though wind mass loss from star 1 is actually lost from the system, so the total mass at the end of the evolution is less than the original 20 M<sub>&#8857;</sub>.
+        Mass histories for stellar model (star 1) and black hole (star 2) when <em>not</em> limiting retention by the Eddington rate. This mass transfer is <strong>conservative</strong> because we specifically disallowed any losses in <code>inlist_project</code> (though wind mass loss from star 1 is actually lost from the system, so the total mass at the end of the evolution is less than the original 20 M<sub>&#8857;)</sub>.
       </figcaption>
     </figure>
 
@@ -1603,7 +1603,7 @@
         The black hole accretes at super-Eddington mass accretion rates (likely in a non-spherically symmetric fashion so the excess radiation pressure can be relieved).
       </li>
       <li>
-        The black hole substantially more massive, and therefore it has a higher Eddington accretion rate.
+        The black hole is substantially more massive, and therefore it has a higher Eddington accretion rate.
       </li>
       <li>
         The efficiency parameter is actually higher than 0.1.
