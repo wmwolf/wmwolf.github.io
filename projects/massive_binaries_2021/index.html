@@ -1709,7 +1709,7 @@
 
  </span><span class="c1">! rest of the inlist omitted</span></code></pre></figure>
     <p class="card-text">
-      We also need to updated the models loaded by <star> for stars 1 and 2 to be the 16 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub> models, respectively. You either need to copy the models into <code>1_evolve_binary</code> or provide a path to the files. We'll assume you have copied the models in (via something like <kbd>cp ../../ZAMS_modesl/zams_8Msun.mod ./</kbd>). Then in <code>inlist1</code>, you'll need
+      We also need to update the models loaded by <star> for stars 1 and 2 to be the 16 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub> models, respectively. You either need to copy the models into <code>1_evolve_binary</code> or provide a path to the files. We'll assume you have copied the models in (via something like <kbd>cp ../../ZAMS_modesl/zams_8Msun.mod ./</kbd>). Then in <code>inlist1</code>, you'll need
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist1</span><span class="w">
 </span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
@@ -1762,7 +1762,7 @@
   </div>
   <div class="card-body collapse" id="sol3_2">
     <p class='card-text'>
-      The final masses of the two stars were 15.4 M<sub>&#8857;</sub> and 8.3 M<sub>&#8857;</sub>. If there is no mass lost, the merger should contain all of this matter, and thus have a mass of <strong class="font-weight-bold">23.7 M<sub>&#8857;</sub></strong>.
+      The final masses of the two stars were 15.4 M<sub>&#8857;</sub> and 8.3 M<sub>&#8857;</sub>. If there is no mass lost, the merger should contain all of this matter, and thus have a mass of <strong class="font-weight-bold">23.697971 M<sub>&#8857;</sub></strong>. (The copious significant digits are unfortunately useful, so hold on to them.)
     </p>
   </div>
 </div>
@@ -1811,7 +1811,7 @@
     </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
     </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'../1_evolve_binary/M1.mod'</span></code></pre></figure>
     <p class="card-text">
-      We also need to update the final mass after relaxation to 23.7 M<sub>&#8857;</sub>:
+      We also need to update the final mass after relaxation to 23.697971 M<sub>&#8857;</sub>:
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
 </span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
@@ -1819,7 +1819,7 @@
 
   </span><span class="c1">! Relax the mass</span><span class="w">
     </span><span class="n">relax_initial_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
-    </span><span class="n">new_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">23.7</span></code></pre></figure>
+    </span><span class="n">new_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">23.697971</span></code></pre></figure>
     <p class="card-text">
       The final mass after running can be confirmed from the terminal output (6th column, first row):
     </p>
@@ -1841,7 +1841,7 @@ ________________________________________________________________________________
 
 <p class='lead mt-4'>
   <span class='font-weight-bold text-primary' id='task3_4'>Task 4: Adjusting the Composition</span>
-  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory 3_relax_composition. Begin with studying the <code>inlist_project</code> file and locate where the relaxation is treated. 
+  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory <code>3_relax_composition</code>. Begin with studying the <code>inlist_project</code> file and locate where the relaxation is treated. 
 </p>
 <ul class="lead">
   <li>
@@ -2304,12 +2304,12 @@ ________________________________________________________________________________
 </div>
 <h4 class="mt-5" id="part3e"><span class="font-weight-bold">BONUS:</span> Rotation of Merger Products</h4>
 <p>
-  After the coalescence of two stars, som eangular momentum is thought to remain, causing the merger product to spin. Let's invoke rotation in the merger product before evolving it further.
+  After the coalescence of two stars, some angular momentum is thought to remain, causing the merger product to spin. Let's invoke rotation in the merger product before evolving it further.
 </p>
 <p class="lead">
   <span class="text-primary font-weight-bold">
     Bonus Task 11: Invoke Rotation
-  </span> 
+  </span> We'll modify the most recent merger product (the main sequence merger) to add rotation to the merger product and study how it evolves. So we'll only be working in <code>4_evolve_merger</code>.
 </p>
 <ul class="lead">
   <li>
