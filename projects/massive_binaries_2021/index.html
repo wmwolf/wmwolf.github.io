@@ -1780,6 +1780,20 @@
 <p class="lead">
   We need a model to start from, it doesn’t matter very much which one, but we have a model with quite close mass created from the previous step -- the final model for the donor. Start the mass relaxation from this model and also adjust the total mass that you would like to reach. Compile and run the model. See how you reach the appropriate mass in the terminal.
 </p>
+
+<div class="card border-warning my-3">
+  <div class="card-header text-white bg-warning">
+    <h5 class='card-title mb-0'>
+      <samp>MESA</samp> Warning: Use a Precise Mass!
+    </h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      For the best results, set the total mass to the precise sum of the two component star masses, to many significant digits. If you don't, you may run into convergence issues when we change the composition of the merger product. We're not entirely sure why this is, but it likely has to do with how the mesh is set up in the initial mass in that step.
+    </p>
+  </div>
+</div>
+
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
     <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_3" aria-expanded="true" aria-controls="sol3_3">
@@ -1869,9 +1883,13 @@ ________________________________________________________________________________
         <kbd>cd 1_evolve_binary</kbd><br>
         <kbd>python construct_merger_composition.py</kbd>
       </li>
-      <li>
+      <li class='mb-2'>
         Copy the resulting file, <code>merger_composition.txt</code> into the work directory where we need it, <code>3_relax_composition</code>:<br>
-        <kbd>cp 1_evolve_binary/merger_composition.txt 3_relax_composition/</kbd>
+        <kbd>cp merger_composition.txt ../3_relax_composition/</kbd>
+      </li>
+      <li>
+        Now navigate to the proper working directory:<br>
+        <kbd>cd ../3_relax_composition</kbd>
       </li>
     </ol>
 
@@ -1925,7 +1943,7 @@ ________________________________________________________________________________
       After compiling and running you should see a rather strange abundance profile in the <code>pgstar</code> abundances panel:
     </p>
     <figure class='figure'>
-      <img class='figure-img img-fluid rounded' src='images/twin_panel_contact.png' alt='pgstar dashboard'>
+      <img class='figure-img img-fluid rounded' src='images/wacky_abundances.png' alt='pgstar dashboard'>
       <figcaption class="figure-caption text-left">
         The final pgstar frames after relaxing the merger product's composition. Note that the abundance profile (see the upper right) is rather messy after sorting the zones by entropy.
       </figcaption>
