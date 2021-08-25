@@ -54,29 +54,66 @@
     <div class="splash bckgrd bckgrd-3">
       <noscript>
         <!-- <img src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
-        <h1>Huston Wilhite Exercise 1</h1>
+        <h1>Physics Advising Wizard</h1>
         }
       </noscript>
       <!-- <img class='fadeIn' src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
-      <h1 class='initially-hidden'>Huston Wilhite Exercise 1</h1>
+      <h1 class='initially-hidden'>Physics Advising Wizard</h1>
     </div>
     <div class="container">
-      <h2>Prompt</h2>
-<p>A useful (albeit not terribly realistic) model for a homogenous composition star may be obtained by assuming that the density is a linear funciton of radius. Thus, assume that
+      <div class='row'>
+  <div class="col-2">
+    <h2 class='text-right'>Year-Term</h2>
+  </div>
+  <div class="col-10">
+    <ul class="pagination pagination-lg" id='year-term-selector'>
+      <li class="page-item active" id='year-term-0'>
+        <a class="page-link" data-position=0 href="#" id='year-term-0a'></a>
+      </li>
+      <li class="page-item" id='year-term-1'>
+        <a class="page-link" data-position=1 href="#" id='year-term-1a'></a>
+      </li>
+      <li class="page-item" id='year-term-2'>
+        <a class="page-link" data-position=2 href="#" id='year-term-2a'></a>
+      </li>
+      <li class="page-item" id='year-term-3'>
+        <a class="page-link" data-position=3 href="#" id='year-term-3a'></a>
+      </li>
+      <li class="page-item" id='year-term-4'>
+        <a class="page-link" data-position=4 href="#" id='year-term-4a'></a>
+      </li>
+      <li class="page-item" id='year-term-5'>
+        <a class="page-link" data-position=5 href="#" id='year-term-5a'></a>
+      </li>
+    </ul>
+  </div>
+</div>
 
-\[\rho(r) = \rho_c(1-r/R)\]
+<div id="body">
+  
+</div>
 
-where \(\rho_c\) is the central density and \(R\) is the total radius where we may assume zero boundary conditions for pressure and temperature: \(P(R)=T(R)=0\).
+<!-- Modal -->
+<div class="modal fade" id="course-info" tabindex="-1" aria-labelledby="course-info-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="course-info-label">Course Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id=course-description>
+      </div>
 
-<ol>
-  <li>
-    Find an expression for the central density in terms of \(R\) and \(M\). You will have to use the mass equation: \[dM_r/dr=4\pi r^2\rho(r)\].
-  </li>
-  <li>
-    Use hydrostatic equilibrium (\(dP/dr = -\rho(r)g(r)\)) and the zero boundary conditions to find the pressure as a function of radius. Your answer will be in the form of \(P(r) = P_c\times (\textrm{polynomial in }r/R)\). What is \(P_c\) in terms of \(M\) and \(R\)? (It should be proportional to \(GM^2/R^4\).) Express \(P_c\) numerically with \(M\) and \(R\) in solar units. That is, your pressure should be of the form of [some pressure] \(\times (M/M_\odot)^2(R/R_\odot)^{-4}\).
-  </li>
-</ol>
-</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id='modal-enrolling'>Enrolling</button>
+        <button type="button" class="btn btn-success" id='modal-completed'>Completed</button>
+      </div>
+    </div>
+  </div>
+</div>
       <div class="push">
         <hr>
 <footer class="footer"> 
@@ -99,6 +136,8 @@ where \(\rho_c\) is the central density and \(R\) is the total radius where we m
 <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <script type="text/javascript" async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML'></script>
 
+
+  <script type='text/javascript' src='/js/wizard.js'></script>
 
 
 </html>

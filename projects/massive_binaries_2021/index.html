@@ -1036,7 +1036,7 @@
   <div class="card-body">
     <h4 class="card-title text-success">Correct</h4>
     <p class="card-text">
-      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–8</sup> M<sub>&#8857;</sub>, which firmly puts us in type Ibc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
+      Excellent. You should have found a final total mass of <sup>1</sup>H of around 8.5 &#215; 10<sup>–9</sup> M<sub>&#8857;</sub>, which firmly puts us in type Ibc territory. However, it is still helium rich, with about 1.4 M<sub>&#8857;</sub> of <sup>4</sup>He, so it is a Type Ib supernova progenitor.
     </p>
   </div>
 </div><div class="card border-danger collapse taxonomy" id="response-2-2-c">
@@ -1115,7 +1115,7 @@
   <div class="card-body">
     <h4 class="card-title text-success">Correct</h4>
     <p class="card-text">
-      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> of <sup>1</sup>H left on the star (but not much more, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it wil still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
+      Nice! Regardless of when you stop the simulation, you should have more than 0.03 M<sub>&#8857;</sub> of <sup>1</sup>H left on the star (but not much more, so it won't be a standard IIp supernova), which places this firmly in the IIb progenitor scenario. Even if you run the star to carbon depletion, it will still have 0.04 M<sub>&#8857;</sub> of hydrogen remaining.
     </p>
   </div>
 </div>
@@ -1225,7 +1225,7 @@
 </p>
 <ul class="lead">
   <li>
-    Make a copy of your latest run directory and prepare it for modeling a different stripped star. Claim a combination of stellar masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>) and initial orbital period in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2") by entering your name or some other identifier in the top table. Don't forget to find the new ZAMS model and load it in your inlist.
+    Make a copy of your latest run directory (with the custom wind routine) and prepare it for modeling a different stripped star. Claim a combination of stellar masses (<var>M</var><sub>1</sub>, <var>M</var><sub>2</sub>) and initial orbital period in the <a href="https://docs.google.com/spreadsheets/d/1DE4l_LVfDqseTllQ-yTUvXau-JBOfwvkkcNtNkHHJek/edit?usp=sharing" target=_blank>google sheet</a> (tab "Ylva - Minilab 2") by entering your name or some other identifier in the top table. Don't forget to find the new ZAMS model and load it in your inlist.
   </li>
   <li>
     The stopping condition for central carbon depletion will no longer work because of the initial composition of the star. You can remove it or stop at helium depletion and restart as previously. In either case, manually stop the run once it is in the second phase of mass transfer.
@@ -1369,8 +1369,9 @@
   </div>
   <div class="card-body collapse" id="sol2_8">
     <p class='card-text'>
-      The following line should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
+      The following lines should be added to the <code>&binary_controls</code> namelist in <code>inlist_project</code>:
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">limit_retention_by_mdot_edd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+   </span><span class="n">use_radiation_corrected_transfer_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span></code></pre></figure>
     <p class="card-text">
       and
     </p>
@@ -1708,7 +1709,7 @@
 
  </span><span class="c1">! rest of the inlist omitted</span></code></pre></figure>
     <p class="card-text">
-      We also need to updated the models loaded by <star> for stars 1 and 2 to be the 16 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub> models, respectively. You either need to copy the models into <code>1_evolve_binary</code> or provide a path to the files. We'll assume you have copied the models in (via something like <kbd>cp ../../ZAMS_modesl/zams_8Msun.mod ./</kbd>). Then in <code>inlist1</code>, you'll need
+      We also need to update the models loaded by <star> for stars 1 and 2 to be the 16 M<sub>&#8857;</sub> and 8 M<sub>&#8857;</sub> models, respectively. You either need to copy the models into <code>1_evolve_binary</code> or provide a path to the files. We'll assume you have copied the models in (via something like <kbd>cp ../../ZAMS_modesl/zams_8Msun.mod ./</kbd>). Then in <code>inlist1</code>, you'll need
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist1</span><span class="w">
 </span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
@@ -1761,7 +1762,7 @@
   </div>
   <div class="card-body collapse" id="sol3_2">
     <p class='card-text'>
-      The final masses of the two stars were 15.4 M<sub>&#8857;</sub> and 8.3 M<sub>&#8857;</sub>. If there is no mass lost, the merger should contain all of this matter, and thus have a mass of <strong class="font-weight-bold">23.7 M<sub>&#8857;</sub></strong>.
+      The final masses of the two stars were 15.4 M<sub>&#8857;</sub> and 8.3 M<sub>&#8857;</sub>. If there is no mass lost, the merger should contain all of this matter, and thus have a mass of <strong class="font-weight-bold">23.697971 M<sub>&#8857;</sub></strong>. (The copious significant digits are unfortunately useful, so hold on to them.)
     </p>
   </div>
 </div>
@@ -1779,6 +1780,20 @@
 <p class="lead">
   We need a model to start from, it doesn’t matter very much which one, but we have a model with quite close mass created from the previous step -- the final model for the donor. Start the mass relaxation from this model and also adjust the total mass that you would like to reach. Compile and run the model. See how you reach the appropriate mass in the terminal.
 </p>
+
+<div class="card border-warning my-3">
+  <div class="card-header text-white bg-warning">
+    <h5 class='card-title mb-0'>
+      <samp>MESA</samp> Warning: Use a Precise Mass!
+    </h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      For the best results, set the total mass to the precise sum of the two component star masses, to many significant digits. If you don't, you may run into convergence issues when we change the composition of the merger product. We're not entirely sure why this is, but it likely has to do with how the mesh is set up in the initial mass in that step.
+    </p>
+  </div>
+</div>
+
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
     <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol3_3" aria-expanded="true" aria-controls="sol3_3">
@@ -1796,7 +1811,7 @@
     </span><span class="n">load_saved_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
     </span><span class="n">saved_model_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'../1_evolve_binary/M1.mod'</span></code></pre></figure>
     <p class="card-text">
-      We also need to update the final mass after relaxation to 23.7 M<sub>&#8857;</sub>:
+      We also need to update the final mass after relaxation to 23.697971 M<sub>&#8857;</sub>:
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! inlist_project</span><span class="w">
 </span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
@@ -1804,7 +1819,7 @@
 
   </span><span class="c1">! Relax the mass</span><span class="w">
     </span><span class="n">relax_initial_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
-    </span><span class="n">new_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">23.7</span></code></pre></figure>
+    </span><span class="n">new_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">23.697971</span></code></pre></figure>
     <p class="card-text">
       The final mass after running can be confirmed from the terminal output (6th column, first row):
     </p>
@@ -1826,7 +1841,7 @@ ________________________________________________________________________________
 
 <p class='lead mt-4'>
   <span class='font-weight-bold text-primary' id='task3_4'>Task 4: Adjusting the Composition</span>
-  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory 3_relax_composition. Begin with studying the <code>inlist_project</code> file and locate where the relaxation is treated. 
+  You have now produced a model with the appropriate mass, but the composition is still not updated. To do that, we need to also relax the composition according to a predetermined structure that is provided in a text file. For this exercise, use the work directory <code>3_relax_composition</code>. Begin with studying the <code>inlist_project</code> file and locate where the relaxation is treated. 
 </p>
 <ul class="lead">
   <li>
@@ -1868,9 +1883,13 @@ ________________________________________________________________________________
         <kbd>cd 1_evolve_binary</kbd><br>
         <kbd>python construct_merger_composition.py</kbd>
       </li>
-      <li>
+      <li class='mb-2'>
         Copy the resulting file, <code>merger_composition.txt</code> into the work directory where we need it, <code>3_relax_composition</code>:<br>
-        <kbd>cp 1_evolve_binary/merger_composition.txt 3_relax_composition/</kbd>
+        <kbd>cp merger_composition.txt ../3_relax_composition/</kbd>
+      </li>
+      <li>
+        Now navigate to the proper working directory:<br>
+        <kbd>cd ../3_relax_composition</kbd>
       </li>
     </ol>
 
@@ -1924,7 +1943,7 @@ ________________________________________________________________________________
       After compiling and running you should see a rather strange abundance profile in the <code>pgstar</code> abundances panel:
     </p>
     <figure class='figure'>
-      <img class='figure-img img-fluid rounded' src='images/twin_panel_contact.png' alt='pgstar dashboard'>
+      <img class='figure-img img-fluid rounded' src='images/wacky_abundances.png' alt='pgstar dashboard'>
       <figcaption class="figure-caption text-left">
         The final pgstar frames after relaxing the merger product's composition. Note that the abundance profile (see the upper right) is rather messy after sorting the zones by entropy.
       </figcaption>
@@ -2285,12 +2304,12 @@ ________________________________________________________________________________
 </div>
 <h4 class="mt-5" id="part3e"><span class="font-weight-bold">BONUS:</span> Rotation of Merger Products</h4>
 <p>
-  After the coalescence of two stars, som eangular momentum is thought to remain, causing the merger product to spin. Let's invoke rotation in the merger product before evolving it further.
+  After the coalescence of two stars, some angular momentum is thought to remain, causing the merger product to spin. Let's invoke rotation in the merger product before evolving it further.
 </p>
 <p class="lead">
   <span class="text-primary font-weight-bold">
     Bonus Task 11: Invoke Rotation
-  </span> 
+  </span> We'll modify the most recent merger product (the main sequence merger) to add rotation to the merger product and study how it evolves. So we'll only be working in <code>4_evolve_merger</code>.
 </p>
 <ul class="lead">
   <li>
@@ -2416,6 +2435,8 @@ ________________________________________________________________________________
 <script src="/js/application.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <script type="text/javascript" async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML'></script>
+
+
 
 <script src="/js/binaries.js"></script>
 
