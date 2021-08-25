@@ -904,6 +904,7 @@
       {
         title: 'Advanced Courses',
         courses: [PHYS_356,
+      PHYS_360,
       PHYS_375,
       PHYS_430,
       PHYS_445,
