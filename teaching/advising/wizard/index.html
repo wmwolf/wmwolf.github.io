@@ -37,11 +37,11 @@
         <h1 class='display-3'>Physics Advising Wizard</h1>
       </div>
       <div class="sticky bg-white no-print py-3">
-  <div class='row mb-3'>
-    <div class="col-3">
+  <div class='row'>
+    <div class="col-4 col-md-3 mb-2">
       <h3 class='text-right'>Degree</h3>
     </div>
-    <div class="col-4">
+    <div class="col-8 col-md-3 mb-2">
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           
@@ -51,17 +51,20 @@
         </div>
       </div>
     </div>
-    <div class="col-5">
-      <h3>
-        Credits: <span class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / <span id="credits-needed"></span></span>
+    <div class="col-4 col-md-3 mb-2">
+      <h3 class='text-right'>
+        Credits
       </h3>
+    </div>
+    <div class="col-8 col-md-3">
+      <h3 class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / <span id="credits-needed"></span></h3>
     </div>
   </div>
   <div class='row'>
-    <div class="col-3">
+    <div class="col-4 col-md-3">
       <h3 class='text-right'>Term</h3>
     </div>
-    <div class="col-9">
+    <div class="col-8 col-md-9">
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Term 0
@@ -149,15 +152,15 @@
         <span class='font-weight-bold text-success'>completed</span> them.
       </p>
       <p>
-        Courses that are <span class="font-weight-bold text-secondary">gray</span>
-        are <span class="font-weight-bold text-secondary">unavailable</span>.
+        Courses that are <span class="font-weight-bold text-muted">gray</span>
+        are <span class="font-weight-bold text-muted">unavailable</span>.
         They may require a corequisite class (ex. PHYS 231 requires prior or
         concurrent enrollment in MATH 114), a prerequisite class (ex. PHYS 232
-        requires you to have already completed PHYS 231), they may require a more
-        complex set of courses (ex. PHYS 486 requires any two of PHYS 340, 350,
-        and 360), or they may not be offered in that particular term (ex. PHYS
-        375 is only offered during the Spring of even years). To find out the
-        requirements for a course, click on its "Details" button.
+        requires prior enrollment in PHYS 231), a more complex set of courses
+        (ex. PHYS 430 requires any two of PHYS 340, PHYS 350, or PHYS 360), or
+        they may not be offered in that particular term (ex. PHYS 375 is only
+        offered during the Spring of even years). Check the requirements and
+        availability of a course by clicking on its "Details" button.
       </p>
       <p>
         Finally, courses with a 
@@ -167,8 +170,10 @@
         a selection of courses that you may opt to take. For instance, Applied
         Physics emphasis majors must take both PHYS 255 <b>and</b> PHYS 356,
         <b>or</b> they may take either of PHYS 365 or PHYS 375. Once any of
-        these three requirements are completed, the other courses will no longer be
-        indicated as required.
+        these three requirements are completed, the other courses will no
+        longer be indicated as required. You will have satisfied all
+        <em>major</em> degree requirements when all bold classes are green and
+        <a href="#" data-toggle="popover" title="Credits Counted Toward Major" data-content="These include all required physics courses except PHYS 240. Additionally, any physics electives numbered over 325, and select courses from MSE count. Up to 6 credits may be counted from any combination of PHYS 399, PHYS 491, and PHYS 499. Up to 3 credits may be counted from PHYS 495.">credits counted towards the major</a>.      
       </p>
     </div>
   </div>

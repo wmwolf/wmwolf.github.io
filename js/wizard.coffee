@@ -1648,4 +1648,9 @@ wizard =
       
 $( document ).ready( ->
   wizard.setup()
+
+  # enable popovers
+  $( ->
+    $('[data-toggle="popover"]').popover()
+  )
 )

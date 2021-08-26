@@ -2118,7 +2118,11 @@
   };
 
   $(document).ready(function() {
-    return wizard.setup();
+    wizard.setup();
+    // enable popovers
+    return $(function() {
+      return $('[data-toggle="popover"]').popover();
+    });
   });
 
 }).call(this);
