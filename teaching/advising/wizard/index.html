@@ -61,31 +61,48 @@
       <h1 class='initially-hidden'>Physics Advising Wizard</h1>
     </div>
     <div class="container">
-      <div class='row'>
-  <div class="col-2">
-    <h2 class='text-right'>Year-Term</h2>
+      <div class="sticky bg-white py-3">
+  <div class='row mb-3'>
+    <div class="col-3">
+      <h2 class='text-right'>Degree</h2>
+    </div>
+    <div class="col-9">
+      <div class="dropdown">
+        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          
+        </button>
+        <div class="dropdown-menu" aria-labelledby="degree-plan-dropdown" id='degree-plan-menu'>
+          <!-- This gets filled in by javascript -->
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-10">
-    <ul class="pagination pagination-lg" id='year-term-selector'>
-      <li class="page-item active" id='year-term-0'>
-        <a class="page-link" data-position=0 href="#" id='year-term-0a'></a>
-      </li>
-      <li class="page-item" id='year-term-1'>
-        <a class="page-link" data-position=1 href="#" id='year-term-1a'></a>
-      </li>
-      <li class="page-item" id='year-term-2'>
-        <a class="page-link" data-position=2 href="#" id='year-term-2a'></a>
-      </li>
-      <li class="page-item" id='year-term-3'>
-        <a class="page-link" data-position=3 href="#" id='year-term-3a'></a>
-      </li>
-      <li class="page-item" id='year-term-4'>
-        <a class="page-link" data-position=4 href="#" id='year-term-4a'></a>
-      </li>
-      <li class="page-item" id='year-term-5'>
-        <a class="page-link" data-position=5 href="#" id='year-term-5a'></a>
-      </li>
-    </ul>
+  <div class='row'>
+    <div class="col-3">
+      <h2 class='text-right'>Term</h2>
+    </div>
+    <div class="col-9">
+      <div class="dropdown">
+        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Term 0
+        </button>
+        <div class="dropdown-menu" aria-labelledby="year-term-dropdown" id='year-term-menu'>
+          <a class="dropdown-item year-term-option active" data-position=0 href="#">Term 0</a>
+          <a class="dropdown-item year-term-option" data-position=1 href="#">Term 1</a>
+          <a class="dropdown-item year-term-option" data-position=2 href="#">Term 2</a>
+          <a class="dropdown-item year-term-option" data-position=3 href="#">Term 3</a>
+          <a class="dropdown-item year-term-option" data-position=4 href="#">Term 4</a>
+          <a class="dropdown-item year-term-option" data-position=5 href="#">Term 5</a>
+          <a class="dropdown-item year-term-option" data-position=6 href="#">Term 6</a>
+          <a class="dropdown-item year-term-option" data-position=7 href="#">Term 7</a>
+          <a class="dropdown-item year-term-option" data-position=8 href="#">Term 8</a>
+          <a class="dropdown-item year-term-option" data-position=9 href="#">Term 9</a>
+          <a class="dropdown-item year-term-option" data-position=10 href="#">Term 10</a>
+          <a class="dropdown-item year-term-option" data-position=11 href="#">Term 11</a>
+        </div>
+        <button class="btn btn-success btn-lg" id="next-term"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
   </div>
 </div>
 

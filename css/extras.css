@@ -377,3 +377,14 @@ h2#overview {
 .initially-hidden {
   display: none;
 }
+
+.border-thick {
+  border-width: 4px;
+}
+
+.sticky {
+  position: -webkit-sticky; /* Safari & IE */
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
