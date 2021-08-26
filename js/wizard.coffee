@@ -1649,8 +1649,10 @@ wizard =
 $( document ).ready( ->
   wizard.setup()
 
-  # enable popovers
-  $( ->
-    $('[data-toggle="popover"]').popover()
-  )
+  # enable popovers  
+  $('[data-toggle="popover"]').popover()
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
+
 )

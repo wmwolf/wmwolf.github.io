@@ -2119,9 +2119,10 @@
 
   $(document).ready(function() {
     wizard.setup();
-    // enable popovers
-    return $(function() {
-      return $('[data-toggle="popover"]').popover();
+    // enable popovers  
+    $('[data-toggle="popover"]').popover();
+    return $('.popover-dismiss').popover({
+      trigger: 'focus'
     });
   });
 
