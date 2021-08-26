@@ -19,6 +19,10 @@
     .no-print {
       display:  none;
     }
+
+    html, body {
+      height: auto;
+    }
     </style>
 
 </head>
@@ -106,47 +110,45 @@
       </p>
       <ol>
         <li>
-          Select which degree plan you are pursuing in the "Degree" dropdown 
-          menu.
+          Select your degree plan from the "Degree" dropdown menu.
         </li>
         <li>
           Mark all courses you have <em>already completed</em> in prior terms
-          by toggling the "Completed" switches for those classes, or by
-          clicking the "completed" button in the "Details" dialog.
+          by toggling the "Completed" switches for those classes.
         </li>
         <li>
-          Mark all courses you are enrolling in, or already taking, in the
-          current term by toggling the "Enrolling" switch for these courses.
+          Mark all courses you are enrolling in for the selected term by toggling the "Enrolling" switch for those courses.
         </li>
         <li>
           Advance to the next tern by clicking the green button next to the
           "Term" indicator, or by selecting a new term from the dropdown menu.
         </li>
         <li>
-          Continue to mark which courses you will enroll in for those
-          subsequent terms, and repeat.
+          Repeat steps 3 and 4 as needed to build up a plan.
         </li>
       </ol>
       <p>
         As you mark courses enrolled or completed, they will appear in your
         course plan at the bottom of the page. When you're done, you can
-        <b>print the page</b> to a printer or to pdf to get just the final
+        <a href='#' id='print-page'>print the page</a> to a printer or to pdf to get just the final
         course plan.
+      </p>
+      <p>
+        <b>This tool is not a substitute for meeting with your academic and faculty advisors!</b> You should meet with your advisors each semester to confirm your course plan and discuss research, internship, career, and graduate study plans.
       </p>
     </div>
     <div class="col-12 col-lg-6">
       <h1>More information</h1>
       <p>Courses in <span class="font-weight-bold text-warning">gold</span> are
         <span class="font-weight-bold text-warning">available</span> for you to
-        take in the selected term. You have met the requirements for them by
-        that time, and they are offered (though PHYS 486 has a more nebulous
+        take in the selected term. You have completed their prerequisites or enrolled in their corequsites, and they are offered in the indicacted term (though PHYS 486 has a more nebulous
         requirement, so it may appear prematurely available).
       </p>
       <p>
         Courses in <span class="font-weight-bold text-primary">blue</span> are
         courses you are
         <span class="font-weight-bold text-primary">enrolling</span> in for the
-        designated term. If you advance to a later term, they will turn
+        designated term. Advancing to a later term will turn them
         <span class="font-weight-bold text-success">green</span>, indicating
         that you have
         <span class='font-weight-bold text-success'>completed</span> them.
@@ -154,12 +156,8 @@
       <p>
         Courses that are <span class="font-weight-bold text-muted">gray</span>
         are <span class="font-weight-bold text-muted">unavailable</span>.
-        They may require a corequisite class (ex. PHYS 231 requires prior or
-        concurrent enrollment in MATH 114), a prerequisite class (ex. PHYS 232
-        requires prior enrollment in PHYS 231), a more complex set of courses
-        (ex. PHYS 430 requires any two of PHYS 340, PHYS 350, or PHYS 360), or
-        they may not be offered in that particular term (ex. PHYS 375 is only
-        offered during the Spring of even years). Check the requirements and
+        They may require one or more <a tabindex="1" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Corequisite Courses" data-content="These are courses that must be taken before or concurrently with a particular course. For example, PHYS 231 has MATH 114 as a corequisite, so you must take MATH 114 before, or along with PHYS 231.">corequisite</a> or <a tabindex="2" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Prerequisite Courses" data-content="These are courses that must be completed before enrolling in another course. For example, PHYS 232 has PHYS 231 as a prerequisite, so you must complete PHYS 231 before you can enroll in PHYS 232.">prerequisite</a> courses, a <a tabindex="3" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Complex Prerequisites" data-content="This isn't common, but sometimes courses have multiple potential prerequisites. For exampls, PHYS 430 requires completing any two of PHYS 340, PHYS 350, and PHYS 360">more complex set of courses</a>, or
+        they may <a tabindex="4" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Course Scheduling" data-content="Some courses, like PHYS 231/232/332 are offered every single term. Others, like PHYS 350, are offered once a year. Still others, like PHYS 375, are only offered every other year.">not be offered in that particular term</a>. Check the requirements and
         availability of a course by clicking on its "Details" button.
       </p>
       <p>
@@ -173,7 +171,7 @@
         these three requirements are completed, the other courses will no
         longer be indicated as required. You will have satisfied all
         <em>major</em> degree requirements when all bold classes are green and
-        <a tabindex="0" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Credits Counted Toward Major" data-content="These include all required physics courses except PHYS 240. Additionally, any physics electives numbered over 325, and select courses from MSE count. Up to 6 credits may be counted from any combination of PHYS 399, PHYS 491, and PHYS 499. Up to 3 credits may be counted from PHYS 495.">credits counted towards the major</a>.      
+        <a tabindex="5" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Credits Counted Toward Major" data-content="These include all required physics courses except PHYS 240. Additionally, any physics electives numbered over 325, and select courses from MSE count. Up to 6 credits may be counted from any combination of PHYS 399, PHYS 491, and PHYS 499. Up to 3 credits may be counted from PHYS 495.">credits counted towards the major</a>.      
       </p>
     </div>
   </div>

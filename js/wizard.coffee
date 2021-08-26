@@ -1654,5 +1654,9 @@ $( document ).ready( ->
   $('.popover-dismiss').popover({
     trigger: 'focus'
   })
-
+  $('a#print-page').click( (event) ->
+    event.preventDefault()
+    window.print()
+    setTimeout("window.close()", 100)
+  )
 )

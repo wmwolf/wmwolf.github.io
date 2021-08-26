@@ -2121,8 +2121,13 @@
     wizard.setup();
     // enable popovers  
     $('[data-toggle="popover"]').popover();
-    return $('.popover-dismiss').popover({
+    $('.popover-dismiss').popover({
       trigger: 'focus'
+    });
+    return $('a#print-page').click(function(event) {
+      event.preventDefault();
+      window.print();
+      return setTimeout("window.close()", 100);
     });
   });
 
