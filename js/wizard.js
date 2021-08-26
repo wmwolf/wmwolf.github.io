@@ -585,7 +585,7 @@
     PHYS_445: {
       field: 'PHYS',
       number: 445,
-      name: 'Advanced Laboratory Technique',
+      name: 'Thermal Physics',
       lecture_hours: 4,
       lab_hours: 0,
       credits: 4,
@@ -1047,7 +1047,7 @@
 
   DegreePlan = class DegreePlan {
     constructor(degree_plan_info) {
-      var class_name, combo, j, k, l, len, len1, len2, len3, len4, len5, len6, len7, m, n, new_combo, new_sequence, o, p, q, ref, ref1, ref2, ref3, sequence;
+      var class_name, combo, j, k, l, len, len1, len2, len3, len4, len5, len6, len7, len8, m, n, new_combo, new_sequence, o, p, q, r, ref, ref1, ref2, ref3, ref4, sequence;
       this.degree_plan_info = degree_plan_info;
       this.name = this.degree_plan_info.name;
       this.credits_needed = this.degree_plan_info.credits_needed;
@@ -1059,6 +1059,7 @@
         requirements: [],
         choices: []
       };
+      this.extra_electives = [];
       this.course_groups = this.degree_plan_info.course_groups;
       // track class objects in the various requirements, rather than just class
       // designations
@@ -1112,6 +1113,13 @@
             }
             this.uncounted_classes.choices.push(new_combo);
           }
+        }
+      }
+      if (this.degree_plan_info.extra_electives !== void 0) {
+        ref4 = this.degree_plan_info.extra_electives;
+        for (r = 0, len8 = ref4.length; r < len8; r++) {
+          class_name = ref4[r];
+          this.extra_electives.push(get_course(class_name));
         }
       }
     }
@@ -1201,6 +1209,25 @@
       }
     }
 
+    // compute how many credits count towards the major requirement of 36 hours
+    credit_count() {
+      var course, credit_count, j, len;
+      credit_count = 0;
+      for (j = 0, len = courses.length; j < len; j++) {
+        course = courses[j];
+        if (course.completed || course.enrolling) {
+          // is course explicitly a requirement, choice, or explicit elective?
+          if (this.counted_classes.requirements.includes(course) || this.counted_classes.choices.flat(3).includes(course) || this.extra_electives.includes(course)) {
+            credit_count += course.credits;
+          // is course an implicit elective (PHYS class numbered over 325)
+          } else if (course.field === 'PHYS' && course.number > 325) {
+            credit_count += course.credits;
+          }
+        }
+      }
+      return credit_count;
+    }
+
   };
 
   YearTerm = class YearTerm {
@@ -1239,6 +1266,12 @@
         new_year += 1;
       }
       return new YearTerm(new_year, new_term);
+    }
+
+    toString() {
+      return `${this.term.replace(/^\w/, (c) => {
+        return c.toUpperCase();
+      })} ${this.year}`;
     }
 
   };
@@ -1340,7 +1373,7 @@
     'PHYS 231',
     'PHYS 232',
     'PHYS 332',
-    'PHYS_333',
+    'PHYS 333',
     'PHYS 350',
     'PHYS 365',
     'PHYS 486'],
@@ -1371,18 +1404,37 @@
         PHYS_333,
         PHYS_340,
         PHYS_350,
-        PHYS_361,
         PHYS_365]
         },
         {
           title: 'Advanced Courses',
           courses: [PHYS_360,
+        PHYS_486]
+        },
+        {
+          title: 'Electives',
+          courses: [PHYS_361,
+        PHYS_362,
+        PHYS_363,
         PHYS_367,
         PHYS_375,
         PHYS_430,
         PHYS_445,
         PHYS_465,
-        PHYS_486]
+        MSE_315,
+        MSE_357,
+        MSE_372,
+        MSE_374,
+        MSE_451]
+        },
+        {
+          title: 'Elective Support (uncounted towards major)',
+          courses: [CHEM_105,
+        CHEM_106,
+        CHEM_109,
+        CHEM_115,
+        MSE_221,
+        MSE_350]
         }
       ]
     },
@@ -1425,11 +1477,16 @@
         MSE_120,
         PHYS_231,
         PHYS_232,
-        PHYS_240]
+        PHYS_240,
+        CHEM_105,
+        CHEM_106,
+        CHEM_109,
+        CHEM_115]
         },
         {
           title: 'Intermediate Courses',
           courses: [MATH_312,
+        MATH_345,
         PHYS_255,
         PHYS_332,
         PHYS_333,
@@ -1442,20 +1499,26 @@
           title: 'Advanced Courses',
           courses: [PHYS_356,
         PHYS_360,
-        PHYS_367,
         PHYS_375,
         PHYS_430,
-        PHYS_445,
-        PHYS_465,
         PHYS_486]
         },
         {
-          title: 'Other Courses',
-          courses: [CHEM_105,
-        CHEM_106,
-        CHEM_109,
-        CHEM_115,
-        MATH_345]
+          title: 'Electives',
+          courses: [PHYS_333,
+        PHYS_367,
+        PHYS_445,
+        PHYS_465,
+        MSE_315,
+        MSE_357,
+        MSE_372,
+        MSE_374,
+        MSE_451]
+        },
+        {
+          title: 'Elective Support (uncounted towards major)',
+          courses: [MSE_221,
+        MSE_350]
         }
       ]
     },
@@ -1564,6 +1627,7 @@
     }
   };
 
+  // compute counted credits towards the degree
   today = new Date();
 
   current_year = today.getFullYear();
@@ -1633,7 +1697,7 @@
     },
     add_group: function(new_group) {
       var k, len1, ref, to_add;
-      to_add = "<hr class='my-5'>\n";
+      to_add = "<hr class='my-4'>\n";
       to_add += "<div class='row'><div class='col'>\n";
       to_add += `  <h2>${new_group.title}</h2>\n`;
       to_add += "</div></div>\n";
@@ -1649,77 +1713,77 @@
       return $('#body').append(to_add);
     },
     refresh: function(old_year_term) {
-      var k, len1, results;
-      results = [];
+      var credit_count, k, len1;
       for (k = 0, len1 = courses.length; k < len1; k++) {
         course = courses[k];
-        results.push(course.refresh(old_year_term, wizard.year_term, wizard.degree_plan));
+        course.refresh(old_year_term, wizard.year_term, wizard.degree_plan);
       }
-      return results;
+      // update credit count display
+      credit_count = wizard.degree_plan.credit_count();
+      $('#credit_count').html(credit_count);
+      if (credit_count >= wizard.degree_plan.credits_needed) {
+        $('#credit-status').removeClass('text-danger').addClass('text-success');
+      } else {
+        $('#credit-status').addClass('text-danger').removeClass('text-success');
+      }
+      // update the course plan
+      return wizard.build_course_plan();
     },
-    setup: function() {
-      var dp, first_year, group, i, k, l, len1, len2, m, ref, term, year;
-      // set up year-term selectors
-      first_year = year_terms[0].year;
-      first_term = year_terms[0].term.replace(/^\w/, (c) => {
-        return c.toUpperCase();
-      });
-      $('#year-term-dropdown').text(`${first_term} ${first_year}`);
-      for (i = k = 0; k <= 11; i = ++k) {
-        year = year_terms[i].year;
-        term = year_terms[i].term.replace(/^\w/, (c) => {
-          return c.toUpperCase();
-        });
-        $(`#year-term-menu>a[data-position='${i}']`).text(`${term} ${year}`);
-      }
-      $('#year-term-menu>a').click(function(event) {
-        var new_term, old_year_term, position;
-        event.preventDefault();
-        old_year_term = wizard.year_term;
-        position = Number($(this).data('position'));
-        wizard.year_term = year_terms[position];
-        // move active status to new choice
-        $('#year-term-menu>a').removeClass('active');
-        $(`#year-term-menu>a[data-position='${position}']`).addClass('active');
-        // update button text
-        new_term = wizard.year_term.term.replace(/^\w/, (c) => {
-          return c.toUpperCase();
-        });
-        $('#year-term-dropdown').text(`${new_term} ${wizard.year_term.year}`);
-        wizard.refresh(old_year_term);
-        // conditionally disable next button text
-        if (wizard.year_term.value() === year_terms[year_terms.length - 1].value()) {
-          return $('#next-term').prop('disabled', true);
-        }
-      });
-      // get next term button working
-      $('#next-term').click(function() {
-        var new_term, old_year_term;
-        old_year_term = wizard.year_term;
-        wizard.year_term = wizard.year_term.next();
-        new_term = wizard.year_term.term.replace(/^\w/, (c) => {
-          return c.toUpperCase();
-        });
-        // move active status to new choice
-        $('#year-term-menu>a').removeClass('active');
-        $(`#year-term-menu>a:contains('${new_term} ${wizard.year_term.year}')`).addClass('active');
-        
-        // update button text
-        new_term = wizard.year_term.term.replace(/^\w/, (c) => {
-          return c.toUpperCase();
-        });
-        $('#year-term-dropdown').text(`${new_term} ${wizard.year_term.year}`);
-        wizard.refresh(old_year_term);
-        // conditionally disable next button text
-        if (wizard.year_term.value() === year_terms[year_terms.length - 1].value()) {
-          return $('#next-term').prop('disabled', true);
-        }
-      });
+    set_degree_plan: function(new_degree_plan) {
+      var group, k, len1, ref;
+      wizard.degree_plan = new_degree_plan;
+      wizard.clear_groups();
       ref = wizard.degree_plan.course_groups;
-      for (l = 0, len1 = ref.length; l < len1; l++) {
-        group = ref[l];
+      for (k = 0, len1 = ref.length; k < len1; k++) {
+        group = ref[k];
         wizard.add_group(group);
       }
+      return wizard.setup_course_listeners();
+    },
+    build_course_plan: function() {
+      var k, l, len1, len2, len3, m, table_html, this_year_term_courses, year_term;
+      $('#course-plan').html('');
+      table_html = "";
+      for (k = 0, len1 = year_terms.length; k < len1; k++) {
+        year_term = year_terms[k];
+        this_year_term_courses = [];
+        for (l = 0, len2 = courses.length; l < len2; l++) {
+          course = courses[l];
+          if (course.completed || course.enrolling) {
+            if (course.year_term_taken.value() === year_term.value()) {
+              this_year_term_courses.push(course);
+            }
+          }
+        }
+        if (this_year_term_courses.length > 0) {
+          table_html += "  <thead class='thead-dark'>\n";
+          table_html += `    <tr><th scope='col' colspan=3 class='text-center'>${year_term}</th></tr>\n`;
+          table_html += "  </thead>\n";
+          table_html += "  <thead class='thead-light'>\n";
+          table_html += "    <tr>\n";
+          table_html += "      <th scope='col'>Course #</th>\n";
+          table_html += "      <th scope='col'>Course Name</th>\n";
+          table_html += "      <th scope='col'>Credits</th>\n";
+          table_html += "    </tr>\n";
+          table_html += "  </thead>\n";
+          table_html += "  <tbody>\n";
+          for (m = 0, len3 = this_year_term_courses.length; m < len3; m++) {
+            course = this_year_term_courses[m];
+            table_html += "    <tr>\n";
+            table_html += `      <td>${course.field} ${course.number}</td>\n`;
+            table_html += `      <td>${course.name}</td>\n`;
+            table_html += `      <td>${course.credits}</td>\n`;
+            table_html += "    </tr>\n";
+          }
+          table_html += "  </tbody>\n";
+        }
+      }
+      if (table_html !== "") {
+        table_html = `<table class='table'>\n${table_html}</table>\n`;
+        return $('#course-plan').html(`<h1 class='my-4'>Course Plan</h1>\n${table_html}`);
+      }
+    },
+    setup_course_listeners: function() {
       // activate switch listeners
       $('input.completed').click(function() {
         var this_course;
@@ -1732,7 +1796,7 @@
         return wizard.refresh(wizard.year_term);
       });
       // activate modal description listeners
-      $('button.description').click(function() {
+      return $('button.description').click(function() {
         course = get_course(this.id.split('-').slice(0, 2).join(' '));
         course.update_modal(wizard.year_term);
         $('#course-info').modal();
@@ -1758,11 +1822,78 @@
           return $('#course-info').modal('hide');
         });
       });
+    },
+    setup: function() {
+      /* Year Term Menu and Next Button */
+      var dp, first_year, i, k, l, len1, term, year;
+      first_year = year_terms[0].year;
+      first_term = year_terms[0].term.replace(/^\w/, (c) => {
+        return c.toUpperCase();
+      });
+      // populate dropdown menu
+      $('#year-term-dropdown').text(`${first_term} ${first_year}`);
+      for (i = k = 0; k <= 11; i = ++k) {
+        year = year_terms[i].year;
+        term = year_terms[i].term.replace(/^\w/, (c) => {
+          return c.toUpperCase();
+        });
+        $(`#year-term-menu>a[data-position='${i}']`).text(`${term} ${year}`);
+      }
+      // Set up listeners for year-term dropdown menu
+      $('#year-term-menu>a').click(function(event) {
+        var new_term, old_year_term, position;
+        event.preventDefault();
+        // update year-term, but hold on to old one so we can refresh, which 
+        // requires knowing both the old and new term
+        old_year_term = wizard.year_term;
+        position = Number($(this).data('position'));
+        wizard.year_term = year_terms[position];
+        // move active status to new choice
+        $('#year-term-menu>a').removeClass('active');
+        $(`#year-term-menu>a[data-position='${position}']`).addClass('active');
+        // update button text
+        new_term = wizard.year_term.term.replace(/^\w/, (c) => {
+          return c.toUpperCase();
+        });
+        $('#year-term-dropdown').text(`${new_term} ${wizard.year_term.year}`);
+        wizard.refresh(old_year_term);
+        // conditionally disable next button text
+        if (wizard.year_term.value() === year_terms[year_terms.length - 1].value()) {
+          return $('#next-term').prop('disabled', true);
+        }
+      });
+      // get next term button working
+      $('#next-term').click(function(event) {
+        var new_term, old_year_term;
+        event.preventDefault();
+        // update year-term, but hold on to old one so we can refresh, which 
+        // requires knowing both the old and new term
+        old_year_term = wizard.year_term;
+        wizard.year_term = wizard.year_term.next();
+        new_term = wizard.year_term.term.replace(/^\w/, (c) => {
+          return c.toUpperCase();
+        });
+        // move active status to new choice
+        $('#year-term-menu>a').removeClass('active');
+        $(`#year-term-menu>a:contains('${new_term} ${wizard.year_term.year}')`).addClass('active');
+        
+        // update button text
+        new_term = wizard.year_term.term.replace(/^\w/, (c) => {
+          return c.toUpperCase();
+        });
+        $('#year-term-dropdown').text(`${new_term} ${wizard.year_term.year}`);
+        wizard.refresh(old_year_term);
+        // conditionally disable next button
+        if (wizard.year_term.value() === year_terms[year_terms.length - 1].value()) {
+          return $('#next-term').prop('disabled', true);
+        }
+      });
+      /* Degree Plan Dropdown */
       // initialize degree plan dropdown button text
       $('#degree-plan-dropdown').text(wizard.degree_plan.name);
 // Populate degree plan dropdown
-      for (m = 0, len2 = degree_plans.length; m < len2; m++) {
-        dp = degree_plans[m];
+      for (l = 0, len1 = degree_plans.length; l < len1; l++) {
+        dp = degree_plans[l];
         if (dp === wizard.degree_plan) {
           $('#degree-plan-menu').append(`<a class='dropdown-item degree-plan-option active' href='#'>${dp.name}</a>`);
         } else {
@@ -1774,17 +1905,14 @@
         var self;
         event.preventDefault();
         self = this;
-        wizard.degree_plan = get_degree_plan(self.text);
-        wizard.clear_groups();
-        wizard.setup();
+        wizard.set_degree_plan(get_degree_plan(self.text));
         $('#degree-plan-menu>a.degree-plan-option').removeClass('active');
         $(`#degree-plan-menu>a.degree-plan-option:contains(${wizard.degree_plan.name})`).addClass('active');
         $('#degree-plan-dropdown').html(wizard.degree_plan.name);
-        
-        // for group in wizard.degree_plan.course_groups
-        //   wizard.add_group(group)
         return wizard.refresh(wizard.year_term);
       });
+      /* Setup Initial Degree Plan */
+      wizard.set_degree_plan(wizard.degree_plan);
       // set up initial availability
       return wizard.refresh(wizard.year_term);
     }

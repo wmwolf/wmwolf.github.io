@@ -64,11 +64,11 @@
       <div class="sticky bg-white py-3">
   <div class='row mb-3'>
     <div class="col-3">
-      <h2 class='text-right'>Degree</h2>
+      <h3 class='text-right'>Degree</h3>
     </div>
-    <div class="col-9">
+    <div class="col-4">
       <div class="dropdown">
-        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           
         </button>
         <div class="dropdown-menu" aria-labelledby="degree-plan-dropdown" id='degree-plan-menu'>
@@ -76,14 +76,19 @@
         </div>
       </div>
     </div>
+    <div class="col-5">
+      <h3>
+        Credits: <span class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / 36</span>
+      </h3>
+    </div>
   </div>
   <div class='row'>
     <div class="col-3">
-      <h2 class='text-right'>Term</h2>
+      <h3 class='text-right'>Term</h3>
     </div>
     <div class="col-9">
       <div class="dropdown">
-        <button class="btn btn-primary btn-lg dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Term 0
         </button>
         <div class="dropdown-menu" aria-labelledby="year-term-dropdown" id='year-term-menu'>
@@ -100,13 +105,100 @@
           <a class="dropdown-item year-term-option" data-position=10 href="#">Term 10</a>
           <a class="dropdown-item year-term-option" data-position=11 href="#">Term 11</a>
         </div>
-        <button class="btn btn-success btn-lg" id="next-term"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        <button class="btn btn-success" id="next-term"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
       </div>
     </div>
   </div>
 </div>
 
+<div id="instructions">
+  <div class="row">
+    <div class="col-12 col-lg-6">
+      <h1>Instructions</h1>
+      <p>
+        This wizard will guide you through planning out the rest of your
+        studies for a major or minor in the department of Physics and Astronomy
+        at UWEC. It does <em>not</em> account for liberal education
+        requirements (yet), and obviously won't account for your second major
+        or minor.
+      </p>
+      <p>
+        Here's how to use it:
+      </p>
+      <ol>
+        <li>
+          Select which degree plan you are pursuing in the "Degree" dropdown 
+          menu.
+        </li>
+        <li>
+          Mark all courses you have <em>already completed</em> in prior terms
+          by toggling the "Completed" switches for those classes, or by
+          clicking the "completed" button in the "Details" dialog.
+        </li>
+        <li>
+          Mark all courses you are enrolling in, or already taking, in the
+          current term by toggling the "Enrolling" switch for these courses.
+        </li>
+        <li>
+          Advance to the next tern by clicking the green button next to the
+          "Term" indicator, or by selecting a new term from the dropdown menu.
+        </li>
+        <li>
+          Continue to mark which courses you will enroll in for those
+          subsequent terms, and repeat.
+        </li>
+      </ol>
+      <p>
+        As you mark courses enrolled or completed, they will appear in your
+        course plan at the bottom of the page.
+      </p>
+    </div>
+    <div class="col-12 col-lg-6">
+      <h1>More information</h1>
+      <p>Courses in <span class="font-weight-bold text-warning">gold</span> are
+        <span class="font-weight-bold text-warning">available</span> for you to
+        take in the selected term. You have met the requirements for them by
+        that time, and they are offered (though PHYS 486 has a more nebulous
+        requirement, so it may appear prematurely available).
+      </p>
+      <p>
+        Courses in <span class="font-weight-bold text-primary">blue</span> are
+        courses you are
+        <span class="font-weight-bold text-primary">enrolling</span> in for the
+        designated term. If you advance to a later term, they will turn
+        <span class="font-weight-bold text-success">green</span>, indicating
+        that you have
+        <span class='font-weight-bold text-success'>completed</span> them.
+      </p>
+      <p>
+        Courses that are <span class="font-weight-bold text-secondary">gray</span>
+        are <span class="font-weight-bold text-secondary">unavailable</span>.
+        They may require a corequisite class (ex. PHYS 231 requires prior or
+        concurrent enrollment in MATH 114), a prerequisite class (ex. PHYS 232
+        requires you to have already completed PHYS 231), they may require a more
+        complex set of courses (ex. PHYS 486 requires any two of PHYS 340, 350,
+        and 360), and they may not be offered in that particular term (ex. PHYS
+        375 is only offered during the Spring of even years). To find out the
+        requirements for a course, click on its "Details" button.
+      </p>
+      <p>
+        Finally, courses with a thicker border are required for the selected
+        degree plan. They may be outright required, or they may be part of
+        a selection of courses that you may opt to take. For instance, Applied
+        Physics emphasis majors must take both PHYS 255 <b>and</b> PHYS 356,
+        <b>or</b> they make take either of PHYS 365 or PHYS 375. Once any of
+        these three requirements are met, the other courses will no longer be
+        indicated as required.
+      </p>
+    </div>
+  </div>
+</div>
+
 <div id="body">
+  
+</div>
+
+<div id="course-plan">
   
 </div>
 

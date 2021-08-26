@@ -543,7 +543,7 @@ course_data =
   PHYS_445:
     field: 'PHYS'
     number: 445
-    name: 'Advanced Laboratory Technique'
+    name: 'Thermal Physics'
     lecture_hours: 4
     lab_hours: 0
     credits: 4
@@ -917,6 +917,7 @@ class DegreePlan
     @uncounted_classes =
       requirements: []
       choices: []
+    @extra_electives = []
 
     @course_groups = @degree_plan_info.course_groups
 
@@ -949,6 +950,10 @@ class DegreePlan
               new_sequence.push(get_course(class_name))
             new_combo.push(new_sequence)
           @uncounted_classes.choices.push(new_combo)
+
+    unless @degree_plan_info.extra_electives == undefined
+      for class_name in @degree_plan_info.extra_electives
+        @extra_electives.push(get_course(class_name))
 
   # determine if a course sequence (part of a combination of possible options)
   # is "complete". It's considered complete when all courses are already
@@ -1013,6 +1018,20 @@ class DegreePlan
             return false
       return true
 
+  # compute how many credits count towards the major requirement of 36 hours
+  credit_count: ->
+    credit_count = 0
+    for course in courses
+      if course.completed || course.enrolling
+        # is course explicitly a requirement, choice, or explicit elective?
+        if @counted_classes.requirements.includes(course) || @counted_classes.choices.flat(3).includes(course) || @extra_electives.includes(course)
+          credit_count += course.credits
+        # is course an implicit elective (PHYS class numbered over 325)
+        else if course.field == 'PHYS' && course.number > 325
+          credit_count += course.credits
+    credit_count
+
+
 class YearTerm
   constructor: (@year, @term) ->
 
@@ -1039,6 +1058,9 @@ class YearTerm
       new_term = 'spring'
       new_year += 1
     new YearTerm(new_year, new_term)
+
+  toString: ->
+    "#{@term.replace(/^\w/, (c) => c.toUpperCase())} #{@year}"
     
 # combine course data with the course class to make useful objects
 MATH_112 = new Course(course_data.MATH_112)
@@ -1099,7 +1121,7 @@ degree_plan_data = [
     name: 'Liberal Arts'
     credits_needed: 36
     counted:
-      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232', 'PHYS 332', 'PHYS_333',
+      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232', 'PHYS 332', 'PHYS 333',
       'PHYS 350', 'PHYS 365', 'PHYS 486']
       choices: [[['PHYS 340'], ['PHYS 360']]]
     uncounted:
@@ -1112,12 +1134,22 @@ degree_plan_data = [
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_361, PHYS_365]
+        courses: [MATH_312, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_365]
       },
       {
         title: 'Advanced Courses'
-        courses: [PHYS_360, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486]
+        courses: [PHYS_360, PHYS_486]
+      },
+      {
+        title: 'Electives'
+        courses: [PHYS_361, PHYS_362, PHYS_363, PHYS_367, PHYS_375, PHYS_430,
+        PHYS_445, PHYS_465, MSE_315, MSE_357, MSE_372, MSE_374, MSE_451]
+      },
+      {
+        title: 'Elective Support (uncounted towards major)'
+        courses: [CHEM_105, CHEM_106, CHEM_109, CHEM_115, MSE_221, MSE_350]
       }
+
     ]
   },
   {
@@ -1133,19 +1165,25 @@ degree_plan_data = [
     course_groups: [
       {
         title: 'Introductory and Prerequisite Courses'
-        courses: [MATH_112, MATH_114, MATH_215, MATH_216, PHYS_186, MSE_120, PHYS_231, PHYS_232, PHYS_240]
+        courses: [MATH_112, MATH_114, MATH_215, MATH_216, PHYS_186, MSE_120,
+        PHYS_231, PHYS_232, PHYS_240, CHEM_105, CHEM_106, CHEM_109, CHEM_115]
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, PHYS_255, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_361, PHYS_365]
+        courses: [MATH_312, MATH_345, PHYS_255, PHYS_332, PHYS_333, PHYS_340, PHYS_350,
+        PHYS_361, PHYS_365]
       },
       {
         title: 'Advanced Courses'
-        courses: [PHYS_356, PHYS_360, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486]
+        courses: [PHYS_356, PHYS_360, PHYS_375, PHYS_430, PHYS_486]
       },
       {
-        title: 'Other Courses'
-        courses: [CHEM_105, CHEM_106, CHEM_109, CHEM_115, MATH_345]
+        title: 'Electives'
+        courses: [PHYS_333, PHYS_367, PHYS_445, PHYS_465, MSE_315, MSE_357, MSE_372, MSE_374, MSE_451]
+      },
+      {
+        title: 'Elective Support (uncounted towards major)'
+        courses: [MSE_221, MSE_350]
       }
     ]
   },
@@ -1199,6 +1237,10 @@ get_degree_plan = (plan_name) ->
   for dp in degree_plans
     if dp.name == plan_name
       return dp
+
+# compute counted credits towards the degree
+
+
     
   
 
@@ -1258,7 +1300,7 @@ wizard =
     $('#body').html('')
 
   add_group: (new_group) ->
-    to_add = "<hr class='my-5'>\n"
+    to_add = "<hr class='my-4'>\n"
     to_add += "<div class='row'><div class='col'>\n"
     to_add += "  <h2>#{new_group.title}</h2>\n"
     to_add += "</div></div>\n"
@@ -1274,60 +1316,57 @@ wizard =
     for course in courses
       course.refresh(old_year_term, wizard.year_term, wizard.degree_plan)
 
-  setup: ->
-    # set up year-term selectors
-    first_year = year_terms[0].year
-    first_term = year_terms[0].term.replace(/^\w/, (c) => c.toUpperCase())
-    $('#year-term-dropdown').text("#{first_term} #{first_year}")
-    for i in [0..11]
-      year = year_terms[i].year
-      term = year_terms[i].term.replace(/^\w/, (c) => c.toUpperCase())
-      $("#year-term-menu>a[data-position='#{i}']").text("#{term} #{year}")
+    # update credit count display
+    credit_count = wizard.degree_plan.credit_count()
+    $('#credit_count').html(credit_count)
+    if credit_count >= wizard.degree_plan.credits_needed
+      $('#credit-status').removeClass('text-danger').addClass('text-success')
+    else
+      $('#credit-status').addClass('text-danger').removeClass('text-success')
 
+    # update the course plan
+    wizard.build_course_plan()
 
-    $('#year-term-menu>a').click( (event) ->
-      event.preventDefault()
-      old_year_term = wizard.year_term
-      position = Number($(this).data('position'))
-      wizard.year_term = year_terms[position]
-
-      # move active status to new choice
-      $('#year-term-menu>a').removeClass('active')
-      $("#year-term-menu>a[data-position='#{position}']").addClass('active')
-
-      # update button text
-      new_term = wizard.year_term.term.replace(/^\w/, (c) => c.toUpperCase())
-      $('#year-term-dropdown').text("#{new_term} #{wizard.year_term.year}")
-      wizard.refresh(old_year_term)
-
-      # conditionally disable next button text
-      if wizard.year_term.value() == year_terms[year_terms.length - 1].value()
-        $('#next-term').prop('disabled', true)
-    )
-
-    # get next term button working
-    $('#next-term').click( ->
-      old_year_term = wizard.year_term
-      wizard.year_term = wizard.year_term.next()
-      new_term = wizard.year_term.term.replace(/^\w/, (c) => c.toUpperCase())
-
-      # move active status to new choice
-      $('#year-term-menu>a').removeClass('active')
-      $("#year-term-menu>a:contains('#{new_term} #{wizard.year_term.year}')").addClass('active')      
-
-      # update button text
-      new_term = wizard.year_term.term.replace(/^\w/, (c) => c.toUpperCase())
-      $('#year-term-dropdown').text("#{new_term} #{wizard.year_term.year}")
-      wizard.refresh(old_year_term)
-
-      # conditionally disable next button text
-      if wizard.year_term.value() == year_terms[year_terms.length - 1].value()
-        $('#next-term').prop('disabled', true)
-    )
-
+  set_degree_plan: (new_degree_plan) ->
+    wizard.degree_plan = new_degree_plan
+    wizard.clear_groups()
     for group in wizard.degree_plan.course_groups
       wizard.add_group(group)
+    wizard.setup_course_listeners()
 
+  build_course_plan: ->
+    $('#course-plan').html('')
+    table_html = ""
+    for year_term in year_terms
+      this_year_term_courses = []
+      for course in courses
+        if course.completed || course.enrolling
+          if course.year_term_taken.value() == year_term.value()
+            this_year_term_courses.push(course)
+      if this_year_term_courses.length > 0
+        table_html += "  <thead class='thead-dark'>\n"
+        table_html += "    <tr><th scope='col' colspan=3 class='text-center'>#{year_term}</th></tr>\n"
+        table_html += "  </thead>\n"
+        table_html += "  <thead class='thead-light'>\n"
+        table_html += "    <tr>\n"
+        table_html += "      <th scope='col'>Course #</th>\n"
+        table_html += "      <th scope='col'>Course Name</th>\n"
+        table_html += "      <th scope='col'>Credits</th>\n"
+        table_html += "    </tr>\n"
+        table_html += "  </thead>\n"
+        table_html += "  <tbody>\n"
+        for course in this_year_term_courses
+          table_html += "    <tr>\n"
+          table_html += "      <td>#{course.field} #{course.number}</td>\n"
+          table_html += "      <td>#{course.name}</td>\n"
+          table_html += "      <td>#{course.credits}</td>\n"
+          table_html += "    </tr>\n"
+        table_html += "  </tbody>\n"
+    unless table_html == ""
+      table_html = "<table class='table'>\n#{table_html}</table>\n"
+      $('#course-plan').html("<h1 class='my-4'>Course Plan</h1>\n#{table_html}")
+
+  setup_course_listeners: ->
     # activate switch listeners
     $('input.completed').click( ->
       this_course = get_course(this.id.split('-')[0..1].join(' '))
@@ -1368,6 +1407,70 @@ wizard =
       )
     )
 
+
+
+  setup: ->
+    ### Year Term Menu and Next Button ###
+    first_year = year_terms[0].year
+    first_term = year_terms[0].term.replace(/^\w/, (c) => c.toUpperCase())
+
+    # populate dropdown menu
+    $('#year-term-dropdown').text("#{first_term} #{first_year}")
+    for i in [0..11]
+      year = year_terms[i].year
+      term = year_terms[i].term.replace(/^\w/, (c) => c.toUpperCase())
+      $("#year-term-menu>a[data-position='#{i}']").text("#{term} #{year}")
+
+    # Set up listeners for year-term dropdown menu
+    $('#year-term-menu>a').click( (event) ->
+      event.preventDefault()
+
+      # update year-term, but hold on to old one so we can refresh, which 
+      # requires knowing both the old and new term
+      old_year_term = wizard.year_term
+      position = Number($(this).data('position'))
+      wizard.year_term = year_terms[position]
+
+      # move active status to new choice
+      $('#year-term-menu>a').removeClass('active')
+      $("#year-term-menu>a[data-position='#{position}']").addClass('active')
+
+      # update button text
+      new_term = wizard.year_term.term.replace(/^\w/, (c) => c.toUpperCase())
+      $('#year-term-dropdown').text("#{new_term} #{wizard.year_term.year}")
+      wizard.refresh(old_year_term)
+
+      # conditionally disable next button text
+      if wizard.year_term.value() == year_terms[year_terms.length - 1].value()
+        $('#next-term').prop('disabled', true)
+    )
+
+    # get next term button working
+    $('#next-term').click( (event) ->
+      event.preventDefault()
+
+      # update year-term, but hold on to old one so we can refresh, which 
+      # requires knowing both the old and new term
+      old_year_term = wizard.year_term
+      wizard.year_term = wizard.year_term.next()
+      new_term = wizard.year_term.term.replace(/^\w/, (c) => c.toUpperCase())
+
+      # move active status to new choice
+      $('#year-term-menu>a').removeClass('active')
+      $("#year-term-menu>a:contains('#{new_term} #{wizard.year_term.year}')").addClass('active')      
+
+      # update button text
+      new_term = wizard.year_term.term.replace(/^\w/, (c) => c.toUpperCase())
+      $('#year-term-dropdown').text("#{new_term} #{wizard.year_term.year}")
+      wizard.refresh(old_year_term)
+
+      # conditionally disable next button
+      if wizard.year_term.value() == year_terms[year_terms.length - 1].value()
+        $('#next-term').prop('disabled', true)
+    )
+
+    ### Degree Plan Dropdown ###
+
     # initialize degree plan dropdown button text
     $('#degree-plan-dropdown').text(wizard.degree_plan.name)
 
@@ -1384,20 +1487,17 @@ wizard =
     $('#degree-plan-menu>a.degree-plan-option').click( (event)->
       event.preventDefault()
       self = this
-      wizard.degree_plan = get_degree_plan(self.text)
-      wizard.clear_groups()
-      wizard.setup()
+      wizard.set_degree_plan(get_degree_plan(self.text))
       $('#degree-plan-menu>a.degree-plan-option').removeClass('active')
       $("#degree-plan-menu>a.degree-plan-option:contains(#{wizard.degree_plan.name})").addClass('active')
       $('#degree-plan-dropdown').html(wizard.degree_plan.name)
 
-      
-      # for group in wizard.degree_plan.course_groups
-      #   wizard.add_group(group)
-
-
       wizard.refresh(wizard.year_term)
     )
+
+    ### Setup Initial Degree Plan ###
+
+    wizard.set_degree_plan(wizard.degree_plan)
 
     # set up initial availability
     wizard.refresh(wizard.year_term)
