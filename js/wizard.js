@@ -5,7 +5,7 @@
   // - instantiate Course instance from entry in course_data object
   // - add course to courses array
   // - add course to any course plan's requirements and associated groups
-  var CHEM_105, CHEM_106, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451, PHYS_186, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_363, PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, first_term, get_course, get_degree_plan, j, len, second_term, today, wizard, year_terms;
+  var CHEM_105, CHEM_106, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451, PHYS_115, PHYS_186, PHYS_205, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_363, PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, first_term, get_course, get_degree_plan, j, len, second_term, today, wizard, year_terms;
 
   course_data = {
     MATH_112: {
@@ -292,6 +292,19 @@
       years_offered: 'all',
       terms_offered: 'spring'
     },
+    PHYS_115: {
+      field: 'PHYS',
+      number: 115,
+      name: 'Survey of Astronomy',
+      lecture_hours: 3,
+      lab_hours: 0,
+      credits: 3,
+      description: "A one-semester presentation of our current understanding of the universe, including the solar system, birth and death of stars, unusual phenomena such as black holes and quasars, evolution of galaxies and the universe, and our link with the cosmos.",
+      le: ['K1'],
+      requirements: null,
+      years_offered: 'all',
+      terms_offered: 'all'
+    },
     PHYS_186: {
       field: 'PHYS',
       number: 186,
@@ -304,6 +317,45 @@
       requirements: null,
       years_offered: 'all',
       terms_offered: 'fall'
+    },
+    PHYS_205: {
+      field: 'PHYS',
+      number: 205,
+      name: 'Physics of Renewable Energy',
+      lecture_hours: 3,
+      lab_hours: 2,
+      credits: 4,
+      description: "Explores the basic physics principles behind various types of renewable energy sources. Discusses impact renewable energy sources have on mitigating global warming and climate change.",
+      le: ['K1', 'K1L', 'R3'],
+      requirements: null,
+      years_offered: 'all',
+      terms_offered: 'fall'
+    },
+    PHYS_226: {
+      field: 'PHYS',
+      number: 226,
+      name: 'Astronomy-Solar System',
+      lecture_hours: 3,
+      lab_hours: 2,
+      credits: 4,
+      description: "The physical nature of the solar system, including earth motions, celestial coordinates, time, telescopes, moon, planets, sun, and origin of solar system.",
+      le: ['K1', 'K1L', 'I1'],
+      requirements: null,
+      years_offered: 'all',
+      terms_offered: 'fall'
+    },
+    PHYS_229: {
+      field: 'PHYS',
+      number: 229,
+      name: 'Astronomy-Stars and Galaxies',
+      lecture_hours: 3,
+      lab_hours: 2,
+      credits: 4,
+      description: "The physical nature of the universe, including stellar evolution, multiple and variable stars, the Milky Way galaxy, other galaxies, and origin of the universe.",
+      le: ['K1', 'K1L'],
+      requirements: null,
+      years_offered: 'all',
+      terms_offered: 'spring'
     },
     PHYS_231: {
       field: 'PHYS',
@@ -366,6 +418,32 @@
       },
       years_offered: 'all',
       terms_offered: 'fall'
+    },
+    PHYS_308: {
+      field: 'PHYS',
+      number: 308,
+      name: 'Science of Musical Sound',
+      lecture_hours: 3,
+      lab_hours: 0,
+      credits: 3,
+      description: "Physical concepts related to production of tones and speech. Application to musical instruments and auditorium acoustics, with experimental demonstrations of vibrational phenomena and electronic sound analysis and synthesis. No prior physics or university mathematics assumed.",
+      le: ['K1'],
+      requirements: null,
+      years_offered: 'all',
+      terms_offered: 'spring'
+    },
+    PHYS_315: {
+      field: 'PHYS',
+      number: 315,
+      name: 'The Mysterious Universe',
+      lecture_hours: 3,
+      lab_hours: 0,
+      credits: 3,
+      description: "A view of the world as revealed by contemporary physical thought. Topics include size and origin of universe, ultimate nature of matter; modern ideas of space, time and energy; possibilities of extraterrestrial life; and values and limitations of science.",
+      le: ['K1', 'I1'],
+      requirements: null,
+      years_offered: 'all',
+      terms_offered: 'all'
     },
     PHYS_332: {
       field: 'PHYS',
@@ -439,21 +517,6 @@
       requirements: {
         prereqs: ['PHYS 255', 'MATH 215'],
         exclude: ['PHYS 356']
-      },
-      years_offered: 'all',
-      terms_offered: 'spring'
-    },
-    PHYS_360: {
-      field: 'PHYS',
-      number: 360,
-      name: 'Electronics',
-      lecture_hours: 3,
-      lab_hours: 3,
-      credits: 4,
-      description: "Description, analysis, and laboratory measurements of digital and analog devices including transistor amplifiers, operational amplifiers, oscillators, gates, flip-flops, analog-digital converters, and microprocessors.",
-      le: [],
-      requirements: {
-        prereqs: ['PHYS 350', 'MATH 240']
       },
       years_offered: 'all',
       terms_offered: 'spring'
@@ -615,7 +678,7 @@
     PHYS_486: {
       field: 'PHYS',
       number: 486,
-      name: 'Introductory Seminar',
+      name: 'Senior Seminar',
       lecture_hours: 0.5,
       lab_hours: 0,
       credits: 0.5,
@@ -880,7 +943,7 @@
     clear_formatting() {
       $(this.card_sel).removeClass(this.all_border_classes);
       $(this.header_sel).removeClass(this.all_bg_classes);
-      $(this.header_sel).removeClass('text-white');
+      $(this.header_sel).removeClass('text-white font-weight-bold');
       return $(this.modal_sel).removeClass(this.all_btn_classes);
     }
 
@@ -893,6 +956,7 @@
       if (degree_plan) {
         if (degree_plan.required(this)) {
           $(this.card_sel).addClass('border-thick');
+          $(this.header_sel).addClass('font-weight-bold');
         }
       }
       $(this.card_sel).addClass('border-warning');
@@ -912,6 +976,7 @@
       if (degree_plan) {
         if (degree_plan.required(this)) {
           $(this.card_sel).addClass('border-thick');
+          $(this.header_sel).addClass('font-weight-bold');
         }
       }
       $(this.card_sel).addClass('border-secondary');
@@ -931,6 +996,7 @@
       if (degree_plan) {
         if (degree_plan.required(this)) {
           $(this.card_sel).addClass('border-thick');
+          $(this.header_sel).addClass('font-weight-bold');
         }
       }
       $(this.card_sel).addClass('border-success');
@@ -976,6 +1042,7 @@
       if (degree_plan) {
         if (degree_plan.required(this)) {
           $(this.card_sel).addClass('border-thick');
+          $(this.header_sel).addClass('font-weight-bold');
         }
       }
       $(this.card_sel).addClass('border-primary');
@@ -991,12 +1058,12 @@
       // moving to future year? convert class from enrolling to taken
       if (new_year_term.value() > old_year_term.value()) {
         if (this.enrolling) {
-          this.mark_completed(old_year_term);
+          this.mark_completed(old_year_term, degree_plan);
           $(this.enrolling_sel).prop('checked', this.enrolling);
           return $(this.completed_sel).prop('checked', this.completed);
         } else if (this.completed) {
           if (new_year_term.value() > this.year_term_taken.value()) {
-            return this.mark_completed(this.year_term_taken);
+            return this.mark_completed(this.year_term_taken, degree_plan);
           }
         } else if (this.available(new_year_term)) {
           return this.mark_available(degree_plan);
@@ -1010,9 +1077,9 @@
           if (!this.year_term_taken) {
             // probably just marked completed; pretend it was taken the term
             // before it was marked completed
-            return this.mark_completed(old_year_term.prev());
+            return this.mark_completed(old_year_term.prev(), degree_plan);
           } else {
-            return this.mark_completed(this.year_term_taken);
+            return this.mark_completed(this.year_term_taken, degree_plan);
           }
         } else if (this.enrolling) {
           return this.mark_enrolling(new_year_term, degree_plan);
@@ -1025,7 +1092,7 @@
         // going back in time; might need to unset date taken
         if (this.completed) {
           if (new_year_term.value() > this.year_term_taken.value()) {
-            return this.mark_completed(this.year_term_taken);
+            return this.mark_completed(this.year_term_taken, degree_plan);
           } else if (new_year_term.value() === this.year_term_taken.value()) {
             return this.mark_enrolling(this.year_term_taken, degree_plan);
           } else if (this.available(new_year_term)) {
@@ -1168,7 +1235,7 @@
           if (!combo.flat(3).includes(course)) {
             continue;
           }
-// bail out if any one sequence is completed
+// bail out if any one sequence is completed; this class isn't needed
           for (k = 0, len1 = combo.length; k < len1; k++) {
             sequence = combo[k];
             // skip the sequence if the class appears in it (it might be complete,
@@ -1197,7 +1264,7 @@
             // skip the sequence if the class appears in it (it might be complete,
             // but our convention is that completed courses can still be
             // "required")
-            if (!sequence.flat(2).includes(course)) {
+            if (sequence.flat(2).includes(course)) {
               continue;
             }
             if (this.sequence_completed(sequence)) {
@@ -1209,7 +1276,7 @@
       }
     }
 
-    // compute how many credits count towards the major requirement of 36 hours
+    // compute how many credits count towards the degree requirement
     credit_count() {
       var course, credit_count, j, len;
       credit_count = 0;
@@ -1314,7 +1381,15 @@
 
   MSE_451 = new Course(course_data.MSE_451);
 
+  PHYS_115 = new Course(course_data.PHYS_115);
+
   PHYS_186 = new Course(course_data.PHYS_186);
+
+  PHYS_205 = new Course(course_data.PHYS_205);
+
+  PHYS_226 = new Course(course_data.PHYS_226);
+
+  PHYS_229 = new Course(course_data.PHYS_229);
 
   PHYS_231 = new Course(course_data.PHYS_231);
 
@@ -1323,6 +1398,10 @@
   PHYS_240 = new Course(course_data.PHYS_240);
 
   PHYS_255 = new Course(course_data.PHYS_255);
+
+  PHYS_308 = new Course(course_data.PHYS_308);
+
+  PHYS_315 = new Course(course_data.PHYS_315);
 
   PHYS_332 = new Course(course_data.PHYS_332);
 
@@ -1356,7 +1435,17 @@
 
   PHYS_486 = new Course(course_data.PHYS_486);
 
-  courses = [MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, CHEM_105, CHEM_106, CHEM_109, CHEM_115, MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451, PHYS_186, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_363, PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486];
+  /* IMPORTANT GLOBAL VARIABLE */
+  // This lists all the coures objects and is used in several classes, which
+  // is terrible form, but hey, it works! Well, usually... The order is important.
+  // When cycling through the courses, its best if prerequisites come before
+  // the courses they depend on. So math courses should always go first, and then
+  // mostly courses can simply increase in number. However, care must be taken to
+  // ensure that some MSE courses are in the right place. For instance, MSE 451
+  // depends on PHYS 333, but if it comes before PHYS 333, completing PHYS 333
+  // will not immediately cause PHYS 451 to be marked as available because it is
+  // refreshed *before* PHYS 333 since it's earlier on the list.
+  courses = [MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, CHEM_105, CHEM_106, CHEM_109, CHEM_115, PHYS_115, PHYS_186, PHYS_205, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_363, PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486, MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451];
 
 // firm up requirements so they work properly
   for (j = 0, len = courses.length; j < len; j++) {
@@ -1385,6 +1474,10 @@
     'PHYS 240'],
         choices: []
       },
+      extra_electives: ['MSE 374',
+    'MSE 357',
+    'MSE 372',
+    'MSE 451'],
       course_groups: [
         {
           title: 'Introductory and Prerequisite Courses',
@@ -1466,6 +1559,10 @@
     'CHEM 106',
     'CHEM 109']]]
       },
+      extra_electives: ['MSE 374',
+    'MSE 357',
+    'MSE 372',
+    'MSE 451'],
       course_groups: [
         {
           title: 'Introductory and Prerequisite Courses',
@@ -1489,10 +1586,8 @@
         MATH_345,
         PHYS_255,
         PHYS_332,
-        PHYS_333,
         PHYS_340,
         PHYS_350,
-        PHYS_361,
         PHYS_365]
         },
         {
@@ -1506,6 +1601,9 @@
         {
           title: 'Electives',
           courses: [PHYS_333,
+        PHYS_361,
+        PHYS_362,
+        PHYS_363,
         PHYS_367,
         PHYS_445,
         PHYS_465,
@@ -1539,11 +1637,12 @@
       uncounted: {
         requirements: ['MATH 312',
     'PHYS 240'],
-        choices: [[['CHEM 115'],
-    ['CHEM 105',
-    'CHEM 106',
-    'CHEM 109']]]
+        choices: []
       },
+      extra_electives: ['MSE 374',
+    'MSE 357',
+    'MSE 372',
+    'MSE 451'],
       course_groups: [
         {
           title: 'Introductory and Prerequisite Courses',
@@ -1567,8 +1666,7 @@
         },
         {
           title: 'Advanced Courses',
-          courses: [PHYS_356,
-        PHYS_360]
+          courses: [PHYS_356]
         },
         {
           title: 'Electives',
@@ -1595,6 +1693,106 @@
         CHEM_115,
         MSE_221,
         MSE_350]
+        }
+      ]
+    },
+    {
+      name: 'LabVIEW',
+      credits_needed: 13,
+      counted: {
+        requirements: ['PHYS 350',
+    'PHYS 360',
+    'PHYS 361',
+    'PHYS 362',
+    'PHYS 363'],
+        choices: []
+      },
+      uncounted: {
+        requirements: [],
+        choices: []
+      },
+      course_groups: [
+        {
+          title: 'Introductory and Prerequisite Courses',
+          courses: [MATH_112,
+        MATH_114,
+        MATH_215,
+        PHYS_231,
+        PHYS_232,
+        PHYS_240]
+        },
+        {
+          title: 'Certificate Courses',
+          courses: [PHYS_350,
+        PHYS_360,
+        PHYS_361,
+        PHYS_362,
+        PHYS_363]
+        }
+      ]
+    },
+    {
+      name: 'Minor',
+      credits_needed: 24,
+      counted: {
+        requirements: ['PHYS 231',
+    'PHYS 232',
+    'PHYS 332'],
+        choices: []
+      },
+      uncounted: {
+        requirements: ['MATH 215'],
+        choices: []
+      },
+      extra_electives: ['PHYS 115',
+    'PHYS 186',
+    'PHYS 205',
+    'PHYS 226',
+    'PHYS 229',
+    'PHYS 240',
+    'PHYS 308',
+    'PHYS 315'],
+      course_groups: [
+        {
+          title: 'Prerequisite Courses',
+          courses: [MATH_112,
+        MATH_114,
+        MATH_215]
+        },
+        {
+          title: 'Required Courses',
+          courses: [PHYS_231,
+        PHYS_232,
+        PHYS_332]
+        },
+        {
+          title: 'Basic Electives',
+          courses: [PHYS_115,
+        PHYS_186,
+        PHYS_205,
+        PHYS_226,
+        PHYS_229,
+        PHYS_240,
+        PHYS_308,
+        PHYS_315]
+        },
+        {
+          title: 'Advanced Electives',
+          courses: [PHYS_333,
+        PHYS_340,
+        PHYS_350,
+        PHYS_356,
+        PHYS_360,
+        PHYS_361,
+        PHYS_362,
+        PHYS_363,
+        PHYS_365,
+        PHYS_367,
+        PHYS_375,
+        PHYS_430,
+        PHYS_445,
+        PHYS_465,
+        PHYS_486]
         }
       ]
     }
@@ -1738,6 +1936,7 @@
         group = ref[k];
         wizard.add_group(group);
       }
+      $('#credits-needed').html(`${new_degree_plan.credits_needed}`);
       return wizard.setup_course_listeners();
     },
     build_course_plan: function() {
@@ -1779,7 +1978,7 @@
         }
       }
       if (table_html !== "") {
-        table_html = `<table class='table'>\n${table_html}</table>\n`;
+        table_html = `<table class='table table-hover table-sm'>\n${table_html}</table>\n`;
         return $('#course-plan').html(`<h1 class='my-4'>Course Plan</h1>\n${table_html}`);
       }
     },

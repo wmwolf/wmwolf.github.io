@@ -7,25 +7,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen, print">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" type="text/css" href="/css/syntax2.css" media="screen">
-  <link rel="stylesheet" type="text/css" href="/css/extras.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/css/syntax2.css" media="screen, print">
+  <link rel="stylesheet" type="text/css" href="/css/extras.css" media="screen, print">
+
+  <style type=text/css media=print>
+    .no-print {
+      display:  none;
+    }
+    </style>
+
 </head>
 
-  <meta name="keywords" content="UCSB, university, California, Santa Barbara,
-  astrophysics, astronomy, astro, Bill, William, Wolf, research, theory,
-  nova, novae, supernova"/>
-  <title>Bill Wolf</title>
+  <meta name="keywords" content="UWEC, university, Wisconsin, Eau Claire,
+  astrophysics, astronomy, astro, professor Bill, William, Wolf, research, theory, nova, novae, supernova, physics"/>
+  <title>Welcome to Jekyll!</title>
 </head>
 
 <body>
   <div class='wrapper'>
     <!-- <div class="container"> -->
-<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" id='main-nav'>
+<nav class="navbar navbar-expand-lg navbar-dark no-print" role="navigation" id='main-nav'>
   <div class="container">   
     <a class="navbar-brand text-white" href="/">Bill Wolf</a>
     <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,10 +89,10 @@ To add new posts, simply add a file in the <code class="language-plaintext highl
 
       <div class="push">
         <hr>
-<footer class="footer"> 
+<footer class="footer no-print"> 
   <p class="text-center">
     Contact <a
-    href="mailto:wolfwm@uwec.ucsb.edu">Webmaster</a> &bull; Last modified  August 2021 
+    href="mailto:wolfwm@uwec.edu">Webmaster</a> &bull; Last modified  August 2021 
   </p>
 </footer>
 

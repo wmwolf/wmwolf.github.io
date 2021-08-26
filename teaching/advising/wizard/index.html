@@ -7,61 +7,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen, print">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" type="text/css" href="/css/syntax2.css" media="screen">
-  <link rel="stylesheet" type="text/css" href="/css/extras.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/css/syntax2.css" media="screen, print">
+  <link rel="stylesheet" type="text/css" href="/css/extras.css" media="screen, print">
+
+  <style type=text/css media=print>
+    .no-print {
+      display:  none;
+    }
+    </style>
+
 </head>
 
-  <meta name="keywords" content="UCSB, university, California, Santa Barbara,
-  astrophysics, astronomy, astro, Bill, William, Wolf, research, theory,
-  nova, novae, supernova"/>
-  <title>Bill Wolf</title>
+  <meta name="keywords" content="UWEC, university, Wisconsin, Eau Claire,
+  astrophysics, astronomy, astro, professor Bill, William, Wolf, research, theory, nova, novae, supernova, physics"/>
+  <title>Physics Adising Wizard</title>
 </head>
 
 <body>
   <div class='wrapper'>
-    <!-- <div class="container"> -->
-<nav class="navbar navbar-expand-lg navbar-dark" role="navigation" id='main-nav'>
-  <div class="container">   
-    <a class="navbar-brand text-white" href="/">Bill Wolf</a>
-    <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon text-white"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/about_bill">About Bill</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/research">Research</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/teaching">Teaching</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="/projects">Projects</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-<!-- </div> -->
-
-    <div class="splash bckgrd bckgrd-3">
-      <noscript>
-        <!-- <img src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
-        <h1>Physics Advising Wizard</h1>
-        }
-      </noscript>
-      <!-- <img class='fadeIn' src='http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg'> -->
-      <h1 class='initially-hidden'>Physics Advising Wizard</h1>
+    <div class="splash bckgrd-physics no-print">
     </div>
     <div class="container">
-      <div class="sticky bg-white py-3">
+      <div class="text-center pb-3 no-print">
+        <h1 class='display-3'>Physics Advising Wizard</h1>
+      </div>
+      <div class="sticky bg-white no-print py-3">
   <div class='row mb-3'>
     <div class="col-3">
       <h3 class='text-right'>Degree</h3>
@@ -78,7 +53,7 @@
     </div>
     <div class="col-5">
       <h3>
-        Credits: <span class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / 36</span>
+        Credits: <span class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / <span id="credits-needed"></span></span>
       </h3>
     </div>
   </div>
@@ -111,7 +86,7 @@
   </div>
 </div>
 
-<div id="instructions">
+<div id="instructions" class='no-print'>
   <div class="row">
     <div class="col-12 col-lg-6">
       <h1>Instructions</h1>
@@ -120,7 +95,8 @@
         studies for a major or minor in the department of Physics and Astronomy
         at UWEC. It does <em>not</em> account for liberal education
         requirements (yet), and obviously won't account for your second major
-        or minor.
+        or minor. It also cannot handle repeatable variable credit classes like
+        PHYS 399 or PHYS 495.
       </p>
       <p>
         Here's how to use it:
@@ -150,7 +126,9 @@
       </ol>
       <p>
         As you mark courses enrolled or completed, they will appear in your
-        course plan at the bottom of the page.
+        course plan at the bottom of the page. When you're done, you can
+        <b>print the page</b> to a printer or to pdf to get just the final
+        course plan.
       </p>
     </div>
     <div class="col-12 col-lg-6">
@@ -177,24 +155,26 @@
         concurrent enrollment in MATH 114), a prerequisite class (ex. PHYS 232
         requires you to have already completed PHYS 231), they may require a more
         complex set of courses (ex. PHYS 486 requires any two of PHYS 340, 350,
-        and 360), and they may not be offered in that particular term (ex. PHYS
+        and 360), or they may not be offered in that particular term (ex. PHYS
         375 is only offered during the Spring of even years). To find out the
         requirements for a course, click on its "Details" button.
       </p>
       <p>
-        Finally, courses with a thicker border are required for the selected
+        Finally, courses with a 
+        <span class='font-weight-bold'>thicker border and title</span> are 
+        <span class='font-weight-bold'>required</span> for the selected
         degree plan. They may be outright required, or they may be part of
         a selection of courses that you may opt to take. For instance, Applied
         Physics emphasis majors must take both PHYS 255 <b>and</b> PHYS 356,
-        <b>or</b> they make take either of PHYS 365 or PHYS 375. Once any of
-        these three requirements are met, the other courses will no longer be
+        <b>or</b> they may take either of PHYS 365 or PHYS 375. Once any of
+        these three requirements are completed, the other courses will no longer be
         indicated as required.
       </p>
     </div>
   </div>
 </div>
 
-<div id="body">
+<div id="body" class="no-print">
   
 </div>
 
@@ -203,7 +183,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="course-info" tabindex="-1" aria-labelledby="course-info-label" aria-hidden="true">
+<div class="modal fade no-print" id="course-info" tabindex="-1" aria-labelledby="course-info-label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -223,12 +203,12 @@
     </div>
   </div>
 </div>
-      <div class="push">
+      <div class="push no-print">
         <hr>
-<footer class="footer"> 
+<footer class="footer no-print"> 
   <p class="text-center">
     Contact <a
-    href="mailto:wolfwm@uwec.ucsb.edu">Webmaster</a> &bull; Last modified  August 2021 
+    href="mailto:wolfwm@uwec.edu">Webmaster</a> &bull; Last modified  August 2021 
   </p>
 </footer>
 

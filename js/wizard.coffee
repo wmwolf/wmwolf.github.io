@@ -269,6 +269,19 @@ course_data =
     years_offered: 'all'
     terms_offered: 'spring'
 
+  PHYS_115:
+    field: 'PHYS'
+    number: 115
+    name: 'Survey of Astronomy'
+    lecture_hours: 3
+    lab_hours: 0
+    credits: 3
+    description: "A one-semester presentation of our current understanding of the universe, including the solar system, birth and death of stars, unusual phenomena such as black holes and quasars, evolution of galaxies and the universe, and our link with the cosmos."
+    le: ['K1']
+    requirements: null
+    years_offered: 'all'
+    terms_offered: 'all'
+
   PHYS_186:
     field: 'PHYS'
     number: 186
@@ -281,6 +294,45 @@ course_data =
     requirements: null
     years_offered: 'all'
     terms_offered: 'fall'
+
+  PHYS_205:
+    field: 'PHYS'
+    number: 205
+    name: 'Physics of Renewable Energy'
+    lecture_hours: 3
+    lab_hours: 2
+    credits: 4
+    description: "Explores the basic physics principles behind various types of renewable energy sources. Discusses impact renewable energy sources have on mitigating global warming and climate change."
+    le: ['K1', 'K1L', 'R3']
+    requirements: null
+    years_offered: 'all'
+    terms_offered: 'fall'
+
+  PHYS_226:
+    field: 'PHYS'
+    number: 226
+    name: 'Astronomy-Solar System'
+    lecture_hours: 3
+    lab_hours: 2
+    credits: 4
+    description: "The physical nature of the solar system, including earth motions, celestial coordinates, time, telescopes, moon, planets, sun, and origin of solar system."
+    le: ['K1', 'K1L', 'I1']
+    requirements: null
+    years_offered: 'all'
+    terms_offered: 'fall'
+
+  PHYS_229:
+    field: 'PHYS'
+    number: 229
+    name: 'Astronomy-Stars and Galaxies'
+    lecture_hours: 3
+    lab_hours: 2
+    credits: 4
+    description: "The physical nature of the universe, including stellar evolution, multiple and variable stars, the Milky Way galaxy, other galaxies, and origin of the universe."
+    le: ['K1', 'K1L']
+    requirements: null
+    years_offered: 'all'
+    terms_offered: 'spring'
 
   PHYS_231:
     field: 'PHYS'
@@ -339,6 +391,32 @@ course_data =
       coreqs: ['MATH 215']
     years_offered: 'all'
     terms_offered: 'fall'
+
+  PHYS_308:
+    field: 'PHYS'
+    number: 308
+    name: 'Science of Musical Sound'
+    lecture_hours: 3
+    lab_hours: 0
+    credits: 3
+    description: "Physical concepts related to production of tones and speech. Application to musical instruments and auditorium acoustics, with experimental demonstrations of vibrational phenomena and electronic sound analysis and synthesis. No prior physics or university mathematics assumed."
+    le: ['K1']
+    requirements: null
+    years_offered: 'all'
+    terms_offered: 'spring'
+
+  PHYS_315:
+    field: 'PHYS'
+    number: 315
+    name: 'The Mysterious Universe'
+    lecture_hours: 3
+    lab_hours: 0
+    credits: 3
+    description: "A view of the world as revealed by contemporary physical thought. Topics include size and origin of universe, ultimate nature of matter; modern ideas of space, time and energy; possibilities of extraterrestrial life; and values and limitations of science."
+    le: ['K1', 'I1']
+    requirements: null
+    years_offered: 'all'
+    terms_offered: 'all'
 
   PHYS_332:
     field: 'PHYS'
@@ -408,20 +486,6 @@ course_data =
     requirements: 
       prereqs: ['PHYS 255', 'MATH 215']
       exclude: ['PHYS 356']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_360:
-    field: 'PHYS'
-    number: 360
-    name: 'Electronics'
-    lecture_hours: 3
-    lab_hours: 3
-    credits: 4
-    description: "Description, analysis, and laboratory measurements of digital and analog devices including transistor amplifiers, operational amplifiers, oscillators, gates, flip-flops, analog-digital converters, and microprocessors."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 350', 'MATH 240']
     years_offered: 'all'
     terms_offered: 'spring'
 
@@ -571,7 +635,7 @@ course_data =
   PHYS_486:
     field: 'PHYS'
     number: 486
-    name: 'Introductory Seminar'
+    name: 'Senior Seminar'
     lecture_hours: 0.5
     lab_hours: 0
     credits: 0.5
@@ -773,7 +837,7 @@ class Course
   clear_formatting: ->
     $(@card_sel).removeClass(@all_border_classes)
     $(@header_sel).removeClass(@all_bg_classes)
-    $(@header_sel).removeClass('text-white')
+    $(@header_sel).removeClass('text-white font-weight-bold')
     $(@modal_sel).removeClass(@all_btn_classes)
     # $(@modal_sel).addClass('btn-secondary')
 
@@ -785,6 +849,7 @@ class Course
     if degree_plan
       if degree_plan.required(this)
         $(@card_sel).addClass('border-thick')
+        $(@header_sel).addClass('font-weight-bold')
     $(@card_sel).addClass('border-warning')
     $(@header_sel).addClass('bg-warning text-white')
     $(@completed_sel).prop('disabled', false)
@@ -801,6 +866,7 @@ class Course
     if degree_plan
       if degree_plan.required(this)
         $(@card_sel).addClass('border-thick')
+        $(@header_sel).addClass('font-weight-bold')
     $(@card_sel).addClass('border-secondary')
     $(@completed_sel).prop('disabled', false)
     $(@enrolling_sel).prop('disabled', true)
@@ -816,6 +882,7 @@ class Course
     if degree_plan
       if degree_plan.required(this)
         $(@card_sel).addClass('border-thick')
+        $(@header_sel).addClass('font-weight-bold')
     $(@card_sel).addClass('border-success')
     $(@header_sel).addClass('bg-success text-white')
     $(@completed_sel).prop('checked', true)
@@ -849,6 +916,7 @@ class Course
     if degree_plan
       if degree_plan.required(this)
         $(@card_sel).addClass('border-thick')
+        $(@header_sel).addClass('font-weight-bold')
     $(@card_sel).addClass('border-primary')
     $(@header_sel).addClass('bg-primary text-white')
     $(@completed_sel).prop('checked', false)
@@ -862,12 +930,12 @@ class Course
     # moving to future year? convert class from enrolling to taken
     if new_year_term.value() > old_year_term.value()
       if @enrolling
-        @mark_completed(old_year_term)
+        @mark_completed(old_year_term, degree_plan)
         $(@enrolling_sel).prop('checked', @enrolling)
         $(@completed_sel).prop('checked', @completed)
       else if @completed
         if new_year_term.value() > @year_term_taken.value()
-          @mark_completed(@year_term_taken)
+          @mark_completed(@year_term_taken, degree_plan)
       else if @available(new_year_term)
         @mark_available(degree_plan)
       else
@@ -879,9 +947,9 @@ class Course
         if !@year_term_taken
           # probably just marked completed; pretend it was taken the term
           # before it was marked completed
-          @mark_completed(old_year_term.prev())
+          @mark_completed(old_year_term.prev(), degree_plan)
         else
-          @mark_completed(@year_term_taken)
+          @mark_completed(@year_term_taken, degree_plan)
       else if @enrolling
         @mark_enrolling(new_year_term, degree_plan)
       else if @available(new_year_term)
@@ -892,7 +960,7 @@ class Course
     else
       if @completed
         if new_year_term.value() > @year_term_taken.value()
-          @mark_completed(@year_term_taken)
+          @mark_completed(@year_term_taken, degree_plan)
         else if new_year_term.value() == @year_term_taken.value()
           @mark_enrolling(@year_term_taken, degree_plan)
         else if @available(new_year_term)
@@ -992,7 +1060,7 @@ class DegreePlan
         # don't consider combination of sequences if course doesn't appear
         unless combo.flat(3).includes(course)
           continue
-        # bail out if any one sequence is completed
+        # bail out if any one sequence is completed; this class isn't needed
         for sequence in combo
           # skip the sequence if the class appears in it (it might be complete,
           # but our convention is that completed courses can still be
@@ -1012,13 +1080,13 @@ class DegreePlan
           # skip the sequence if the class appears in it (it might be complete,
           # but our convention is that completed courses can still be
           # "required")
-          unless sequence.flat(2).includes(course)
+          if sequence.flat(2).includes(course)
             continue
           if @sequence_completed(sequence)
             return false
       return true
 
-  # compute how many credits count towards the major requirement of 36 hours
+  # compute how many credits count towards the degree requirement
   credit_count: ->
     credit_count = 0
     for course in courses
@@ -1081,11 +1149,17 @@ MSE_315  = new Course(course_data.MSE_315)
 MSE_357  = new Course(course_data.MSE_357)
 MSE_372  = new Course(course_data.MSE_372)
 MSE_451  = new Course(course_data.MSE_451)
+PHYS_115 = new Course(course_data.PHYS_115)
 PHYS_186 = new Course(course_data.PHYS_186)
+PHYS_205 = new Course(course_data.PHYS_205)
+PHYS_226 = new Course(course_data.PHYS_226)
+PHYS_229 = new Course(course_data.PHYS_229)
 PHYS_231 = new Course(course_data.PHYS_231)
 PHYS_232 = new Course(course_data.PHYS_232)
 PHYS_240 = new Course(course_data.PHYS_240)
 PHYS_255 = new Course(course_data.PHYS_255)
+PHYS_308 = new Course(course_data.PHYS_308)
+PHYS_315 = new Course(course_data.PHYS_315)
 PHYS_332 = new Course(course_data.PHYS_332)
 PHYS_333 = new Course(course_data.PHYS_333)
 PHYS_340 = new Course(course_data.PHYS_340)
@@ -1103,13 +1177,25 @@ PHYS_445 = new Course(course_data.PHYS_445)
 PHYS_465 = new Course(course_data.PHYS_465)
 PHYS_486 = new Course(course_data.PHYS_486)
 
+### IMPORTANT GLOBAL VARIABLE ###
+# This lists all the coures objects and is used in several classes, which
+# is terrible form, but hey, it works! Well, usually... The order is important.
+# When cycling through the courses, its best if prerequisites come before
+# the courses they depend on. So math courses should always go first, and then
+# mostly courses can simply increase in number. However, care must be taken to
+# ensure that some MSE courses are in the right place. For instance, MSE 451
+# depends on PHYS 333, but if it comes before PHYS 333, completing PHYS 333
+# will not immediately cause PHYS 451 to be marked as available because it is
+# refreshed *before* PHYS 333 since it's earlier on the list.
+
 courses = [
   MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345,
   CHEM_105, CHEM_106, CHEM_109, CHEM_115,
-  MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451
-  PHYS_186, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_332, PHYS_333,
+  PHYS_115, PHYS_186, PHYS_205, PHYS_226, PHYS_229, PHYS_231, PHYS_232,
+  PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_333,
   PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_363,
-  PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486
+  PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486,
+  MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451
 ]
 
 # firm up requirements so they work properly
@@ -1127,6 +1213,7 @@ degree_plan_data = [
     uncounted:
       requirements: ['MATH 312', 'PHYS 240']
       choices: []
+    extra_electives: ['MSE 374', 'MSE 357', 'MSE 372', 'MSE 451']
     course_groups: [
       {
         title: 'Introductory and Prerequisite Courses'
@@ -1162,6 +1249,7 @@ degree_plan_data = [
     uncounted:
       requirements: ['MATH 312', 'MATH 345', 'PHYS 240']
       choices: [[['CHEM 115'], ['CHEM 105', 'CHEM 106', 'CHEM 109']]]
+    extra_electives: ['MSE 374', 'MSE 357', 'MSE 372', 'MSE 451']
     course_groups: [
       {
         title: 'Introductory and Prerequisite Courses'
@@ -1170,8 +1258,8 @@ degree_plan_data = [
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, MATH_345, PHYS_255, PHYS_332, PHYS_333, PHYS_340, PHYS_350,
-        PHYS_361, PHYS_365]
+        courses: [MATH_312, MATH_345, PHYS_255, PHYS_332, PHYS_340,
+        PHYS_350, PHYS_365]
       },
       {
         title: 'Advanced Courses'
@@ -1179,7 +1267,8 @@ degree_plan_data = [
       },
       {
         title: 'Electives'
-        courses: [PHYS_333, PHYS_367, PHYS_445, PHYS_465, MSE_315, MSE_357, MSE_372, MSE_374, MSE_451]
+        courses: [PHYS_333, PHYS_361, PHYS_362, PHYS_363, PHYS_367, PHYS_445,
+          PHYS_465, MSE_315, MSE_357, MSE_372, MSE_374, MSE_451]
       },
       {
         title: 'Elective Support (uncounted towards major)'
@@ -1196,7 +1285,8 @@ degree_plan_data = [
       choices: [[['PHYS 255', 'PHYS 356'], ['PHYS 365']]]
     uncounted:
       requirements: ['MATH 312', 'PHYS 240']
-      choices: [[['CHEM 115'], ['CHEM 105', 'CHEM 106', 'CHEM 109']]]
+      choices: []
+    extra_electives: ['MSE 374', 'MSE 357', 'MSE 372', 'MSE 451']
     course_groups: [
       {
         title: 'Introductory and Prerequisite Courses'
@@ -1208,7 +1298,7 @@ degree_plan_data = [
       },
       {
         title: 'Advanced Courses'
-        courses: [PHYS_356, PHYS_360]
+        courses: [PHYS_356]
       },
       {
         title: 'Electives'
@@ -1218,6 +1308,59 @@ degree_plan_data = [
       {
         title: 'Elective Support (uncounted towards major)'
         courses: [CHEM_105, CHEM_106, CHEM_109, CHEM_115, MSE_221, MSE_350]
+      }
+    ]
+  }
+  {
+    name: 'LabVIEW'
+    credits_needed: 13
+    counted:
+      requirements: ['PHYS 350', 'PHYS 360', 'PHYS 361', 'PHYS 362', 'PHYS 363']
+      choices: []
+    uncounted:
+      requirements: []
+      choices: []
+    course_groups: [
+      {
+        title: 'Introductory and Prerequisite Courses'
+        courses: [MATH_112, MATH_114, MATH_215, PHYS_231, PHYS_232, PHYS_240]
+      },
+      {
+        title: 'Certificate Courses'
+        courses: [PHYS_350, PHYS_360, PHYS_361, PHYS_362, PHYS_363]
+      },
+    ]
+  },
+  {
+    name: 'Minor'
+    credits_needed: 24
+    counted:
+      requirements: ['PHYS 231', 'PHYS 232', 'PHYS 332']
+      choices: []
+    uncounted:
+      requirements: ['MATH 215']
+      choices: []
+    extra_electives: ['PHYS 115', 'PHYS 186', 'PHYS 205', 'PHYS 226',
+    'PHYS 229', 'PHYS 240', 'PHYS 308', 'PHYS 315']
+    course_groups: [
+      {
+        title: 'Prerequisite Courses'
+        courses: [MATH_112, MATH_114, MATH_215]
+      },
+      {
+        title: 'Required Courses'
+        courses: [PHYS_231, PHYS_232, PHYS_332]
+      },
+      {
+        title: 'Basic Electives'
+        courses: [PHYS_115, PHYS_186, PHYS_205, PHYS_226, PHYS_229, PHYS_240,
+        PHYS_308, PHYS_315]
+      },
+      {
+        title: 'Advanced Electives'
+        courses: [PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360,
+        PHYS_361, PHYS_362, PHYS_363, PHYS_365, PHYS_367, PHYS_375, PHYS_430,
+        PHYS_445, PHYS_465, PHYS_486]
       }
     ]
   }
@@ -1332,6 +1475,7 @@ wizard =
     wizard.clear_groups()
     for group in wizard.degree_plan.course_groups
       wizard.add_group(group)
+    $('#credits-needed').html("#{new_degree_plan.credits_needed}")
     wizard.setup_course_listeners()
 
   build_course_plan: ->
@@ -1363,7 +1507,7 @@ wizard =
           table_html += "    </tr>\n"
         table_html += "  </tbody>\n"
     unless table_html == ""
-      table_html = "<table class='table'>\n#{table_html}</table>\n"
+      table_html = "<table class='table table-hover table-sm'>\n#{table_html}</table>\n"
       $('#course-plan').html("<h1 class='my-4'>Course Plan</h1>\n#{table_html}")
 
   setup_course_listeners: ->
