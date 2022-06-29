@@ -50,14 +50,14 @@
     <a class="nav-link ml-3 my-1" href="#part1a">Starting from a Test Case</a>
     <a class="nav-link ml-3 my-1" href="#part1b">Structure of a Test Case</a>
     <a class="nav-link ml-3 my-1" href="#part1c">Building a Steadily-Burning Model</a>
-    <a class="nav-link ml-3 my-1" href="#part1d">Compiling, Running, and Restarting</a>
+    <!-- <a class="nav-link ml-3 my-1" href="#part1d">Compiling, Running, and Restarting</a> -->
   </nav>
   <a class="nav-link part-header" href="#part2">Minilab 2: Customizing pgstar</a>
-  <!-- <nav class="nav nav-pills flex-column" id='part2-subparts'>
-    <a class='nav-link ml-3 my-1' href='#part2a'>A First X-ray Burst</a>
-    <a class='nav-link ml-3 my-1' href='#part2b'>Burning Regimes</a>
-    <a class='nav-link ml-3 my-1' href='#part2c'>Extending MESA</a>
-  </nav> -->
+  <nav class="nav nav-pills flex-column" id='part2-subparts'>
+    <a class='nav-link ml-3 my-1' href='#part2a'>The Stock <samp>pgstar</samp> Panel</a>
+    <a class='nav-link ml-3 my-1' href='#part2b'>Pointing to a New Inlist</a>
+    <a class='nav-link ml-3 my-1' href='#part2c'>Updating the Dashboard</a>
+  </nav>
   <a class="nav-link part-header" href="#part3">Maxilab: The Stability Boundary</a>
   <!-- <nav class="nav nav-pills flex-column" id='part3-subparts'>
     <a class="nav-link ml-3 my-1" href="#part3a">Background</a>
@@ -129,16 +129,16 @@
 </p>
 
 
-<h2 id='part0' class='mt-5'>Part 0: Background</h2>
+<h2 id='part0' class='mt-5'>Background</h2>
 <p>
-  Recurrent novae are thermonuclear flashes on the surfaces of rapidly-accreting massive white dwarfs. They are similar to classical novae, but they have been observed in outburst multiple times. In general, the more massive a white dwarf is, the shorter the recurrence time will be. Similarly, the higher the accretion rate M&#775;, the shorter the recurrence time will be.
+  Recurrent novae are thermonuclear flashes on the surfaces of rapidly-accreting massive white dwarfs. They are similar to classical novae, but they have been observed in outburst multiple times. In general, the more massive a white dwarf is, the shorter the recurrence time will be. Similarly, the higher the accretion rate Ṁ, the shorter the recurrence time will be.
 </p>
 
 <p>
-  There is a limit to how high M&#775; can be before the nova will find an equilibrium solution and burn material at the same rate it is accreted. There is some debate as to whether this could physically occur (perhaps the accretion doesn't return or is never stable enough over long enough timescales, etc.). For now, we will assume that accretion resumes immediately after the initial "explosion", and we will see that stable burning does occur for sufficiently high M&#775; in <samp>MESA</samp>. 
+  There is a limit to how high Ṁ can be before the nova will find an equilibrium solution and burn material at the same rate it is accreted. There is some debate as to whether this could physically occur (perhaps the accretion doesn't return or is never stable enough over long enough timescales, etc.). For now, we will assume that accretion resumes immediately after the initial "explosion", and we will see that stable burning does occur for sufficiently high Ṁ in <samp>MESA</samp>. 
 </p>
 <p>
-  Our goal is to find the transition M&#775; where this occurs, and we'll see that we need to be careful with our simulation if we want a consistent result.
+  Our goal is to find the transition Ṁ where this occurs, and we'll see that we need to be careful with our simulation if we want a consistent result.
 </p>
 
 <h2 id="part1" class='mt-5'> Minilab 1: Getting Started</h2>
@@ -158,20 +158,20 @@
 </p>
 
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge 1.1:</span> Copy the <code>wd_nova_burst</code> test case from <samp>MESA star</samp> into a new directory outside of the installation, and call it <code>wolf_1</code>.
+  <span class='font-weight-bold text-primary'>Challenge 1.1:</span> Copy the <code>wd_nova_burst</code> test case from <samp>MESA star</samp> into a new directory outside of the installation, and call it <code>wolf</code>.
 </p>
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#copy-dir-sol" aria-expanded="true" aria-controls="burst-def-sol">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p1" aria-expanded="true" aria-controls="sol-1p1">
       Show Solution 1.1
     </button>
   </div>
-  <div class="card-body collapse" id="copy-dir-sol">
+  <div class="card-body collapse" id="sol-1p1">
     <p class="card-text">
       Assuming your <code>MESA_DIR</code> is set up correctly, execute the
       following in the terminal
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cp</span> <span class="nt">-r</span> <span class="s2">"</span><span class="nv">$MESA_DIR</span><span class="s2">/star/test_suite/wd_nova_burst"</span> <span class="s2">"~/wolf_1"</span></code></pre></figure>      
-      Though you may choose to place <code>wolf_1</code> somewhere other than
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cp</span> <span class="nt">-r</span> <span class="s2">"</span><span class="nv">$MESA_DIR</span><span class="s2">/star/test_suite/wd_nova_burst"</span> <span class="s2">"~/wolf"</span></code></pre></figure>      
+      Though you may choose to place <code>wolf</code> somewhere other than
       your home directory.
     </p> 
     <h4 class='card-text'>Explanation</h4>
@@ -184,7 +184,8 @@
   Because this is a test case, some inlists, makefiles, and executable scripts will set their own <code>MESA_DIR</code> variable such that the test case will ignore whatever you have set as your environment variable. This makes the test case work perfectly fine in its normal home, even if you haven't set <code>MESA_DIR</code>, but outside of that location, it wreaks havoc. We need to fix this.
 </p>
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge 1.2:</span> Delete all references to <code>MESA_DIR</code> or <code>mesa_dir</code> from the test case.
+  <span class='font-weight-bold text-primary'>Challenge 1.2:</span> Delete all
+  references to <code>MESA_DIR</code> or <code>mesa_dir</code> from the test case.
 </p>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
@@ -292,8 +293,9 @@ inlist_wd_nova_burst_header:      mesa_dir <span class="o">=</span> <span class=
 </p>
 <h5 class='mt-3'>Multiple Inlists and Inlist Headers</h5>
 <p>
-  In this test case, we have a whopping five files that star with the word <code>inlist</code>. What's going on with this? Before diving into those, it first makes sense to look at the <code>rn</code> script. Open this file up again and look at it (it's also shown below). It is <em>not</em> the same as the typical <code>rn</code> script in the normal <samp>MESA</samp> work directory.
+  In this test case, we have a whopping five files that star with the word <code>inlist</code>. What's going on with this? Before diving into those, it first makes sense to look at the <code>rn</code> script. Open this file up again and look at it (it's also shown below). It is <em>not</em> the same as the typical <code>rn</code> script in the standard <samp>MESA</samp> work directory.
 </p>
+<h4 class="text-monospace">rn</h4>
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#!/bin/bash</span>
 
 <span class="c"># this provides the definition of do_one (run one part of test)</span>
@@ -318,11 +320,12 @@ do_one inlist_wd_nova_burst_header final.mod
   <li>Optionally check for the existence of a model that should have come from the run, and exit with an error if it doesn't exist.</li>
 </ol>
 <p>
-  So in <code>rn</code>, we're first running <code>inlist_setup</code>, then checking to make sure that the model it creates exists before going on to run <code>inlist_wd_nova_burst</code>. Through the copying action of the <code>do_one</code> function, we never directly interact with the file <code>inlist</code>. But why are there two inlists for each state (the header and the non-header versions)?
+  So in <code>rn</code>, we're first running <code>inlist_setup_header</code>, then checking to make sure that the model it creates exists before going on to run <code>inlist_wd_nova_burst_header</code>. Through the copying action of the <code>do_one</code> function, we never directly interact with the file <code>inlist</code>. But why are there two inlists for each state (the header and the non-header versions)?
 </p>
 <p>
   Open up <code>inlist_setup_header</code> (also shown below) and inspect it.
 </p>
+<h4 class="text-monospace">inlist</h4>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">!inlist_setup_header</span><span class="w">
 </span><span class="p">&amp;</span><span class="n">star_job</span><span class="w">
 
@@ -379,7 +382,8 @@ do_one inlist_wd_nova_burst_header final.mod
 </p>
 
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge 1.3:</span> Remove aggressive stopping condition(s) in <code>inlist_wd_nova_burst</code>.
+  <span class='font-weight-bold text-primary'>Challenge 1.3:</span> Remove
+  aggressive stopping condition(s) in <code>inlist_wd_nova_burst</code>.
 </p>
 <p>
   We will tune this model to go into a steady burning mode so we can let it run for a very long time. There are one or more settings in the <code>controls</code> namelist that will prevent this. See if you can figure out which one(s) they are and comment them out or delete them.
@@ -395,6 +399,7 @@ do_one inlist_wd_nova_burst_header final.mod
     <p class="card-text">
       The biggest issue here is the limit on the maximum model number:
     </p>
+    <h4><span class="text-monospace">inlist_wd_nova_burst</span> (partial)</h4>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">controls</span><span class="w">
 
   </span><span class="c1">! limit max_model_number as part of test_suite</span><span class="w">
@@ -423,15 +428,16 @@ do_one inlist_wd_nova_burst_header final.mod
 <p>
   Open up <code>src/run_star_extras.f</code>. We won't analyze everything that's here (most is basically boilerplate code in every simulation). Note, though, the following lines near the top:
 </p>
-
+<h4><span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="kt">integer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">num_bursts</span><span class="w">
   </span><span class="kt">logical</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">waiting_for_burst</span><span class="w">
   </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">L_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d4</span><span class="p">,</span><span class="w"> </span><span class="n">L_between</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d3</span><span class="w"> </span><span class="c1">! Lsun units</span></code></pre></figure>
   
 <p>
-  These define variables that the simulation uses in some of the other functions/subroutines. The first two variables are defined at the beginning of the run in <code>extras_startup</code>:
+  These define variables that the simulation uses in some of the other functions/subroutines. The first two variables are defined at the beginning of the run in <code>extras_startup</code>, unless we are doing a restart, in which case they are loaded from the photo:
 </p>
-  
+
+<h4><span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>  
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="k">subroutine</span><span class="w"> </span><span class="n">extras_startup</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">restart</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">restart</span><span class="w">
@@ -449,6 +455,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <p>
   And all four are used in <code>extras_check_model</code>:
 </p>
+<h4><span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="kt">integer</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">extras_check_model</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w">
    </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
    </span><span class="kt">integer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
@@ -481,7 +488,9 @@ do_one inlist_wd_nova_burst_header final.mod
 </p>
 
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge 1.4:</span> Edit <code>extras_check_model</code> so the simulation ends after two bursts rather than one.
+  <span class='font-weight-bold text-primary'>Challenge 1.4:</span> Edit
+  <code>extras_check_model</code> so the simulation ends after two bursts rather
+  than one.
 </p>
 
 <div class="card border-success mb-3">
@@ -492,7 +501,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body collapse" id="sol-1p4">
     <p class="card-text">
-      Edit the line
+      In <code>src/run_star_extras.f90</code>, edit the line
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num_bursts</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span></code></pre></figure>      
     to
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num_bursts</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span></code></pre></figure>
@@ -501,7 +510,10 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge 1.5:</span> Edit <code>run_star_extras.f</code> so that a burst "ends" after the luminosity drops below 5 &#215; 10<sup>3</sup> L<sub>&#8857;</sub> instead of 1 &#215; 10<sup>3</sup> L<sub>&#8857;</sub>.
+  <span class='font-weight-bold text-primary'>Challenge 1.5:</span>
+  Edit <code>run_star_extras.f</code> so that a burst "ends" after the
+  luminosity drops below 5 &#215; 10<sup>3</sup> L<sub>&#8857;</sub> instead of
+  1 &#215; 10<sup>3</sup> L<sub>&#8857;</sub>.
 </p>
 
 <div class="card border-success mb-3">
@@ -512,11 +524,12 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body collapse" id="sol-1p5">
     <p class="card-text">
-      Edit the line
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">L_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d4</span><span class="p">,</span><span class="w"> </span><span class="n">L_between</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d3</span><span class="w"> </span><span class="c1">! Lsun units</span></code></pre></figure>      
+      In <code>src/run_star_extras.f90</code>, edit the line<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">    </span><span class="o">&lt;</span><span class="p">/</span><span class="n">p</span><span class="o">&gt;</span><span class="w">
+      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">L_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d4</span><span class="p">,</span><span class="w"> </span><span class="n">L_between</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d3</span><span class="w"> </span><span class="c1">! Lsun units</span></code></pre></figure>    
+  <p>  
     to
+  </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">L_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d4</span><span class="p">,</span><span class="w"> </span><span class="n">L_between</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5d3</span><span class="w"> </span><span class="c1">! Lsun units</span></code></pre></figure>
-    </p> 
   </div>
 </div>
 
@@ -528,14 +541,17 @@ do_one inlist_wd_nova_burst_header final.mod
   With your modified test case working, let's move on to tweaking the inlists.
 </p>
 
-<h3 id="part1c" class='mt-4'>Building a Steadily Burning Model</h2>
+<h3 id="part1c" class='mt-4'>Building a Steadily Burning Model</h3>
 
 <p>
   So far, we haven't really substantively changed anything in the test case other than modifying the stopping condition. Now we want to actually change how it works. We'll start by increasing the accretion rate.
 </p>
 
 <p class='lead'>
-  <span class='font-weight-bold'>Challenge 1.6:</span> Edit <code>inlist_wd_nova_burst</code> so it accretes at a rate of 3 &#215; 10<sup>–7</sup> M<sub>&#8857;</sub>/yr. Also turn on the on-screen <samp>pgstar</samp> plots that are already defined in <code>pgstar</code>
+  <span class='font-weight-bold text-primary'>Challenge 1.6:</span>
+  Edit <code>inlist_wd_nova_burst</code> so it accretes at a rate of 3 &#215;
+  10<sup>–7</sup> M<sub>&#8857;</sub>/yr. Also turn on the on-screen
+  <samp>pgstar</samp> plots that are already defined in <code>pgstar</code>
   namelist.
 </p>
 
@@ -569,12 +585,511 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
 </div>
 
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p6" aria-expanded="true" aria-controls="sol-1p6">
+      Show Solution 1.6
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-1p6">
+    <p class="card-text">
+      In the <code>&star_job</code> namelist uncomment the line
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">       </span><span class="c1">!pgstar_flag = .true.</span></code></pre></figure>      
+    <p class="card-text">to become</p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">       </span><span class="n">pgstar_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
+  <p class="card-text">
+    And lower, in the <code>controls</code> namelist, the the accretion rate
+    by editing the line
+  </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-9</span></code></pre></figure>
+  <p class="card-text">to</p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3d-7</span></code></pre></figure>
+  </div>
+</div>
+<p>
+  Our simulation is almost ready to run, but there's one issue. We are loading
+  a white dwarf model that was prepared to accrete at 10<sup>–9</sup>
+  M<sub>&#8857;</sub>, but now we want it to accrete at a rate 300 times higher!
+  While this can work, it would be a painful process requiring very short
+  timesteps to allow the outer regions of the model to adjust to the new
+  scenario. We'd like a way to slowly ramp up the accretion rate. Fortunately,
+  <samp>MESA</samp> has just that sort of thing: 
+  <strong class="font-weight-bold">relaxation routines</strong>.
+</p>
+<p class='lead'>
+  <span class='text-primary font-weight-bold'>Challenge 1.7:</span> Search the
+  <code>star_job</code> defaults for a set of controls that will allow us to
+  slowly increase the accretion rate from zero to 3 × 10<sup>–7</sup>
+  M<sub>&#8857;</sub> over fifty timesteps, taking no more than 0.1 years per
+  timestep. Set these controls in <code>inlist_wd_nova_burst</code>.
+</p>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p7a" aria-expanded="true" aria-controls="hint-1p7a">
+      Show Hint 1.7a: Where do I look for defaults?
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-1p7a">
+    <p class='card-text'>
+      Within the <samp>MESA</samp> source, you can always look inside (or 
+      <kbd>grep</kbd> into) 
+      <code>$MESA_DIR/star/defaults/star_job.defaults</code>. Alternatively, you
+      can find documentation generated from this file at 
+      <a href="https://docs.mesastar.org" target=_blank>docs.mesastar.org</a>.
+      Inlist defaults are detailed in the "Reference" section.
+    </p>
+  </div>
+</div>
 
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p7b" aria-expanded="true" aria-controls="hint-1p7b">
+      Show Hint 1.7b: The Main Flag
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-1p7b">
+    <p class='card-text'>
+      The primary flag you want to set is called
+      <code>relax_initial_mass_change</code>, which you should set to 
+      <code>.true.</code>. There are an additional four numerical controls you
+      will also want to set.
+    </p>
+    <p class="card-text">
+      You might also notice the very similar <code>relax_mass_change</code>
+      (missing the word "initial"). This will do the same thing, except it will
+      also trigger the relaxation process <em>on restarts</em>. We don't want to
+      do that; we only want to relax the accretion rate when we first start the
+      run, and then subsequent restarts can just go straight to the final
+      accretion rate.
+    </p>
+  </div>
+</div>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p7" aria-expanded="true" aria-controls="sol-1p7">
+      Show Solution 1.7
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-1p7">
+    <p class="card-text">
+      Add the following lines to the <code>star_job</code> namelist of
+      <code>inlist_wd_nova_burst</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">relax_initial_mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+      </span><span class="n">relax_mass_change_min_steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="w">
+      </span><span class="n">relax_mass_change_max_yrs_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="w">
+      </span><span class="n">relax_mass_change_init_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3d-7</span></code></pre></figure>
+  </div>
+</div>
+<p class='lead'>
+  <span class='text-primary font-weight-bold'>Challenge 1.8:</span> Get your model running! Compile if you haven't already, and then start the simulation.
+</p>
+<p>
+  After completing the setup inlist and the relaxation process, a
+  <samp>pgstar</samp> window should open up. This may take a few minutes, but
+  once it does, that means your simulation should be ready to run continuously.
+  You may let it run or end the process once the pgstar window has appeared.
+</p>
 
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p8" aria-expanded="true" aria-controls="sol-1p8">
+      Show Solution 1.8
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-1p8">
+    <p class="card-text">
+      If you haven't already, compile your project with <kbd>./mk</kbd>. Then
+      get things started with <kbd>./rn</kbd>. If you get any errors, go back
+      and review the previous challenge solutions and look for any discrepancies
+      with your files.
+    </p>
+    <p class="card-text">
+      The <code>rn</code> script will first run off of
+      <code>inlist_setup_header</code>, which shouldn't take more than a minute.
+      Then, it should launch run off of <code>inlist_wd_nova_burst_header</code>,
+      which should launch a pgstar window something like what is shown below.
+    </p>
+    <figure class='figure'>
+      <img class="figure-img img-fluid rounded" alt='pgstar grid' src="images/pgstar_1p8.png">
+      <figcaption class="figure-caption text-left">
+        The <samp>pgstar</samp> grid that should open up a while after starting
+        the run. Note that it must first get through the setup inlist as well
+        as the relaxation process, so your window may not open for a few
+        minutes.
+      </figcaption>
+    </figure>
 
+    <p class="card-text">
+      This simulation should run continuously (and likely slowly). You can let
+      it run continuously until the luminosity and effective temperature are
+      pretty consistent at roughly log <var>L</var>/L<sub>&#8857;</sub> ≈ 4.3
+      and log T<sub>eff</sub> ≈ 5.8. At this point, you can stop the run with
+      <kbd>CTRL-C</kbd>.
+    </p>
+  </div>
+</div>
 
+<h2 id="part2" class="mt-5">Minilab 2: Customizing pgstar</h2>
+<p>
+  This lab focuses on getting you more comfortable working with and customizing
+  <samp>pgstar</samp> plots. In particular, you will:
+</p>
+<ul>
+  <li>Learn the basic structure of the <samp>pgstar</samp> namelist</li>
+  <li>Customize an incomplete <samp>pgstar</samp> dashboard
+</ul>
+<p>
+  <samp>pgstar</samp> is a built-in feature of <samp>MESA</samp> that allows
+  for real-time graphical insight into how your model is evolving. While the
+  plots it generates are usually not suitable for publication, being able to
+  "see" your model evolve can be an invaluable tool in developing intuition and
+  diagnosing issues. Additionally, you can easily string frames of
+  <samp>pgstar</samp> output into a movie after a simulation, which is great
+  for presentations and group meetings!
+</p>
 
+<p>
+  <samp>pgstar</samp> is comprised of several building blocks that we can sort
+  into several [slightly-overlapping] categories.
+</p>
+<dl class="row">
+  <dt class="col-sm-3">History Plots</dt>
+  <dd class="col-sm-9">
+    Plot that shows one or two quantities from the history output plotted
+    against a monotonically-increasing quantity, like <samp>star_age</samp> or
+    <samp>model_number</samp>. These quantities must all be saved in 
+    <code>history.data</code>, and the resolution will depend on how often data
+    is written to <samp>history.data</samp>.
+  </dd>
+  <dt class="col-sm-3">Profile Plots</dt>
+  <dd class="col-sm-9">
+    Plot that shows one or two quantities that <em>could</em> be output in
+    profiles against another profile quantity, often pressure, mass coordinate,
+    or radius. Note that these do <em>not</em> need to be in
+    <code>profile.columns</code> since they do not need to persist over multiple
+    steps.
+  </dd>
+  <dt class="col-sm-3">Special Plots</dt>
+  <dd class="col-sm-9">
+    A collection of "one-off" plots with special capabilities. Examples include
+    Kippenhahn diagrams, echelle diagrams, a nuclear network diagram, and a
+    temperature-density profile. These can often be customized to a degree, but
+    they are not as flexible as profile and history plots.
+  </dd>
+  <dt class="col-sm-3">Text Summaries</dt>
+  <dd class="col-sm-9">
+    Grids of name/value pairs that show scalar values associated with the
+    current timestep. Examples include model number luminosity, and helium core
+    mass. No graphics here; just text. 
+  </dd>
+</dl>
+<p>
+  Most often, you'll deal with a <span class="font-weight-bold">grid</span> or
+  <span class="font-weight-bold">dashboard</span> that contains many individual
+  single- or multi-panel plots and/or text summaries arranged into a single
+  window. We'll explore this next.
+</p>
 
+<h3 id='part2a' class="mt-4">The Stock <samp>pgstar</samp> Dashboard</h3>
+<p>
+  Look inside <code>inlist_wd_nova_burst</code>, towards the bottom. You'll find
+  the <code>pgstar</code> namelist, which is responsible for defining the
+  output you saw at the end of the last minilab. The relevant contents are
+  shown below for convenience.
+</p>
+<h4><span class="font-monospace">inlist_wd_nova_burst</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">pgstar</span><span class="w">
+
+         </span><span class="n">Grid8_win_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+         </span><span class="n">Grid8_win_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="w">
+         </span><span class="n">Summary_Burn_xaxis_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'logxq'</span><span class="w"> 
+         </span><span class="n">Summary_Burn_xaxis_reversed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+         </span><span class="n">Summary_Burn_xmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-14</span><span class="w"> </span><span class="c1">! -101d0 ! only used if /= -101d0</span><span class="w">
+         </span><span class="n">Summary_Burn_xmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-3</span><span class="w"> </span><span class="c1">! -101d0 ! only used if /= -101d0</span><span class="w">
+         </span><span class="n">Abundance_xaxis_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'logxq'</span><span class="w"> 
+         </span><span class="n">Abundance_xaxis_reversed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+         </span><span class="n">Abundance_xmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-14</span><span class="w"> </span><span class="c1">! -101d0 ! only used if /= -101d0</span><span class="w">
+         </span><span class="n">Abundance_xmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-3</span><span class="w"> </span><span class="c1">! -101d0 ! only used if /= -101d0</span><span class="w">
+
+    </span><span class="n">Text_Summary1_name</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'time_step_sec'</span><span class="w">
+    </span><span class="n">Text_Summary1_name</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'max_tau_conv'</span><span class="w">
+    </span><span class="c1">!Text_Summary1_name(7,2) = 'cz_bot_radius'</span><span class="w">
+    </span><span class="c1">!Text_Summary1_name(8,2) = 'cz_top_radius'</span><span class="w">
+
+</span><span class="p">/</span><span class="w"> </span><span class="c1">! end of pgstar namelist</span></code></pre></figure>
+<p>
+  The top line is the most important. This tells <samp>MESA</samp> to display
+  a pre-built grid called <code>Grid8</code>, which is defined in
+  <code>$MESA_DIR/star/defaults/pgstar.defaults</code>. Open that file up and
+  search for the section that defines <code>Grid8</code>.
+</p>
+
+<p>
+  Here you can see how the grid is defined. We provide a width and aspect ratio
+  for the window, essentially defining its size. The various
+  <code>Grid8_xleft</code>, <code>Grid8_ybot</code> controls set up margins to
+  keep the contents from overflowing the window. Then the grid is set up by
+  setting numbers of rows, columns, and plots, as well as default values for the
+  names, positions, and padding for these plots.
+</p>
+
+<p>
+  After setting the defaults for all of these values, they are set to more
+  reasonable values, and each plot of the grid is defined. For
+  <code>Grid8</code> in particular, there are 3 columns, 14 rows, and a total of
+  6 plots. How is this possible? Well, we can set individual plots to span
+  multiple columns or rows, so the total number of plots should always be less
+  than the product of the number of rows and columns.
+</p>
+
+<p>
+  Now let's look at the settings for one of the constituent plots:
+</p>
+
+<h4><samp class="font-monospace">pgstar.defaults</samp> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">    </span><span class="n">Grid8_plot_name</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Summary_Burn'</span><span class="w">
+    </span><span class="n">Grid8_plot_row</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="n">Grid8_plot_rowspan</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w">
+    </span><span class="n">Grid8_plot_col</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="n">Grid8_plot_colspan</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="n">Grid8_plot_pad_left</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="n">Grid8_plot_pad_right</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.06</span><span class="w">
+    </span><span class="n">Grid8_plot_pad_top</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="n">Grid8_plot_pad_bot</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.09</span><span class="w">
+    </span><span class="n">Grid8_txt_scale_factor</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.7</span></code></pre></figure>
+
+<p>
+  All of these quantities are arrays, and we are setting the value at index 1,
+  meaning this is what we will refer to as "plot 1". The name
+  (<samp>Summary_Burn</samp>) refers to pre-defined plot found elsewhere in
+  <code>pgstar.defaults</code> with many of its own settins. The rest of the
+  controls define which row and column to start in, and how many rows/columns
+  the plot should cover, and then some padding to make sure the plot doesn't
+  overflow its bounds.
+</p>
+
+<p>
+  After each of the plots are defined similarly, there is a small collection
+  of controls governing file output. In addition to or instead of displaying
+  live on-screen plots, <samp>pgstar</samp> can save a .png file for each
+  timestep (or in this case, every fifth timestep, since the intervel is set to
+  five). If you want to make movies out of <samp>pgstar</samp> output, these
+  controls will help you generate the indvidual frames you'll need.
+</p>
+
+<p>
+  By looking at the various values in the <code>Grid8_plot_name</code> array,
+  we can see that this grid contains the following plots:
+</p>
+<ol>
+  <li><samp>Summary_Burn</samp></li>
+  <li><samp>Abundance</samp></li>
+  <li><samp>HR</samp></li>
+  <li><samp>TRho</samp></li>
+  <li><samp>TRho_Profile</samp></li>
+  <li><samp>Text_Summary1</samp></li>
+</ol>
+
+<p>
+  As mentioned earlier, each of <em>these</em> plots can also be customized. In
+  the <code>&pgstar</code> namelist of <code>inlist_wd_nova_burst</code>, we
+  see a couple of lines that modify <samp>Summary_Burn</samp> by changing what
+  quantity is used for the horizontal axis as well as reversing it. You can see
+  how several of the other plots are tweaked as well, including changing a
+  couple of values in the text summary.
+</p>
+
+<p>
+  Now that we understand a bit more about how the <samp>pgstar</samp> display
+  is being generated&#8230; let's throw it away and start with a fresh one!
+</p>
+
+<h3 class="mt-4" id="part2b">Pointing to a New Inlist</h3>
+<p>
+  In this part, we'll replace the dashboard that came with the test case with
+  a custom (but incomplete) one. Download the file below and move it into your
+  work directory (<samp>wolf</samp>).
+</p>
+<div class="text-center mb-2">
+  <a href="inlist_pgstar" download>
+    <button class='btn btn-lg btn-primary'>Download <samp>inlist_pgstar</samp></button>
+  </a>
+</div>
+
+<p>
+  Now that you have our new <code>inlist_pgstar</code> in the work directory,
+  let's tell <code>inlist_wd_nova_burst</code> to use it.
+</p>
+
+<p class='lead bg-secondary p-2'>
+  <span class='text-primary font-weight-bold'>Challenge 2.1:</span>
+  Edit <code>inlist_wd_nova_burst_header</code> (and 
+  <strong class='font-weight-bold'>not</strong>
+  <code>inlist_wd_nova_burst</code>) so that it reads <samp>pgstar</samp>
+  controls from <code>inlist_pgstar</code> rather than 
+  <code>inlist_wd_nova_burst</code>, and then copy the new header to 
+  <code>inlist</code>.
+</p>
+
+<p>
+  Note that the copying to <code>inlist</code> is only necessary because we
+  will restart from a photo rather than starting a fresh run. If we were going
+  to rely on <code>rn</code>, it would have done the copying for us.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-2p1" aria-expanded="true" aria-controls="sol-2p1">
+      Show Solution 2.1
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-2p1">
+    <p class="card-text">Edit <code>inlist_wd_nova_burst_header</code> from</p>
+    <h4><span class="font-monospace">inlist_wd_nova_burst_header</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">pgstar</span><span class="w">
+
+      </span><span class="n">read_extra_pgstar_inlist2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+      </span><span class="n">extra_pgstar_inlist2_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inlist_wd_nova_burst'</span><span class="w">
+
+</span><span class="p">/</span><span class="w"> </span><span class="c1">! end of pgstar namelist</span></code></pre></figure>
+    <p class="card_text">to this:</p>
+    <h4><span class="font-monospace">inlist_wd_nova_burst_header</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">pgstar</span><span class="w">
+
+      </span><span class="n">read_extra_pgstar_inlist2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+      </span><span class="n">extra_pgstar_inlist2_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'inlist_pgstar'</span><span class="w">
+
+</span><span class="p">/</span><span class="w"> </span><span class="c1">! end of pgstar namelist</span></code></pre></figure>
+    <p class='card-text'>
+      Once that is done, overwrite <code>inlist</code> via
+      <kbd>cp inlist_wd_nova_burst_header inlist</kbd>.
+    </p>
+    <h4>Explanation</h4>
+    <p class='card-text'>
+      Now the <code>&pgstar</code> namelist in <code>inlist_wd_nova_burst</code>
+      will <em>never be used</em>. Instead, we will use the one in
+      <code>inlist_pgstar</code>. This is another reason why header style
+      inlists can be very useful; we can reuse inlists for particular purposes
+      and even share them between projects.
+    </p>
+    <p class="card-text">
+      Again, the copying is necessary since if we did nothing else, 
+      <code>inlist</code> would still point to 
+      <code>inlist_wd_nova_burst_header</code> for all namelists until 
+      <code>rn</code> overwrote it or we did it by hand.
+    </p>
+  </div>
+</div>
+
+<p class='lead bg-secondary p-2'>
+  <span class='text-primary font-weight-bold'>Challenge 2.2:</span>
+  <strong class="font-weight-bold">Resume</strong> your run by restarting from
+  the most recent photo. Do <strong class="font-weight-bold">not</strong> start
+  from the beginning with the <code>rn</code> script.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-2p2" aria-expanded="true" aria-controls="sol-2p2">
+      Show Solution 2.2
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-2p2">
+    <p class="card-text">
+      Simply execute <kbd>./re</kbd>. When called without an explicit photo, it
+      will default to using the most recent photo.
+    </p>
+    <p>
+      You can also provide a specific
+      photo corresponding to one found in the <code>photos</code> directory, as
+      in <kbd>./re x150</kbd>, which would restart from the last saved photo
+      from a model number ending in 150.
+    </p>
+  </div>
+</div>
+<p>
+  If all is working properly, you should see something like the dashboard shown
+  below:
+</p>
+
+<figure class='figure'>
+  <img class="figure-img img-fluid rounded" alt='pgstar grid' src="images/pgstar_2p2.png">
+  <figcaption class="figure-caption text-left">
+    The <samp>pgstar</samp> grid that should open up after pointing to the
+    provided version of <code>inlist_pgstar</code>.
+  </figcaption>
+</figure>
+
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+    <h5>Pro Tip: Edit <code>inlist_pgstar</code> on the fly</h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      Unlike the other namelists, <code>&pgstar</code> can be edited and saved
+      during a live run, and changes will [usually] take effect on the next
+      timestep. Assuming you don't mind your computer chugging on this
+      simulation, you can leave it running for the rest of this minilab. If you
+      make a bad change that causes the run to crash, just restart from a photo
+      again.
+    </p>
+  </div>
+</div>
+
+<p>
+  Go ahead and look inside <code>inlist_pgstar</code> now and see if you can
+  understand how this works. Note that all three plots in the profile panels
+  are "special" profile plots (abundance, power, and mixing). The middle tall
+  plot is a panel of history plots, though at present, it contains only one
+  plot showing the evolution of central temperature and density with respect to
+  the model number. The bottom shows a text summary with some entries left
+  blank, and then along the left are the more familiar HR diagram and
+  temperature-density profile.
+</p>
+
+<h3 class="mt-4" id="part2c">Updating the Dashboard</h3>
+<p>
+  Our primary goals will be to
+</p>
+<ul>
+  <li>add a little more information to the text summary</li>
+  <li>expand the history panel to three stacked panels showing</li>
+  <ul>
+    <li>hydrogen and helium layer masses</li>
+    <li>photospheric and hydrogen-burning luminosities</li>
+    <li>mass change rate and ratio of the luminosity to the Eddington luminosity</li>
+  </ul>
+</ul> 
+<p>
+  Let's start by adding information to the text summary, which is a little
+  more straightforward.
+</p>
+<div class="bg-secondary">
+  <p class='lead bg-secondary p-2'>
+    <span class='text-primary font-weight-bold'>Challenge 2.3:</span>
+    Add the following to the text summary in the specified columns, below any
+    existing entries:
+    <ul class='bg-secondary'>
+      <li>Column 2</li>
+      <ul>
+        <li>Mass of the hydrogen-rich layer</li>
+        <li>Mass of the helium-rich layer</li>
+      </ul>
+      <li>Column 4</li>
+      <ul>
+        <li>log of the total luminosity from nuclear reactions</li>
+        <li>log of the neutrino luminosity</li>
+        <li>log of the luminosity from hydrogen-burning reactions</li>
+        <li>log of the luminosity from helium-burning reactions</li>
+        <li>log of the luminosity from other nuclear reactions besides H and He</li>
+      </ul>
+      
+    </ul>
+  </p>
+</div>
 
 
 
