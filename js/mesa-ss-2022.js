@@ -23,8 +23,8 @@ var rng = {
   setup: function() {
     $('#mdot-gen').click(function() {
       // alert('clicked');
-      var mdot_min = 3.1
-      var mdot_max = 3.7
+      var mdot_min = 1.5
+      var mdot_max = 4.0
       var new_base = (mdot_min + Math.random() * (mdot_max - mdot_min)).toPrecision(3);
       $('span.mdot-base').text(new_base);
     });
