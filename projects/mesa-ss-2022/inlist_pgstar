@@ -39,11 +39,10 @@
   HR_win_width = 6
   HR_win_aspect_ratio = 1
 
-  HR_logT_min = 4.2!5.4
-  HR_logT_max = 6.2
-  HR_logL_min = -2!2.0
+  HR_logT_min = 4.9
+  HR_logT_max = 6.1
+  HR_logL_min = 0
   HR_logL_max = 5.5
-
 
   !!!!!!!!!!!!!!!!!!!!!!!!
   ! Profile Panels 1
