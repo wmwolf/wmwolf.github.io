@@ -64,6 +64,14 @@
   </li>
   <li class="nav-item">
     <a class="nav-link part-header h5" href="#part3">Maxilab: The Stability Boundary</a>
+    <nav class="nav nav-pills flex-column sub-parts" id='part3-subparts'>
+        <a class="nav-link ml-3 my-1" href="#part3a">Updating M&#775;</a>
+        <a class="nav-link ml-3 my-1" href="#part3b">Resolving the SSS Phase</a>
+        <a class="nav-link ml-3 my-1" href="#part3c">A New Wind Scheme</a>
+        <!-- <a class="nav-link ml-3 my-1" href="#part3d">Resolving the SSS phase</a> -->
+        <!-- <a class="nav-link ml-3 my-1" href="#part3e">A New Wind Scheme</a> -->
+        <!-- <a class="nav-link ml-3 my-1" href="#part3f">Controlling Accretion</a> -->
+      </nav>
   </li>
   <!-- <nav class="nav nav-pills flex-column" id='part3-subparts'>
     <a class="nav-link ml-3 my-1" href="#part3a">Background</a>
@@ -275,7 +283,7 @@ inlist_wd_nova_burst_header:      mesa_dir <span class="o">=</span> <span class=
     </ul>
     <p class="card-text">
       There's another line in <code>ck</code>, but that file is part of the
-      testing infrstructure, so we can ignore it.
+      testing infrastructure, so we can ignore it.
     </p>
   </div>
 </div>
@@ -398,6 +406,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </p>
   
 </div>
+
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
     <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p3" aria-expanded="true" aria-controls="sol-1p3">
@@ -558,7 +567,7 @@ do_one inlist_wd_nova_burst_header final.mod
 
 <p class='lead bg-secondary p-2'>
   <span class='font-weight-bold text-primary'>Challenge 1.6:</span>
-  Edit <code>inlist_wd_nova_burst</code> so it accretes at a rate of 3 &#215;
+  Edit <code>inlist_wd_nova_burst</code> so it accretes at a rate of 3.5 &#215;
   10<sup>–7</sup> M<sub>&#8857;</sub>/yr. Also turn on the on-screen
   <samp>pgstar</samp> plots that are already defined in <code>pgstar</code>
   namelist.
@@ -619,7 +628,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-9</span></code></pre></figure>
   <p class="card-text">to</p>
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3d-7</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span></code></pre></figure>
   </div>
 </div>
 <p>
@@ -635,7 +644,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <p class='lead bg-secondary p-2'>
   <span class='text-primary font-weight-bold'>Challenge 1.7:</span> Search the
   <code>star_job</code> defaults for a set of controls that will allow us to
-  slowly increase the accretion rate from zero to 3 × 10<sup>–7</sup>
+  slowly increase the accretion rate from zero to 3.5 &#215; 10<sup>–7</sup>
   M<sub>&#8857;</sub> over fifty timesteps, taking no more than 0.1 years per
   timestep. Set these controls in <code>inlist_wd_nova_burst</code>.
 </p>
@@ -695,7 +704,7 @@ do_one inlist_wd_nova_burst_header final.mod
       </span><span class="n">relax_mass_change_min_steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="w">
       </span><span class="n">relax_mass_change_max_yrs_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="w">
       </span><span class="n">relax_mass_change_init_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
-      </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3d-7</span></code></pre></figure>
+      </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span></code></pre></figure>
   </div>
 </div>
 <p class='lead bg-secondary p-2'>
@@ -755,6 +764,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <ul>
   <li>Learn the basic structure of the <samp>pgstar</samp> namelist</li>
   <li>Customize an incomplete <samp>pgstar</samp> dashboard
+  <li>(Time Permitting) add a custom history column and use it in <samp>pgstar</samp></li>
 </ul>
 <p>
   <samp>pgstar</samp> is a built-in feature of <samp>MESA</samp> that allows
@@ -1176,7 +1186,7 @@ do_one inlist_wd_nova_burst_header final.mod
   <p class='lead'>
     <span class='text-primary font-weight-bold'>Challenge 2.4:</span>
     Update the history panels to have three plots. All quantities should be
-    plotted against the star age with a maximum width of 40 years. From top
+    plotted against the star age with a maximum width of 30 years. From top
     to bottom, the plots should show:
   </p>
   <ul class='lead'>
@@ -1306,7 +1316,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </span><span class="n">History_Panels1_xaxis_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'star_age'</span><span class="w">
   </span><span class="n">History_Panels1_xmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-101d0</span><span class="w">
   </span><span class="n">History_Panels1_xmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-101d0</span><span class="w">
-  </span><span class="n">History_Panels1_max_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">40</span><span class="w">
+  </span><span class="n">History_Panels1_max_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="w">
   </span><span class="n">History_Panels1_dxmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
   </span><span class="n">History_Panels1_xaxis_reversed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span><span class="w">
   </span><span class="n">History_Panels1_xaxis_log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span><span class="w"> </span><span class="c1">! show log10 of abs value</span><span class="w">
@@ -1713,100 +1723,87 @@ do_one inlist_wd_nova_burst_header final.mod
 </figure>
 </div>
 
-<div class="card border-primary mb-3">
-  <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p7b" aria-expanded="true" aria-controls="hint-1p7b">
-      Show Hint 1.7b: The Main Flag
-    </button>
-  </div>
-  <div class="card-body collapse" id="hint-1p7b">
-    <p class='card-text'>
-      The primary flag you want to set is called
-      <code>relax_initial_mass_change</code>, which you should set to 
-      <code>.true.</code>. There are an additional four numerical controls you
-      will also want to set.
-    </p>
-    <p class="card-text">
-      You might also notice the very similar <code>relax_mass_change</code>
-      (missing the word "initial"). This will do the same thing, except it will
-      also trigger the relaxation process <em>on restarts</em>. We don't want to
-      do that; we only want to relax the accretion rate when we first start the
-      run, and then subsequent restarts can just go straight to the final
-      accretion rate.
-    </p>
-  </div>
-</div>
-<div class="card border-success mb-3">
-  <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p7" aria-expanded="true" aria-controls="sol-1p7">
-      Show Solution 1.7
-    </button>
-  </div>
-  <div class="card-body collapse" id="sol-1p7">
-    <p class="card-text">
-      Add the following lines to the <code>star_job</code> namelist of
-      <code>inlist_wd_nova_burst</code>:
-    </p>
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">relax_initial_mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
-      </span><span class="n">relax_mass_change_min_steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="w">
-      </span><span class="n">relax_mass_change_max_yrs_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="w">
-      </span><span class="n">relax_mass_change_init_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
-      </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3d-7</span></code></pre></figure>
-  </div>
-</div>
-<p class='lead'>
-  <span class='text-primary font-weight-bold'>Challenge 1.8:</span> Get your model running! Compile if you haven't already, and then start the simulation.
-</p>
-<p>
-  After completing the setup inlist and the relaxation process, a
-  <samp>pgstar</samp> window should open up. This may take a few minutes, but
-  once it does, that means your simulation should be ready to run continuously.
-  You may let it run or end the process once the pgstar window has appeared.
-</p>
 
-<div class="card border-success mb-3">
-  <div class="card-header bg-success text-white make-clickable">
-    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p8" aria-expanded="true" aria-controls="sol-1p8">
-      Show Solution 1.8
-    </button>
-  </div>
-  <div class="card-body collapse" id="sol-1p8">
-    <p class="card-text">
-      If you haven't already, compile your project with <kbd>./mk</kbd>. Then
-      get things started with <kbd>./rn</kbd>. If you get any errors, go back
-      and review the previous challenge solutions and look for any discrepancies
-      with your files.
-    </p>
-    <p class="card-text">
-      The <code>rn</code> script will first run off of
-      <code>inlist_setup_header</code>, which shouldn't take more than a minute.
-      Then, it should launch run off of <code>inlist_wd_nova_burst_header</code>,
-      which should launch a pgstar window something like what is shown below.
-    </p>
-    <figure class='figure'>
-      <img class="figure-img img-fluid rounded" alt='pgstar grid' src="images/pgstar_1p8.png">
-      <figcaption class="figure-caption text-left">
-        The <samp>pgstar</samp> grid that should open up a while after starting
-        the run. Note that it must first get through the setup inlist as well
-        as the relaxation process, so your window may not open for a few
-        minutes.
-      </figcaption>
-    </figure>
+
 
 <h2 id="part3" class="mt-5">Maxilab: Finding the Stability Boundary</h2>
 
+<p>
+  We've seen that at sufficiently high accretion rates, a white dwarf can 
+  burn hydrogen-rich material at the same rate it is accreted, creating a stably
+  and steadily burning model. These are observed as persistent supersoft sources
+  (SSSs), since they are strong sources of supersoft X-rays.
+</p>
 
-<h1 class="display-1">NEEDS UPDATING</h1>
+<p>
+  Below some particular accretion rate, which we will call the <span class="font-weight-bold">stability boundary</span>, the nuclear fusion becomes
+  thermally unstable, and goes through a cycle of accretion and thermonuclear
+  flashes known as <span class="font-weight-bold">recurrent novae</span>.
+  Below, a <samp>pgstar</samp> video shows a couple of recurrent novae resulting
+  from lowering the accretion rate to 1.0 × 10<sup>–7</sup>
+  M<sub>&#8857;</sub>/yr.
+</p>
+
+<div align="center" class='embed-responsive embed-responsive-16by9'>
+  <video controls fullscreen>
+    <source src="rne.mp4" type="video/mp4">
+    Your browser does not support the video tag.      
+  </video>
+</div>
+<p>
+  Note how the model traces out a "swoosh" in the HR diagram, and there are two
+  distinct bursts in the history panels, separated by about 25.5 years. We call
+  this the <span class="font-weight-bold">recurrence time</span> of the nova.
+  Note also that we can see a time after the mass loss has ended that the
+  luminosity and effective temperature are quite high. This is the supersoft
+  source phase. It's harder to read off of the plots but it lasts from model 626 until the end (for the second burst), for duration of about 0.67 years.
+</p>
+
+<p>
+  Compare that with the behavior of the model you should have constructed in
+  the previous two minilabs, run for roughly the same duration:
+</p>
+
+<div align="center" class='embed-responsive embed-responsive-16by9'>
+  <video controls fullscreen>
+    <source src="stable.mp4" type="video/mp4">
+    Your browser does not support the video tag.      
+  </video>
+</div>
+
+<p>
+  The model still appears to go through a "first flash" (you probably got
+  through this in minilab 1), but it gets to the supersoft phase and just
+  hangs there as the accreted material is consumed at the same rate it is 
+  accreted.
+</p>
+
+<p class="lead">
+  Our main goal in this lab is to determine more precisely the stability
+  boundary for this 1.10 M<sub>&#8857;</sub> white dwarf model.  
+</p>
+
+<p>
+  Additionally, you should learn the following
+</p>
+<ul>
+  <li>how to use timestep controls to increase time resolution</li>
+  <li>how to perform a basic convergence study</li>
+  <li>how to change controls on the fly in <code>run_star_extras.f90</code></li>
+  <li>(time permitting) how to implement a custom wind routine</li>
+</ul>
+
+<h3 class="mt-4" id="part3a">Updating M&#775;</h3>
 
 <p>
   In <code>inlist_wd_nova_burst</code>, you should still have a line like
 
   <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">controls</span><span class="w">
 
-      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">4d-7</span><span class="w">
+      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span><span class="w">
   </span></code></pre></figure>
 
-  We've established that at this accretion rate, the model finds a steady and stable configuration where it fuses hydrogen at the same rate it is accreted. Now we want to find how low we can take this accretion rate before the model undergoes repeated nova flashes. We'll crowd-source random values between 1.5 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr and 4.0 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr. Pick yours with the tool below:
+  We've established that at this accretion rate, the model finds a steady and stable configuration where it fuses hydrogen at the same rate it is accreted. We also showed that at only 2 &#215; 10<sup>–7</sup>, it enters a recurrent nova regime. Now we want to find the limiting accretion rate between these two regimes. We'll crowd-source random values between 2.0 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr and 3.5 &#215; 10<sup>-7</sup> M<sub>&#8857;</sub>/yr. Pick yours with the tool below:
 </p>
 <div class='text-center'>
   <div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
@@ -1832,12 +1829,19 @@ do_one inlist_wd_nova_burst_header final.mod
   <div class="card-body collapse" id="sol-3p1">
     <p class="card-text">
       Change the line above in <code>inlist_nova</code> to <code> mass_change = <span class="mdot-base">???</span>d-7</code>
-    </p> 
+    </p>
+    <p class="card-text">
+      You might also consider changing the following line in the 
+      <code>&star_job</code> namelist so that if you start the run over from
+      the beginning, that the relaxation method takes the accretion rate to the
+      right value:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-7</span></code></pre></figure>
   </div>
 </div>
 
 <p>
-  With your M&#775; selected, you should be able to run your model. Compile with <kbd>./mk</kbd> if you haven't already, and then start the run with <kbd>./rn</kbd>. You should see some terminal output fly out, and then eventually a large pgstar dashboard should appear. If it's too large to fit on your screen, go into <code>inlist_pgstar</code> and reduce the value of <code>Grid1_win_width = 17</code> to something smaller.
+  With your M&#775; selected, you should be able to resume your model. Restart the run with <kbd>./re</kbd>.
 </p>
 
 <h4 class='mt-4'>Interpreting the pgstar Output</h4>
@@ -1845,17 +1849,25 @@ do_one inlist_wd_nova_burst_header final.mod
   There's a lot of data on your pgstar dashboard! In the upper left is a profile (snapshot of the entire star at one point) of the temperature and density of the star. Different colors indicate different mixing mechanisms or levels of nuclear burning as indicated by the legend. In the lower left is an HR diagram. The middle panel of plots show the last two years of history of various surface quantities, and the panel on the right shows profiles of the isotope abundances (top), nuclear energy generation (middle), and mixing mechanism diffusion coefficients (bottom). The very bottom shows text information that supplements the terminal output.
 </p>
 
-<p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Report whether or not your model was stable. If it was unstable, also report the following:
+<div class='p-2 bg-secondary'>
+  <p class="lead">
+    <span class='font-weight-bold text-primary'>Challenge 3.2:</span> Restart your model, run it for at least 30 years if stable, or until it stops on its own if unstable, and report whether or not your model was stable.
+  </p>
+  <p class="lead">
+    If it was unstable, also report the following (try to get them to at least two significant digits):
+  </p>
   <ul>
     <li>
       <strong>Recurrence Time:</strong> duration between successive starts of bursts
     </li>
     <li>
-      <strong>SSS Duration</strong> duration in "supersoft phase" where hydrogen-burning luminosity is very close to the photospheric luminosity
+      <strong>SSS Duration</strong> duration in supersoft phase where hydrogen-burning luminosity is very close to the photospheric luminosity after mass loss has ended
     </li>
   </ul>
-</p>
+  <p class="lead">
+    If it was stable, also report the hydrogen-rich layer mass
+  </p>
+</div>
 
 <div class="text-center mb-2">
   <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
@@ -1866,16 +1878,22 @@ do_one inlist_wd_nova_burst_header final.mod
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#stability-hint" aria-expanded="true" aria-controls="stability-hint">
-      Show Hint: Determining Stability
+      Show Hint 3.2a: Determining Stability
     </button>
   </div>
   <div class="card-body collapse" id="stability-hint">
+    <p class="card-text">
+      Here are some example videos showing unstable and stable configurations.
+      Note that these start from the very beginning of the simulation; yours
+      probably started from a hot an luminous state (near the left side of the
+      "knee" in the HR diagram).
+    </p>
     <p class="card-text">
       Here is a movie of a model that is clearly unstable:
     </p> 
     <div align="center" class='embed-responsive embed-responsive-16by9'>
       <video controls fullscreen>
-        <source src="first_run_3.1.mp4" type="video/mp4">
+        <source src="rne.mp4" type="video/mp4">
         Your browser does not support the video tag.      
       </video>
     </div>
@@ -1885,7 +1903,7 @@ do_one inlist_wd_nova_burst_header final.mod
     </p> 
     <div align="center" class='embed-responsive embed-responsive-16by9'>
       <video controls fullscreen>
-        <source src="first_run_3.7.mp4" type="video/mp4">
+        <source src="stable.mp4" type="video/mp4">
         Your browser does not support the video tag.      
       </video>
     </div>
@@ -1895,15 +1913,19 @@ do_one inlist_wd_nova_burst_header final.mod
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#timescales-hint" aria-expanded="true" aria-controls="timescales-hint">
-      Show Hint: Determining Timescales
+      Show Hint 3.2b: Determining Timescales
     </button>
   </div>
   <div class="card-body collapse" id="timescales-hint">
     <p class="card-text">
       The beginnings of flashes are the easiest to identify, so estimate the time between the two subsequent sharp rises in the luminosity to get the recurrence time.
     </p> 
-    <p>
+    <p class='card-text'>
       The SSS phase duration is a little more nebulous. Estimate the the duration from the time of minimum effective temperature until the photospheric and hydrogen-burning luminosities precipitously depart from each other as they plummet.
+    </p>
+    <p class="card-text">
+      The example below is taken from a simulation on a higher-mass white dwarf
+      and higher accretion rate, so the timescales are much shorter. You should find recurrence times on the order of tens of years for the recurrence time and a little less than a year for the SSS phase duration.
     </p>
     <div class='text-center'>
     <figure class='figure'>
@@ -1914,13 +1936,27 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
 </div>
 
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#timescales-hint" aria-expanded="true" aria-controls="timescales-hint">
+      Show Hint 3.2c: Determining H-Rich Layer Mass
+    </button>
+  </div>
+  <div class="card-body collapse" id="timescales-hint">
+    <p class="card-text">
+      This quantity should be on your pgstar dashboard. You added it to your
+      panel in minilab 2 in the text summary.
+    </p> 
+  </div>
+</div>
+
 <div class="card border-secondary mb-3">
   <div class="card-header bg-secondary">
     <h5 class='card-title mb-0'>Tool: Making Movies with <samp>images_to_movie</samp></h5>
   </div>
   <div class="card-body">
     <p class="card-text">
-      Did you check out the hint about determining stability? The videos there were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
+      Did you check out the hint about determining stability? The videos there (and earlier) were composed of all the output from pgstar. In this simulation, we output a snapshot of the pgstar output with each timestep into the <code>png</code> directory. Take a look in there, and you'll see a png for every timestep.
     </p> 
     <p class='card-text'>
       To make these into a movie, the SDK comes with a nifty script that does the heavy lifting for you: <code>images_to_movie</code>. To use it, do something like the following:
@@ -1947,7 +1983,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
 </div>
 
-<h4 id='part3d' class='mt-4'>Resolving the SSS Phase</h4>
+<h4 id='part3b' class='mt-4'>Resolving the SSS Phase</h4>
 <p>
   This simulation is tuned to run quickly, and as a result, the supersoft phase doesn't last many timesteps. If we ran through it too quickly, we might actually have missed stability, while shorter timesteps might catch it. Our goal now is to modify our simulation so that it takes shorter time steps, but only during the SSS phase.
 </p>
@@ -1957,7 +1993,7 @@ do_one inlist_wd_nova_burst_header final.mod
   changes over the timestep. If &#951; is greater than <code>delta_HR_limit</code>, then the next timestep will be reduced by a factor of <code>delta_HR_limit</code>/&#951;. If instead &#951; is greater than <code>delta_HR_hard_limit</code>, the <em>current</em> timestep will be retried with a shorter timestep. 
 </p>
 <p>
-  We could put these in our inlist, but they will make the entire run intolerably slow. We only want really high time resolution during the SSS phase, so we will implement this in <code>run_star_extras.f90</code>, specifically, in <code>extras_check_model</code>, which is executed at the end of every timestep. We want to use these tight tolerances only when the hydrogen burning luminosity is similar to the photospheric luminosity. We also only really care when the effective temperature is large.
+  We could put these in our inlist, but they will make the <em>entire</em> run intolerably slow. We only want really high time resolution during the SSS phase, so we will implement this in <code>run_star_extras.f90</code>, specifically, in <code>extras_check_model</code>, which is executed at the end of every timestep. We want to use these tight tolerances only when the hydrogen burning luminosity is similar to the photospheric luminosity. We also only really care when the effective temperature is large.
 </p>
 <div class="card border-secondary mb-3">
   <div class="card-header bg-secondary">
@@ -1965,24 +2001,24 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body">
     <p class='card-text'>
-      Within subroutines in <code>run_star_extras</code>, we can access the full data in the stellar model via the "star info structure", which is usually denoted as <code>s</code>. All the data you can access are listed in <code>$MESA_DIR/star/public/star_data.inc</code>. Additionally, inlist controls are members of the star info structute, so all controls in <code>$MESA_DIR/star/defaults/controls.defaults</code> are can be accessed and changed.
+      Within subroutines in <code>run_star_extras</code>, we can access the full data in the stellar model via the "star info structure", which is usually denoted as <code>s</code>. All the data you can access are listed in various files in <code>$MESA_DIR/star_data/public</code>. The two most useful files there are <code>star_data_step_input.inc</code> and <code>star_data_step_work.f90</code>. Additionally, inlist controls are members of the star info structure, so all controls in <code>$MESA_DIR/star/defaults/controls.defaults</code> can be accessed and changed.
     </p>    
     <p class='card-text'>
       Depending on when in the timestep you access the star info structure, some values will have already been set and/or any changes you make might be overwritten by another internal subroutine. Understanding what is set when and how often boils down to grepping around in <code>$MESA_DIR/star/private</code>. In <code>extras_check_model</code>, everything should already be set, so we don't yet need to worry about this detail (but anything we change won't affect this timestep!).
     </p>
     <p class='card-text'>
-      To access a member of the star info structure, we just append a <code>%</code> after <code>s</code>, followed by the name. For instance, <code>s% mstar</code> will return the baryonic mass of the stellar model in grams. Note that units in the star info structure are <em>usually</em> in cgs (unless otherwise indicated in <code>$MESA_DIR/star/public/star_data.inc</code>), while inlist controls are often given in solar units, so you may need to juggle conversions between the two.
+      To access a member of the star info structure, we just append a <code>%</code> after <code>s</code>, followed by the name. For instance, <code>s% mstar</code> will return the baryonic mass of the stellar model in grams. Note that units in the star info structure are <em>usually</em> in cgs (unless otherwise indicated in the source file), while inlist controls are often given in solar units, so you may need to juggle conversions between the two.
     </p>
   </div>
 </div>
 
-<p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Edit <code>extras_check_model</code> to add a conditional that sets <code>delta_HR_limit</code> to <code>5d-3</code> and <code>delta_HR_hard_limit</code> to <code>1d-2</code> whenever L<sub>H</sub>/L<sub>phot</sub> &lt; 1.1 <em>and</em> T<sub>eff</sub> &gt; 800,000 K <em>and</em> when L<sub>phot</sub> is above the burst threshold set by <code>L_burst</code>. Otherwise both controls should be set to -1.
+<p class='lead bg-secondary p-2'>
+  <span class='font-weight-bold text-primary'>Challenge 3.3:</span> Edit <code>extras_check_model</code> to add a conditional that sets <code>delta_HR_limit</code> to <code>5d-3</code> and <code>delta_HR_hard_limit</code> to <code>1d-2</code> whenever L<sub>H</sub>/L<sub>phot</sub> &lt; 1.1 <em>and</em> T<sub>eff</sub> &gt; 500,000 K <em>and</em> when L<sub>phot</sub> is above the burst threshold set by <code>L_burst</code>. Otherwise both controls should be set to –1.
 </p>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#access-hint" aria-expanded="true" aria-controls="access-hint">
-      Show Hint: Accessing the luminosities and effective temperature
+      Show Hint 3.3a: Accessing the luminosities and effective temperature
     </button>
   </div>
   <div class="card-body collapse" id="access-hint">
@@ -2007,7 +2043,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#setting-hint" aria-expanded="true" aria-controls="setting-hint">
-      Show Hint: Setting Parameters on the Fly
+      Show Hint 3.3b: Setting Parameters on the Fly
     </button>
   </div>
   <div class="card-body collapse" id="setting-hint">
@@ -2024,45 +2060,55 @@ do_one inlist_wd_nova_burst_header final.mod
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
     <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#resolution-sol" aria-expanded="true" aria-controls="resolution-sol">
-      Show Solution
+      Show Solution 3.3
     </button>
   </div>
   <div class="card-body collapse" id="resolution-sol">
     <p class="card-text">
       The main conditional in <code>extras_check_model</code> should now be something like this:
     </p> 
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="c1">! set defaults (no extra resolution)</span><span class="w">
-  </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
-  </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_hard_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
-
-  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">L_burst</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
-     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">waiting_for_burst</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
-        </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
-        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="s1">'num_bursts'</span><span class="p">,</span><span class="w"> </span><span class="n">num_bursts</span><span class="w">
-        </span><span class="n">waiting_for_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span><span class="w">
-     </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
-     </span><span class="c1">! if we are in SSS, add resolution</span><span class="w">
-     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">power_h_burn</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="ow">.LT.</span><span class="w"> </span><span class="mf">1.1d0</span><span class="w"> </span><span class="ow">.AND.</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">Teff</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">8d5</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
-        </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5d-3</span><span class="w">
-        </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_hard_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-2</span><span class="w">
-     </span><span class="k">endif</span><span class="w">
-
-  </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">L_between</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
-     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num_bursts</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
-        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'have finished burst'</span><span class="w">
-        </span><span class="n">extras_check_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terminate</span><span class="w">
-        </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">termination_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_extras_check_model</span><span class="w">
-     </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
-     </span><span class="n">waiting_for_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
-  </span><span class="k">end</span><span class="w"> </span><span class="k">if</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="c1">! returns either keep_going, retry, or terminate.</span><span class="w">
+</span><span class="kt">integer</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">extras_check_model</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+   </span><span class="kt">integer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+   </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+   </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+   </span><span class="k">include</span><span class="w"> </span><span class="s1">'formats'</span><span class="w">
+   </span><span class="n">extras_check_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keep_going</span><span class="w">
+   </span><span class="c1">! Deactivate HR limits by default</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">L_burst</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">waiting_for_burst</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+         </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
+         </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="s1">'num_bursts'</span><span class="p">,</span><span class="w"> </span><span class="n">num_bursts</span><span class="w">
+         </span><span class="n">waiting_for_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.false.</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
+      </span><span class="c1">! Preferentially increase time resolution based on motion through</span><span class="w">
+      </span><span class="c1">! HR diagram.</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">power_h_burn</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">1.1d0</span><span class="w"> </span><span class="ow">.and.</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">Teff</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">5e5</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+         </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5d-3</span><span class="w">
+         </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-2</span><span class="w">               
+      </span><span class="k">endif</span><span class="w">
+   </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">L_between</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num_bursts</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+         </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'have finished burst'</span><span class="w">
+         </span><span class="n">extras_check_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terminate</span><span class="w">
+         </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">termination_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_extras_check_model</span><span class="w">
+      </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
+      </span><span class="n">waiting_for_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+   </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">extras_check_model</span></code></pre></figure>
     <p class='card-text'>
       Note that the outer conditional takes care of the luminosity condition automatically.
     </p>
   </div>
 </div>
 
-<p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Recompile and rerun your model at the same M&#775;, but now with the increased time resolution. Report the same quantities as before, but now on the second tab of the google spreadsheet.
+<p class='lead bg-secondary p-2'>
+  <span class='font-weight-bold text-primary'>Challenge 3.4:</span> Recompile and rerun your model at the same M&#775;, but now with the increased time resolution. Report the same quantities as before, but now on the second column of the google spreadsheet.
 </p>
 <div class="text-center mb-2">
   <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
@@ -2070,7 +2116,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </a>
 </div>
 
-<h2 id='part3e' class='mt-4'>A New Wind Scheme</h2>
+<h2 id='part3c' class='mt-4'>A New Wind Scheme</h2>
 <p>
   The super eddington wind scheme we've been using for mass loss is simple and convenient, but you may have noticed that it continues well into the supersoft phase. In fact, this is largely due to the fact that we've moved the outer boundary condition to an optical depth of 20, which has the effect of making the model think it is super-eddington.
 </p>
