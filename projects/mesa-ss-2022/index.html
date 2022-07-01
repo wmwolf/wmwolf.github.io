@@ -398,7 +398,6 @@ do_one inlist_wd_nova_burst_header final.mod
   </p>
   
 </div>
-
 <div class="card border-success mb-3">
   <div class="card-header bg-success text-white make-clickable">
     <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p3" aria-expanded="true" aria-controls="sol-1p3">
@@ -1714,8 +1713,85 @@ do_one inlist_wd_nova_burst_header final.mod
 </figure>
 </div>
 
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p7b" aria-expanded="true" aria-controls="hint-1p7b">
+      Show Hint 1.7b: The Main Flag
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-1p7b">
+    <p class='card-text'>
+      The primary flag you want to set is called
+      <code>relax_initial_mass_change</code>, which you should set to 
+      <code>.true.</code>. There are an additional four numerical controls you
+      will also want to set.
+    </p>
+    <p class="card-text">
+      You might also notice the very similar <code>relax_mass_change</code>
+      (missing the word "initial"). This will do the same thing, except it will
+      also trigger the relaxation process <em>on restarts</em>. We don't want to
+      do that; we only want to relax the accretion rate when we first start the
+      run, and then subsequent restarts can just go straight to the final
+      accretion rate.
+    </p>
+  </div>
+</div>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p7" aria-expanded="true" aria-controls="sol-1p7">
+      Show Solution 1.7
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-1p7">
+    <p class="card-text">
+      Add the following lines to the <code>star_job</code> namelist of
+      <code>inlist_wd_nova_burst</code>:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">relax_initial_mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+      </span><span class="n">relax_mass_change_min_steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="w">
+      </span><span class="n">relax_mass_change_max_yrs_dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="w">
+      </span><span class="n">relax_mass_change_init_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3d-7</span></code></pre></figure>
+  </div>
+</div>
+<p class='lead'>
+  <span class='text-primary font-weight-bold'>Challenge 1.8:</span> Get your model running! Compile if you haven't already, and then start the simulation.
+</p>
+<p>
+  After completing the setup inlist and the relaxation process, a
+  <samp>pgstar</samp> window should open up. This may take a few minutes, but
+  once it does, that means your simulation should be ready to run continuously.
+  You may let it run or end the process once the pgstar window has appeared.
+</p>
 
-
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-1p8" aria-expanded="true" aria-controls="sol-1p8">
+      Show Solution 1.8
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-1p8">
+    <p class="card-text">
+      If you haven't already, compile your project with <kbd>./mk</kbd>. Then
+      get things started with <kbd>./rn</kbd>. If you get any errors, go back
+      and review the previous challenge solutions and look for any discrepancies
+      with your files.
+    </p>
+    <p class="card-text">
+      The <code>rn</code> script will first run off of
+      <code>inlist_setup_header</code>, which shouldn't take more than a minute.
+      Then, it should launch run off of <code>inlist_wd_nova_burst_header</code>,
+      which should launch a pgstar window something like what is shown below.
+    </p>
+    <figure class='figure'>
+      <img class="figure-img img-fluid rounded" alt='pgstar grid' src="images/pgstar_1p8.png">
+      <figcaption class="figure-caption text-left">
+        The <samp>pgstar</samp> grid that should open up a while after starting
+        the run. Note that it must first get through the setup inlist as well
+        as the relaxation process, so your window may not open for a few
+        minutes.
+      </figcaption>
+    </figure>
 
 <h2 id="part3" class="mt-5">Maxilab: Finding the Stability Boundary</h2>
 
