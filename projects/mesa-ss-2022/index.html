@@ -67,11 +67,14 @@
     <nav class="nav nav-pills flex-column sub-parts" id='part3-subparts'>
         <a class="nav-link ml-3 my-1" href="#part3a">Updating M&#775;</a>
         <a class="nav-link ml-3 my-1" href="#part3b">Resolving the SSS Phase</a>
-        <a class="nav-link ml-3 my-1" href="#part3c">A New Wind Scheme</a>
+        <a class="nav-link ml-3 my-1" href="#part3c">Changing the Wind Scheme</a>
         <!-- <a class="nav-link ml-3 my-1" href="#part3d">Resolving the SSS phase</a> -->
         <!-- <a class="nav-link ml-3 my-1" href="#part3e">A New Wind Scheme</a> -->
         <!-- <a class="nav-link ml-3 my-1" href="#part3f">Controlling Accretion</a> -->
       </nav>
+  </li>
+  <li class="nav-item">
+    <a href="#part4" class="nav-link h5">Discussion</a>
   </li>
   <!-- <nav class="nav nav-pills flex-column" id='part3-subparts'>
     <a class="nav-link ml-3 my-1" href="#part3a">Background</a>
@@ -98,7 +101,7 @@
     University of California, Santa Barbara
   </a> in August 2022. The labs were designed by
   <a href="https://billwolf.space" target=_blank>Bill Wolf</a> and
-  Ebraheem Farag.
+  Ebraheem Farag. The science case is loosely based on simulations in <a href="https://ui.adsabs.harvard.edu/abs/2013ApJ...777..136W/abstract" target=_blank>Wolf et al. 2013</a>.
 </p>
 <h3>Requirements</h3>
 <p>
@@ -114,7 +117,7 @@
 </dl>
 <p>
   These exercises <em>may</em> work or be adapted to older or newer releases,
-  but there is no such expectation.
+  but there is no such expectation for them to work.
 </p>
 
 <h3>What You'll Learn</h3>
@@ -127,7 +130,7 @@
   <li>Customizing <samp>pgstar</samp> output</li>
   <li>Performing basic convergence studies</li>
   <li>Modifying controls mid-simulation using <samp>run_star_extras.f90</samp></li>
-  <li>Implementing custom physics using the <samp>other_wind</samp> hook</li>
+  <li>Implementing custom physics using the <samp>other_adjust_mdot</samp> hook</li>
 </ul>
 <p>
   We'll do all this while studying the topic of rapidly-accreting white dwarf
@@ -1790,7 +1793,7 @@ do_one inlist_wd_nova_burst_header final.mod
   <li>how to use timestep controls to increase time resolution</li>
   <li>how to perform a basic convergence study</li>
   <li>how to change controls on the fly in <code>run_star_extras.f90</code></li>
-  <li>(time permitting) how to implement a custom wind routine</li>
+  <li>how to use a hook to add custom physics to the model</li>
 </ul>
 
 <h3 class="mt-4" id="part3a">Updating M&#775;</h3>
@@ -1831,12 +1834,12 @@ do_one inlist_wd_nova_burst_header final.mod
       Change the line above in <code>inlist_nova</code> to <code> mass_change = <span class="mdot-base">???</span>d-7</code>
     </p>
     <p class="card-text">
-      You might also consider changing the following line in the 
+      You should similarly update the following line in the 
       <code>&star_job</code> namelist so that if you start the run over from
       the beginning, that the relaxation method takes the accretion rate to the
       right value:
     </p>
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-7</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span></code></pre></figure>
   </div>
 </div>
 
@@ -1870,7 +1873,7 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 
 <div class="text-center mb-2">
-  <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
+  <a href="https://docs.google.com/spreadsheets/d/18iE_dkCjDJO3SqNb6p-Ngrkguk5huHBGcjNFQmn0HeE/edit?usp=sharing" target=_blank>
     <button class='btn btn-lg btn-primary'>Record my Data</button>
   </a>
 </div>
@@ -2111,12 +2114,425 @@ do_one inlist_wd_nova_burst_header final.mod
   <span class='font-weight-bold text-primary'>Challenge 3.4:</span> Recompile and rerun your model at the same M&#775;, but now with the increased time resolution. Report the same quantities as before, but now on the second column of the google spreadsheet.
 </p>
 <div class="text-center mb-2">
-  <a href="https://docs.google.com/spreadsheets/d/17UuB2cA5QniX65THA9VNQRNPgjXtiQTWQaO_2E0PZAQ/edit?usp=sharing" target=_blank>
+  <a href="https://docs.google.com/spreadsheets/d/18iE_dkCjDJO3SqNb6p-Ngrkguk5huHBGcjNFQmn0HeE/edit?usp=sharing" target=_blank>
     <button class='btn btn-lg btn-primary'>Record my Data (use second tab on bottom)</button>
   </a>
 </div>
+<h2 id='part3c' class='mt-4'>Delaying Mass Loss</h2>
+<p>
+  Now that we're better resolving the SSS phase (though we have not actually verified that this is converged spatially or temporally), we now turn our attention to the effects of the mass loss mechanism. Right now, we're using the super Eddington winds, which assume that all luminosity in excess comes in the form of mass moving at the escape speed:
+</p>
+<p>
+  $$L - L_{\rm Edd} = \frac{1}{2}\dot{M}v_{\rm esc}^2$$
+</p>
+<p>
+  Which yields a mass loss rate of:
+</p>
+<p>
+  $$\dot{M} = \frac{2(L-L_{\rm Edd})}{v_{\rm esc}^2}$$
+</p>
+<p>
+  How is that <var>L</var><sub>Edd</sub> computed, though? Traditionally, it is
+</p>
+<p>
+  $$L_{\rm Edd} = \frac{4\pi GcM}{\kappa},$$
+</p>
+<p>
+  which is an entirely local quantity. Near the outside of the star, the mass is well-defined, but the opacity is rapidly changing. To make this more unclear, this particular test case sets <code>tau_factor</code> to 30, which means that the outermost cell is defined to be at an optical depth 30 times greater than the photospheric optical depth of 2/3, so at an optical depth of 20.
+</p>
+<p>
+  It turns out that, even with this definition, novae on this mass of WD are only super Eddington when their effective temperature just below the location of the bump in opacity due to iron at around log <var>T</var><sub>eff</sub> = 5.2. If the nova expands beyond this, the model would simply keep expanding. We do see novae expanding to lower effective temperatures and still losing mass, so a more accurate treatment of mass loss is likely much more involved.
+</p>
+<h4>Why Do We Care About This?</h4>
+<p>
+  If mass loss is delayed or weaker, it may be the case that the post-outburst nova enters the SSS phase with a larger hydrogen-rich envelope and is able to accrete enough during this phase to resume steady burning, whereas stronger and earlier mass loss might cause too much of a reduction in the envelope, and erroneously manifest as a recurrent novae when perhaps it should manifest as a steady burner.
+</p>
 
-<h2 id='part3c' class='mt-4'>A New Wind Scheme</h2>
+<h4>How Should we "Fix" This?</h4>
+<p>
+  For illustrative purposes, we will make use of the control <code>super_eddington_wind_Ledd_factor</code>, which is already set to 1 in <code>inlist_wd_nova_burst</code>. As the comment indicates, this is a factor by which the Eddington luminosity is scaled by in computing the wind. We will increase this to 1.5 in the next challenge to make the winds start later and end sooner.
+</p>
+<p class='lead bg-secondary p-2'>
+  <span class='font-weight-bold text-primary'>Challenge 3.5:</span> Increase the value of <code>super_eddington_wind_Ledd_factor</code> to 1.5. Start your model over from the beginning (don't restart), and observe what happens during the initial flash. Depending on your accretion rate, it may get stuck in this phase. See if you can figure out what's going on.
+</p>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-3p4" aria-expanded="true" aria-controls="sol-3p4">
+      Show Solution 3.5
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-3p4">
+    <p class="card-text">
+      Part of your inlist should look like
+    </p> 
+    <h4><span class="text-monospace">inlist_wd_nova_burst</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="c1">! NOTE: for super eddington wind,</span><span class="w">
+      </span><span class="c1">! we use Ledd averaged over mass to optical depth tau = 100</span><span class="w">
+      </span><span class="n">super_eddington_scaling_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+         </span><span class="c1">! parameter for mass loss driven by super Eddington luminosity        </span><span class="w">
+      </span><span class="n">super_eddington_wind_Ledd_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+         </span><span class="c1">! multiply Ledd by this factor when computing super Eddington wind</span><span class="w">
+         </span><span class="c1">! e.g., if this is 2, then only get wind when L &gt; 2*Ledd</span></code></pre></figure>
+    <p class='card-text'>
+      Start your model from the beginning with <kbd>./rn</kbd>.
+    </p>
+    <h4 class='card-text'>What's Going On?</h4>
+    <p class='card-text'>
+      Depending on your accretion rate, you may see different outcomes, but many
+      simulations will stall in the mass loss phase because the model oscillates
+      wildly between accretion (mass gain) and winds (mass loss), so it cannot
+      take very long timesteps.
+    </p>
+    <div align="center" class='embed-responsive embed-responsive-16by9'>
+      <video controls fullscreen>
+        <source src="stable_stutter.mp4" type="video/mp4">
+        Your browser does not support the video tag.      
+      </video>
+    </div>
+    <p class="card-text">
+      In this video, see how the model has trouble getting through the mass loss phase? Part of this is because it is right at the cusp of triggering super Eddington winds, but the other issues is that whenever the winds cease, accretion immediately resumes (see the abundance plott for confirmation), which then affects the opacity in the outer layers, which triggers the winds, etc.
+    </p>
+  </div>
+</div>
+
+<p>
+  Perhaps you ran into troubles in the last challenge during the mass loss phase. If not, see the video in the solution for an example of what could happen. As discussed in the solution, issues can arise when models oscillate wildly between mass loss and mass gain. To remedy this situation, we will try to stop accretion a little before mass loss would normally begin and resume it only a little after mass loss ends.
+</p>
+<p>
+  Perhaps we could do this by changing the <code>mass_change</code> control on
+  the fly like we did with the <code>delta_HR_limit</code> controls, but a more elegant solution is to use one of <samp>MESA</samp>'s many <code>other_*</code> hooks. These "hooks" let us plug bits of physics into the evolution loop at just the right moment. In our case, we want to intervene just after any winds have been calculated, but before any mass has been added or removed from the model. The <code>other_adjust_mdot</code> hook allows for exactly this, letting us inject code at this critical time.
+</p>
+
+<p>
+  The process for implementing one of these hooks is usually pretty consistent:
+</p>
+<ol>
+  <li>Identify the hook you want to use from those available in <code>$MESA_DIR/star/other</code></li>
+  <li>
+    Copy and rename the "null" version of the subroutine in proper file in <code>$MESA_DIR/star/other</code> into your <code>run_star_extras.f90</code>
+  </li>
+  <li>
+    Point to your new subroutine in the <code>extras_controls</code> subroutine in <code>run_star_extras.f90</code>
+  </li>
+  <li>
+    Make your <code>other_*</code> routine print something so we'll be able to see that it is being called
+  </li>
+  <li>
+    Compile your project with <kbd>./mk</kbd>
+  </li>
+  <li>
+    Add a line to the <code>controls</code> namelist to tell <samp>MESA</samp> to use your routine (usually the control is something like <code>use_other_* = .true.</code>, where <code>*</code> is standing in for something more specific)
+  </li>
+  <li>
+    Run or restart your project and ensure that the expected output is coming from the routine
+  </li>
+  <li>
+    Stop the run, edit the routine to actually do the thing you want, recompile, and run/restart.
+  </li>
+</ol>
+<p>
+  Different hooks have different interfaces, so the above workflow may need a bit of tinkering to work right for you. We'll follow this process over the next couple of challenges for the <code>other_adjust_mdot</code> hook.
+</p>
+
+<p class='lead bg-secondary p-2'>
+  <span class='font-weight-bold text-primary'>Challenge 3.6:</span> Implement the hook for <code>other_adjust_mdot</code> up to step 7 (the hook shouldn't do anything interesting, but it should print something to show it is being called). Call the subroutine <code>nova_adjust_mdot</code>.
+</p>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p6a" aria-expanded="true" aria-controls="hint-3p6a">
+      Show Hint 3.6a: The null subroutine
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-3p6a">
+    <p class="card-text">
+      The following code should be copied into <code>run_star_extras.f90</code> below the <code>contains</code> statement, but outside of any other subroutine or function:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="c1">! your routine will be called after winds and before mass adjustment</span><span class="w">
+   </span><span class="k">subroutine</span><span class="w"> </span><span class="n">null_other_adjust_mdot</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+      </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
+      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+      </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">null_other_adjust_mdot</span></code></pre></figure>
+  </div>
+</div>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p6b" aria-expanded="true" aria-controls="hint-3p6b">
+      Show Hint 3.6b: Renaming the routine
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-3p6b">
+    <p class="card-text">
+      Edit the <span class="font-weight-bold">two</span> lines containing the text <code>subroutine null_other_adjust_mdot</code> and edit it to <code>subroutine nova_adjust_mdot</code> to get:
+    </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="c1">! your routine will be called after winds and before mass adjustment</span><span class="w">
+   </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_other_adjust_mdot</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+      </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
+      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+      </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_other_adjust_mdot</span></code></pre></figure>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p6c" aria-expanded="true" aria-controls="hint-3p6c">
+      Show Hint 3.6c: Printing a Message
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-3p6c">
+    <p class="card-text">
+      The quickest way to print something is to use something like <code>write(*,*) "MY MESSAGE HERE"</code>.
+    </p>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p6d" aria-expanded="true" aria-controls="hint-3p6d">
+      Show Hint 3.6d: Activating the Hook
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-3p6d">
+    <p class="card-text">
+      You'll need to add the line <code>s% other_adjust_mdot => nova_adjust_mdot</code> into
+      the <code>extras_controls</code> subroutine, and then add the control <code>use_other_adjust_mdot = .true.</code> to the <code>controls namelist</code> of <code>inlist_wd_nova_burst</code>.
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-3p6" aria-expanded="true" aria-controls="sol-3p6">
+      Show Solution 3.6
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-3p6">
+    <p class="card-text">
+      The following should be in <code>run_star_extras.f90</code>:
+    </p> 
+    <h4> <span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="k">subroutine</span><span class="w"> </span><span class="n">extras_controls</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+   </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+   </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">other_photo_read</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">extras_photo_read</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">other_photo_write</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">extras_photo_write</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">other_adjust_mdot</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">nova_adjust_mdot</span><span class="w">
+   
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">extras_startup</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">extras_startup</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">extras_check_model</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">extras_check_model</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">extras_finish_step</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">extras_finish_step</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">extras_after_evolve</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">extras_after_evolve</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">how_many_extra_history_columns</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">how_many_extra_history_columns</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">data_for_extra_history_columns</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">data_for_extra_history_columns</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">how_many_extra_profile_columns</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">how_many_extra_profile_columns</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">data_for_extra_profile_columns</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">data_for_extra_profile_columns</span><span class="w">  
+</span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">extras_controls</span><span class="w">
+
+</span><span class="c1">! your routine will be called after winds and before mass adjustment</span><span class="w">
+</span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_adjust_mdot</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+   </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+
+   </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s2">"Hello from nova_adjust_mdot"</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_adjust_mdot</span></code></pre></figure>
+    <p class='card-text'>
+      Note that the <code>nova_adjust_mdot</code> subroutine doesn't have to be right after <code>extras_controls</code>; it can be on its own anywhere else in the file, so long as it is below the <code>contains</code> keyword. The only difference in <code>extras_controls</code> is the line that sets <code>s% other_adjust_mdot</code>.
+    </p>
+    
+    <p class="card-text">Additionally, this bit should appear in <code>inlist_wd_nova_burst</code>:</p>
+    <h4> <span class="text-monospace">inlist_wd_nova_burst</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="p">&amp;</span><span class="n">controls</span><span class="w">
+   </span><span class="n">use_other_adjust_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
+    <p class="card-text">
+      Then we compile (which takes into account the changes in <code>run_star_extras.f90</code>) with <kbd>./mk</kbd> and restart with <kbd>./re</kbd>. You should see the message you printed in the terminal output for each step. In this case, <code>Hello from nova_adjust_mdot</code> should appear.
+    </p>
+  </div>
+</div>
+
+<p>
+  We have successfully injected some code into our project at just the right time. Now we just need to make it useful! Look at our new <code>nova_adjust_mdot</code> subroutine. There's not much going on. Some hooks work by having you modify data on the star info structure directly. Others work by having you modify a variable with an intent of out. This one doesn't really give you much to go on, and to be honest, the comments in <code>$MESA_DIR/star/other/other_adjust_mdot.f90</code> don't really give you a whole lot to go on. So what can we do in here?
+</p>
+
+<p>
+  Well, if you track down when in the flow of execution <code>s% other_adjust_mdot</code> is called in <code>$MESA_DIR/star/private</code>, you'll find it is at the time when <code>s% mstar_dot</code> has just been updated after winds. This is what we will want to [possibly] change in our routine.
+</p>
+
+<p>
+  But still, we don't even have the star info structure set up yet! Look now at the <code>extras_startup</code> subroutine (or one or many other subroutines, actually). This code is also shown below for convenience:
+</p>
+<h4><span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="k">subroutine</span><span class="w"> </span><span class="n">extras_startup</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">restart</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+   </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">restart</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+   </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">             </span><span class="c1">! LOOK HERE</span><span class="w">
+   </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">                 </span><span class="c1">! LOOK HERE</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">                      </span><span class="c1">! LOOK HERE</span><span class="w">
+   </span><span class="k">call</span><span class="w"> </span><span class="n">test_suite_startup</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">restart</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">.not.</span><span class="w"> </span><span class="n">restart</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+      </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="n">waiting_for_burst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span><span class="w">
+   </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">extras_startup</span></code></pre></figure>
+<p>
+  In that subroutine (and many others) there are three key lines that set up the star info structure. Early on, we instantiate a variable <code>s</code> with a type of <code>star_info</code>, then later we set it up by calling the subroutine <code>star_ptr</code>, and for good measure, we return if the previous line set <code>ierr</code> to an nonzero value (<code>ierr</code> is an integer that indicates if an error has occurred when it is nonzero). After <code>star_ptr</code> successfully exits, <code>s</code> is now set up. We can do the same thing in <code>nova_adjust_mdot</code> to set up the star info structure so we can query it for data and, crucially, update the value of <code>s% mstar_dot</code>.
+</p>
+<div class="bg-secondary px-2 pt-2">
+  <p class='lead'>
+    <span class='font-weight-bold text-primary'>Challenge 3.7:</span> Edit <code>nova_adjust_mdot</code> to set up the star info structure, and then set <code>s% mstar_dot</code> to zero if all of the conditions are met:
+  </p>
+  <ul class='lead'>
+    <li>We are in a burst (alternatively, we are not "waiting for a burst")</li>
+    <li><code>s% mstar_dot</code> is not currently negative (don't want to shut off winds)</li>
+    <li>The effective temperature is less than 5 &#215; 10<sup>5</sup> K (allows accretion after mass loss is over)</li>
+    <li>The model is not currently in a relaxation process (like <code>relax_initial_mass_change</code>; turns out we need this or else we'll shut off accretion even though the model thinks it is relaxing <code>mass_change</code>)</li>
+  </ul>
+  <p class="lead pb-2">
+    Confirm your code compiles, but don't run it until verifying that it makes sense by looking at the solution.
+  </p>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p7" aria-expanded="true" aria-controls="hint-3p7">
+      Show Hint 3.7: Useful Members of the Star Info Structure
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-3p7">
+    <p class="card-text">
+      You can complete this challenge using only the three following members of the star info structure:
+    </p>
+    <ul class='card-text'>
+      <li><code>s% mstar_dot</code></li>
+      <li><code>s% Teff</code></li>
+      <li><code>s% doing_relax</code></li>
+    </ul>
+    <p class='card-text'>
+      Note that the model is considered "in a burst" whenever <code>waiting_for_burst</code> is <code>.false.</code>. You might as well reuse this nifty variable in your code!
+    </p>
+  </div>
+</div>
+
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-3p7" aria-expanded="true" aria-controls="sol-3p7">
+      Show Solution 3.7
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-3p7">
+    <p class="card-text">
+      Below is a working implementation. You may have come up with an equivalent solution. The <code>MIN</code> function ensures that we don't override a negative value for <code>s% mstar_dot</code>, but you could achieve the same effect with more conditionals.
+    </p> 
+    <h4> <span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! your routine will be called after winds and before mass adjustment</span><span class="w">
+</span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_adjust_mdot</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
+   </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
+   </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="n">star_info</span><span class="p">),</span><span class="w"> </span><span class="k">pointer</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">s</span><span class="w">
+
+   </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+   </span><span class="k">call</span><span class="w"> </span><span class="n">star_ptr</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ierr</span><span class="w"> </span><span class="p">/</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w">
+   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">.not.</span><span class="w"> </span><span class="n">waiting_for_burst</span><span class="w"> </span><span class="ow">.and.</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">Teff</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">5d5</span><span class="w"> </span><span class="ow">.and.</span><span class="w"> </span><span class="ow">.not.</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">doing_relax</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+      </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">mstar_dot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">MIN</span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">mstar_dot</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+   </span><span class="k">endif</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_adjust_mdot</span></code></pre></figure>
+    <p class='card-text'>
+      Then confirm that it compiles with <kbd>./mk</kbd>
+    </p>
+  </div>
+</div>
+
+<p class='bg-secondary lead p-2'>
+  <span class='font-weight-bold text-primary'>Challenge 3.8:</span> Test your model again with the functional <code>nova_adjust_mdot</code> by recompiling and then restarting before the first burst gets to mass loss. Report the same data to the appropriate place in the google sheet.
+</p>
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p8" aria-expanded="true" aria-controls="hint-3p8">
+      Show Hint 3.8: On Restarting
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-3p8">
+    <p class="card-text">
+      Nothing should have changed for the beginning of your runs since minilab 2. You should be able to restart from several hundred steps in, so probably around photo <code>x300</code>, assuming that corresponds with model 300 and not 1300. You can do this via <kbd>./re x300</kbd>. You can try different photos to see which start you during the thermonuclear runaway, but before the expansion and surge to the red.
+    </p>
+    <p class="card-text">
+      If you can't find a good photo to start from, just start the model anew with <kbd>./rn</kbd>. It's just going to take awhile.
+    </p>
+  </div>
+</div>
+<div class="card border-success mb-3">
+  <div class="card-header bg-success text-white make-clickable">
+    <button class="btn btn-link text-reset stretched-link" type="button" data-toggle="collapse" data-target="#sol-3p8" aria-expanded="true" aria-controls="sol-3p8">
+      Show Solution 3.8
+    </button>
+  </div>
+  <div class="card-body collapse" id="sol-3p8">
+    <p class="card-text">
+      Here is an example of a model that was unstable in all sitautions before, but became stable with these modifications after the second burst. Note that the hiccups still occur during mass loss, but accretion doesn't resume (see the abundance plot for proof). Compare this to the video in Solution 3.5.
+    </p> 
+    <div align="center" class='embed-responsive embed-responsive-16by9'>
+      <video controls fullscreen>
+        <source src="with_adjust_mdot.mp4" type="video/mp4">
+        Your browser does not support the video tag.      
+      </video>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mb-2">
+  <a href="https://docs.google.com/spreadsheets/d/18iE_dkCjDJO3SqNb6p-Ngrkguk5huHBGcjNFQmn0HeE/edit?usp=sharing" target=_blank>
+    <button class='btn btn-lg btn-primary'>Record my Data (use third tab on bottom)</button>
+  </a>
+</div>
+
+<h2 id="part4" class='mt-5'> Discussion</h2>
+<p>
+  What happened to your model as we changed the resolution and the mass loss mechanism? There are probably three options:
+</p>
+<ol>
+  <li>It was stable and it always remained stable</li>
+  <li>It was unstable and it always remained unstable</li>
+  <li>The stability depended on the resolution and/or mass loss settings</li>
+</ol>
+<p>
+  At the high and low ends of the accretion rate range, you likely were in the first or second camp, but in the middle, some interesting things happen. So what is the "real" value for the stability limit? It's hard to say from this data alone, especially since we haven't truly confirmed that we have numerically converged by increasing the time resolution even further. In the interest of time, we never even tried increasing the spatial (mesh) resolution, but that should happen as well.
+</p>
+<p>
+  But even if this were numerically converged, our physical assumptions of mass loss can have a real effect. Perhaps the expansion of the atmosphere is strong enough to disrupt the accretion disc and the white dwarf could not resume accretion until much later, making steady burning much more difficult. Or perhaps a better model for mass loss would lose more or less of the envelope. At a certain point, you need to write the paper, in which case you should:
+</p>
+<ol>
+  <li>Strive to make reasonable assumptions and state them clearly, along with justification and any forseeable ramifications</li>
+  <li>Provide sufficient materials for others to recreate your simulation so that someone later can verify your findings and expand upon them with different assumptions</li>
+</ol>
+<p class='mb-5'>
+  As the saying goes, <span class="font-weight-bold">"All models are wrong. Some are useful."</span>
+</p>
+
+
+
+
+
+
+
+<!-- 
+
+<h1 class="display-1 my-5">Suspicious from here on out</h1>
+<h2 id='part3z' class='mt-4'>A New Wind Scheme</h2>
 <p>
   The super eddington wind scheme we've been using for mass loss is simple and convenient, but you may have noticed that it continues well into the supersoft phase. In fact, this is largely due to the fact that we've moved the outer boundary condition to an optical depth of 20, which has the effect of making the model think it is super-eddington.
 </p>
@@ -2179,18 +2595,74 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 </div>
 <p>
-  This is implemented in <samp>MESA</samp> as the "nova" wind option. You can find the related controls in <code>$MESA_DIR/star/defaults/controls.defaults</code>.
+  This wind scheme is no longer implemented in <samp>MESA</samp>, so we will
+  need to implement it in <code>run_star_extras.f90</code>. To do that, we will
+  use the <code>other_wind</code> hook provided by <samp>MESA</samp> to inject
+  code at the moment in the evolve loop when winds are calculated. Before we do that, we'll implement a "null" subroutine that just prints a statement to the terminal to confirm that it is being called.
 </p>
-<p class='lead'>
-  <span class='font-weight-bold'>Challenge:</span> Edit <code>inlist_nova</code> [only] to deactivate the super eddington wind, and activate the nova wind. The nova wind should only be active for T<sub>eff</sub> &lt; 3 &#215; 10<sup>5</sup> K and L &gt; 10<sup>4</sup> L<sub>&#8857;</sub>. At a radius of 100 R<sub>&#8857;</sub>, set a Roche lobe overflow M&#775; of 10<sup>-3</sup> M<sub>&#8857;</sub>/yr.
+<div class="bg-secondary px-2 pt-2">
+  <p class='lead'>
+    <span class='font-weight-bold text-primary'>Challenge 3.5:</span> Implement
+    and activate a "null" wind routine that just prints out something to the
+    screen to let you know it ran by doing the following:
+  </p>
+  <ol class="lead pb-2">
+    <li>Copy the subroutine <code>null_other_wind</code> from <code>$MESA_DIR/star/other/other_wind.f90</code> into <code>run_star_extras.f90</code>.</li>
+    <li>Rename the subroutine to <code>nova_wind</code>.</li>
+    <li>Edit the subroutine so that it prints out a message to the terminal when it is called.</li>
+    <li>Set the proper pointer in <code>extras_controls</code> and the proper inlist control to activate the wind (see the contents of <code>$MESA_DIR/star/other/other_wind.f90</code> for some help) </li>
+    <li>
+      Compile and restart your model long enough to confirm that the message is being printed to the screen.
+    </li>
+  </ol>
+</div>
+<div class=
+
+<p>
+  Now we're ready to implement the wind scheme and try out our model. We'll need
+  to add some logic to <code>nova_wind</code> and shut off the old wind scheme. The <code>nova_wind</code> subroutine (and any <code>other_wind</code> subroutine) takes the following surface quantities in as inputs from the stellar model (all in cgs units):
 </p>
+  <ol class=>
+    <li>photospheric luminosity</li>
+    <li>mass</li>
+    <li>photospheric radius</li>
+    <li>photospheric temperature</li>
+    <li>mass fractions of hydrogen, helium, and metals</li>
+  </ol>
+<p>
+  You'll see the corresponding variables all have an intent of "in". This tells the compiler that you don't intend to modify these variables and it will flag it if you do at compile time. There is another useful variable that has an intent of "out", which is <code>w</code>. This is the variable you need to <em>set</em> to the value of the wind, measured in M<sub>&#8857;</sub>/yr, where a postive value indicates mass loss.
+</p>
+
+<p class='lead bg-secondary p-2'>
+  <span class='font-weight-bold text-primary'>Challenge 3.6:</span> Implement the nova wind scheme described above in <code>nova_wind</code>. Also edit <code>inlist_wd_nova_burst</code> to deactivate the previous wind scheme we used before.
+</p>
+
+<div class="card border-secondary mb-3">
+  <div class="card-header bg-secondary">
+      <h5 class='card-title mb-0'>Using Astrophysical Constants</h5>
+  </div>
+  <div class="card-body">
+    <p class='card-text'>
+      Often quantities are stored in the star info structure (or passed into <code>other_*</code> routines) in cgs, but relevant controls/outputs (and indeed some of the internal values in the star info structure) are expressed in solar units. Converting between these (and many other tasks) are made easy by the <samp>const</samp> module, which is loaded at the top of your <code>run_star_extras.f90</code> file:
+    </p>    
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="k">use</span><span class="w"> </span><span class="n">star_lib</span><span class="w">
+   </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
+   </span><span class="k">use</span><span class="w"> </span><span class="n">const_def</span><span class="w"> </span><span class="c1">! loads all sorts of goodies</span><span class="w">
+   </span><span class="k">use</span><span class="w"> </span><span class="n">math_lib</span><span class="w">
+   </span><span class="k">use</span><span class="w"> </span><span class="n">auto_diff</span></code></pre></figure>
+    <p class='card-text'>
+      Look in <code>$MESA_DIR/const/public/const_def.f90</code> to see what constants are already available. So long as the module is loaded, you don't need to declare these or anything before using them, and they aren't part of the star info structure, so you could just reference <code>Lsun</code> directly in any of the code, and it will evaluate to a solar luminosity in cgs.
+    </p>
+  </div>
+</div>
+
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#deact-sewind-hint" aria-expanded="true" aria-controls="deact-sewind-hint">
-      Show Hint: Deactivating the Super Eddington Wind
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p6a" aria-expanded="true" aria-controls="hint-3p6a">
+      Show Hint 3.6a: Deactivating the super Eddington wind
     </button>
   </div>
-  <div class="card-body collapse" id="deact-sewind-hint">
+  <div class="card-body collapse" id="hint-3p6a">
     <p class="card-text">
       To shut off the super eddington winds, you can do one of two things to the <code>super_eddington_scaling_factor</code> control:
     </p>
@@ -2202,23 +2674,14 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
-    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#nova-wind-controls-hint" aria-expanded="true" aria-controls="nova-wind-controls-hint">
-      Show Hint: Nova Wind Controls
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-3p6b" aria-expanded="true" aria-controls="hint-3p6b">
+      Show Hint 3.6b: Determining the value of <var>b</var>
     </button>
   </div>
-  <div class="card-body collapse" id="nova-wind-controls-hint">
+  <div class="card-body collapse" id="hint-3p6b">
     <p class="card-text">
-      You will need to set the following controls to appropriate values:
+      You can hard-code in a value of <var>b</var> appropriate for our 1.10 M<sub>&#8857;</sub> white dwarf. For valuable <samp>MESA</samp> bonus points, you can have it be automatically determined from the mass parameter and interpolated reasonably.
     </p>
-    <ul>
-      <li><code>nova_scaling_factor</code></li>
-      <li><code>nova_wind_b</code></li>
-      <li><code>nova_wind_max_Teff</code></li>
-      <li><code>nova_wind_min_L</code></li>
-      <li><code>nova_roche_lobe_radius</code></li>
-      <li><code>nova_RLO_mdot</code></li>
-    </ul>
-    <p>You don't need to worry about <code>nova_min_Teff_for_accretion</code> yet, so don't set it.</p>
   </div>
 </div>
 
@@ -2498,22 +2961,7 @@ winds.f90:         !      T1 < s% nova_min_Teff_for_accretion .and. s% mass_chan
   </div>
 </div>
 
-<div class="card border-secondary mb-3">
-  <div class="card-header bg-secondary">
-      <h5 class='card-title mb-0'>Using Astrophysical Constants</h5>
-  </div>
-  <div class="card-body">
-    <p class='card-text'>
-      We didn't need to worry about this in this exercise, but often quantities are stored in the star info structure in cgs, but relevant controls (and indeed some of the internal values in the star info structure) are expressed in solar units. Converting between these (and many other tasks) are made easy by the <samp>const</samp> module, whidh is loaded at the top of your <code>run_star_extras.f90</code> file:
-    </p>    
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="k">use</span><span class="w"> </span><span class="n">star_lib</span><span class="w">
-      </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
-      </span><span class="k">use</span><span class="w"> </span><span class="n">const_def</span><span class="w"> </span><span class="c1">! loads all sorts of goodies</span></code></pre></figure>
-    <p class='card-text'>
-      Look in <code>$MESA_DIR/const/public/const_def.f90</code> to see what constants are already available. So long as the module is loaded, you don't need to declare these or anything before using them, and they aren't part of the star info structure, so you could just reference <code>Lsun</code> directly in any of the code, and it will evaluate to a solar luminosity in cgs.
-    </p>
-  </div>
-</div>
+
 
 
 <p class='lead'>
@@ -2530,7 +2978,7 @@ winds.f90:         !      T1 < s% nova_min_Teff_for_accretion .and. s% mass_chan
 <p>
   The super eddington wind prescription, in additon to being poorly resolved in time, suffered from mass loss continuing well into the SSS phase, which if we dug deeper, we would realize would not happen had we not set our surface boundary condition at &tau;=20. We still haven't touched on what changing the spatial resolution would do, or more importantly how convective boundary mixing during the runaway would change things. There are still many experiments to run!
 </p>
-
+ -->
 
       </div>
     </div>      
