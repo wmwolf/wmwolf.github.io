@@ -1,29 +1,29 @@
 .vcenter {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 .rotate20 {
   .rotate(20deg);
 }
 
-.my-cap { 
-  margin:3px;
-  text-align:center;
-  font-style:italic;
-  width:100%
+.my-cap {
+  margin: 3px;
+  text-align: center;
+  font-style: italic;
+  width: 100%;
 }
 
-#side-nav nav.sub-parts{
-     display:none;
+#side-nav nav.sub-parts {
+  display: none;
 }
 
-#side-nav a.part-header.active+nav.sub-parts{
-     display:block;
+#side-nav a.part-header.active + nav.sub-parts {
+  display: block;
 }
 
 .buffer {
-  height:100px;
+  height: 100px;
 }
 
 .buffer-small {
@@ -34,15 +34,15 @@
   height: 25px;
 }
 
-.contact-block{
-  width:33%;
+.contact-block {
+  width: 33%;
   display: inline-block;
-  float:left;
-/*  margin-left: 5px;*/
+  float: left;
+  /*  margin-left: 5px;*/
   margin-right: 5px;
 }
- 
-html{
+
+html {
   height: 100%;
   box-sizing: border-box;
 }
@@ -54,7 +54,9 @@ body {
   padding-bottom: 10rem;
 }
 
-#leiden-body, #mesa-ss-body, #binaries-body {
+#leiden-body,
+#mesa-ss-body,
+#binaries-body {
   padding-bottom: 0;
 }
 
@@ -102,7 +104,7 @@ p {
 }
 
 /*.classes td {*/
-  /*text-align: center;*/
+/*text-align: center;*/
 /*}*/
 
 table.classes {
@@ -154,13 +156,15 @@ table.classes {
   background-position: center;
 }
 
-#leiden-instructions, #mesa-ss-instructions {
+#leiden-instructions,
+#mesa-ss-instructions {
   height: 100%;
   overflow-y: scroll;
   position: relative;
 }
 
-#leiden-instructions code, #mesa-ss-instructions code {
+#leiden-instructions code,
+#mesa-ss-instructions code {
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
@@ -171,10 +175,11 @@ table.classes {
 }
 
 #burning-regimes td {
-  vertical-align:  middle;
+  vertical-align: middle;
 }
 
-#leiden-instructions .btn-lg, #mesa-instructions .btn-lg {
+#leiden-instructions .btn-lg,
+#mesa-instructions .btn-lg {
   min-width: 300px;
 }
 
@@ -213,7 +218,7 @@ table.classes {
   white-space: pre;
   border-radius: inherit;
   display: inherit;
-  background-color:black;
+  background-color: black;
   border: inherit;
   color: inherit;
   padding: 15px;
@@ -306,8 +311,8 @@ h2#overview {
 }
 
 .full-height {
-  top:12em;
-  bottom:0%;
+  top: 12em;
+  bottom: 0%;
 }
 
 .help-footer {
@@ -315,58 +320,58 @@ h2#overview {
   bottom: 0%;
 }
 
-.bckgrd-1{
-/*  position: absolute;*/
-  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2007-16-e-large_web.jpg");  
-/*  background-size: 100%;*/
-/*  background-attachment: fixed;*/
-/*  background-position: ;*/
+.bckgrd-1 {
+  /*  position: absolute;*/
+  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2007-16-e-large_web.jpg");
+  /*  background-size: 100%;*/
+  /*  background-attachment: fixed;*/
+  /*  background-position: ;*/
 }
 
-.bckgrd-2{
-/*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2012-10-a-large_web.jpg');
-/*  background-size: 100%;*/
-/*  background-attachment: fixed;*/
+.bckgrd-2 {
+  /*  position: absolute;*/
+  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2012-10-a-large_web.jpg");
+  /*  background-size: 100%;*/
+  /*  background-attachment: fixed;*/
 }
 
-.bckgrd-3{
-/*  position: absolute;*/
+.bckgrd-3 {
+  /*  position: absolute;*/
   /*background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-25-i-large_web.jpg');*/
-  background-image: url('/images/hs-2009-25-i-large_web.jpg');
-/*  background-size: 100%;*/
-/*  background-attachment: fixed;*/
+  /* background-image: url('/images/hs-2009-25-i-large_web.jpg'); */
+  background-image: url("/images/webb-carina.jpeg");
+  background-position: center;
+  /*  background-size: 100%;*/
+  /*  background-attachment: fixed;*/
 }
 
-.bckgrd-4{
-/*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg');
-/*  background-size: 100%;*/
-/*  background-attachment: fixed;*/
+.bckgrd-4 {
+  /*  position: absolute;*/
+  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2006-01-q-large_web.jpg");
+  /*  background-size: 100%;*/
+  /*  background-attachment: fixed;*/
 }
 
-.bckgrd-5{
-/*  position: absolute;*/
-  background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-02-a-large_web.jpg');
-/*  background-size: 100%;*/
-/*  background-attachment: fixed;*/
+.bckgrd-5 {
+  /*  position: absolute;*/
+  background-image: url("http://imgsrc.hubblesite.org/hu/db/images/hs-2009-02-a-large_web.jpg");
+  /*  background-size: 100%;*/
+  /*  background-attachment: fixed;*/
 }
 
-.bckgrd-physics{
-/*  position: absolute;*/
+.bckgrd-physics {
+  /*  position: absolute;*/
   /*background-image: url('http://imgsrc.hubblesite.org/hu/db/images/hs-2009-25-i-large_web.jpg');*/
-  background-image: url('/images/newtons_cradle.jpg');
-/*  background-size: 100%;*/
-  background-position:  center;
-/*  background-attachment: fixed;*/
+  background-image: url("/images/newtons_cradle.jpg");
+  /*  background-size: 100%;*/
+  background-position: center;
+  /*  background-attachment: fixed;*/
   text-shadow: 3px 3px 3px #000;
-
 }
-
 
 #main-nav {
   position: absolute;
-  background-color: rgba(0,0,0,0.33);
+  background-color: rgba(0, 0, 0, 0.33);
   /*margin-top: 10px;*/
   text-shadow: 1.5px 1.5px 1.5px #000;
   width: 100%;
@@ -401,7 +406,6 @@ h2#overview {
   height: 400px;
 }
 
-
 .initially-hidden {
   display: none;
 }
@@ -419,5 +423,5 @@ h2#overview {
 
 /* make href-less links still appear like links */
 a:hover {
- cursor:pointer;
+  cursor: pointer;
 }
