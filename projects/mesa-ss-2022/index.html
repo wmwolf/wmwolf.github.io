@@ -568,16 +568,32 @@ do_one inlist_wd_nova_burst_header final.mod
 <h3 id="part1c" class='mt-4'>Building a Steadily Burning Model</h3>
 
 <p>
-  So far, we haven't really substantively changed anything in the test case other than modifying the stopping condition. Now we want to actually change how it works. We'll start by increasing the accretion rate.
+  So far, we haven't really substantively changed anything in the test case other than modifying the stopping condition. Now we want to actually change how it works. We'll start by increasing the accretion rate, lowering the spatial resolution,
 </p>
 
-<p class='lead bg-secondary p-2'>
-  <span class='font-weight-bold text-primary'>Challenge 1.6:</span>
-  Edit <code>inlist_wd_nova_burst</code> so it accretes at a rate of 3.5 &#215;
-  10<sup>–7</sup> M<sub>&#8857;</sub>/yr. Also turn on the on-screen
-  <samp>pgstar</samp> plots that are already defined in <code>pgstar</code>
-  namelist.
-</p>
+<div class="bg-secondary pt-2 px-2">
+  <p class='lead bg-secondary'>
+    <span class='font-weight-bold text-primary'>Challenge 1.6:</span>
+    Edit <code>inlist_wd_nova_burst</code> and/or <code>inlist_setup</code> to make the following changes:
+  </p>
+  <ul class="lead">
+    <li>
+      it accretes at a rate of 3.5 &#215; 10<sup>–7</sup> M<sub>&#8857;</sub>/yr
+    </li>
+    <li>
+      the spatial resolution is lowered; set <code>mesh_delta_coeff</code> to 3.0 (this is bad practice for science, but it will make simulations run faster)
+    </li>
+    <li>
+      the nuclear network is set to the simpler <code>basic.net</code> (another bad idea scientifically, but this will also help speed up the runs)
+    </li>
+    <li>
+      the <samp>pgstar</samp> grid defined in the <code>&pgstar</code> namelist is active and visible
+    </li>
+  </ul>
+  <p class="lead pb-2">
+    None of these changes will require adding new lines to either inlist; you can do this all by editing or uncommenting existing lines.
+  </p>
+</div>
 
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
@@ -599,10 +615,36 @@ do_one inlist_wd_nova_burst_header final.mod
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
     <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p6b" aria-expanded="true" aria-controls="hint-1p6b">
-      Show Hint 1.6b: Activating <samp>pgstar</samp>
+      Show Hint 1.6b: Lowering the Spatial Resolution
     </button>
   </div>
   <div class="card-body collapse" id="hint-1p6b">
+    <p class='card-text'>
+      In both <code>inlist_wd_nova_burst</code> in the <code>&controls</code> namelist, set <code>mesh_delta_coeff = 3.0</code>. This is more important in <code>inlist_wd_nova_burst</code>, but you can do it in <code>inlist_setup</code>, too. These controls exist in both, but they are set to 1.0 initially.
+    </p>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p6c" aria-expanded="true" aria-controls="hint-1p6c">
+      Show Hint 1.6c: Setting the Nuclear Network
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-1p6c">
+    <p class='card-text'>
+      The network is only set in <code>inlist_setup</code>, and is left alone in <code>inlist_wd_nova_burst</code>. There is a line in its <code>&star_job</code> namelist that sets the name of the network, and you should edit it to <code>"basic.net"</code>.
+    </p>
+  </div>
+</div>
+
+<div class="card border-primary mb-3">
+  <div class="card-header bg-primary text-white">
+    <button class="btn btn-link text-reset" type="button" data-toggle="collapse" data-target="#hint-1p6d" aria-expanded="true" aria-controls="hint-1p6d">
+      Show Hint 1.6d: Activating <samp>pgstar</samp>
+    </button>
+  </div>
+  <div class="card-body collapse" id="hint-1p6d">
     <p class='card-text'>
       Interestingly, the control you want here is <span class="font-weight-bold">not</span> in the <code>pgstar</code> namelist! It's the <code>pgstar_flag</code> control in the <code>star_job</code> namelist. That line should already be there; you just need to uncomment it.
     </p>
@@ -623,18 +665,28 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body collapse" id="sol-1p6">
     <p class="card-text">
-      In the <code>&star_job</code> namelist uncomment the line
+      In the <code>&star_job</code> namelist in <code>inlist_wd_nova_burst</code> uncomment the line
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">       </span><span class="c1">!pgstar_flag = .true.</span></code></pre></figure>
     <p class="card-text">to become</p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">       </span><span class="n">pgstar_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">.true.</span></code></pre></figure>
   <p class="card-text">
-    And lower, in the <code>controls</code> namelist, the the accretion rate
-    by editing the line
+    And lower, in the <code>&controls</code> namelist of <code>inlist_wd_nova_burst</code>, the accretion rate
+    and spatial resolution can be updated by editing the lines
   </p>
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-9</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-9</span><span class="w">
+      </span><span class="c1">! lines omitted</span><span class="w">
+      </span><span class="n">mesh_delta_coeff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span></code></pre></figure>
   <p class="card-text">to</p>
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="n">mass_change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span><span class="w">
+      </span><span class="c1">! lines omitted</span><span class="w">
+      </span><span class="n">mesh_delta_coeff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.0</span></code></pre></figure>
+  <p class="card-text">
+    Finally, we update the nuclear network by editing <code>inlist_setup</code>. Specifically, we change the following line in the <code>&star_job</code> namelist:
+  </p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="n">new_net_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'cno_extras_o18_to_mg26_plus_fe56.net'</span></code></pre></figure>
+  <p class="card-text">to</p>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="n">new_net_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'basic.net'</span></code></pre></figure>
   </div>
 </div>
 <p>
@@ -2016,7 +2068,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body">
     <p class='card-text'>
-      Within subroutines in <code>run_star_extras</code>, we can access the full data in the stellar model via the "star info structure", which is usually denoted as <code>s</code>. All the data you can access are listed in various files in <code>$MESA_DIR/star_data/public</code>. The two most useful files there are <code>star_data_step_input.inc</code> and <code>star_data_step_work.f90</code>. Additionally, inlist controls are members of the star info structure, so all controls in <code>$MESA_DIR/star/defaults/controls.defaults</code> can be accessed and changed.
+      Within subroutines in <code>run_star_extras</code>, we can access the full data in the stellar model via the "star info structure", which is usually denoted as <code>s</code>. All the data you can access are listed in various files in <code>$MESA_DIR/star_data/public</code>. The two most useful files there are <code>star_data_step_input.inc</code> and <code>star_data_step_work.inc</code>. Additionally, inlist controls are members of the star info structure, so all controls in <code>$MESA_DIR/star/defaults/controls.defaults</code> can be accessed and changed.
     </p>
     <p class='card-text'>
       Depending on when in the timestep you access the star info structure, some values will have already been set and/or any changes you make might be overwritten by another internal subroutine. Understanding what is set when and how often boils down to grepping around in <code>$MESA_DIR/star/private</code>. In <code>extras_check_model</code>, everything should already be set, so we don't yet need to worry about this detail (but anything we change won't affect this timestep!).
@@ -2123,7 +2175,7 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 
 <p class='lead bg-secondary p-2'>
-  <span class='font-weight-bold text-primary'>Challenge 3.4:</span> Recompile and rerun your model at the same M&#775;, but now with the increased time resolution. Report the same quantities as before, but now on the second column of the google spreadsheet.
+  <span class='font-weight-bold text-primary'>Challenge 3.4:</span> Recompile and rerun your model at the same M&#775;, but now with the increased time resolution. You can start the model from the beginning, or you can start from model 200 if the photo (<code>x200</code>) is still handy and doesn't point to model 1200. Report the same quantities as before, but now on the second column of the google spreadsheet.
 </p>
 <div class="text-center mb-2">
   <a href="https://docs.google.com/spreadsheets/d/18iE_dkCjDJO3SqNb6p-Ngrkguk5huHBGcjNFQmn0HeE/edit?usp=sharing" target=_blank>
@@ -2150,7 +2202,7 @@ do_one inlist_wd_nova_burst_header final.mod
   $$L_{\rm Edd} = \frac{4\pi GcM}{\kappa},$$
 </p>
 <p>
-  which is an entirely local quantity. Near the outside of the star, the mass is well-defined, but the opacity is rapidly changing. To make this more unclear, this particular test case sets <code>tau_factor</code> to 30, which means that the outermost cell is defined to be at an optical depth 30 times greater than the photospheric optical depth of 2/3, so at an optical depth of 20.
+  which is an entirely local quantity. Near the outside of the star, the mass is well-defined, but the opacity is rapidly changing. To make this even more unclear, this particular test case sets <code>tau_factor</code> to 30, which means that the outermost cell is defined to be at an optical depth 30 times greater than the photospheric optical depth of 2/3, so at an optical depth of 20.
 </p>
 <p>
   It turns out that, even with this definition, novae on this mass of WD are only super Eddington when their effective temperature just below the location of the bump in opacity due to iron at around log <var>T</var><sub>eff</sub> = 5.2. If the nova expands beyond this, the model would simply keep expanding. We do see novae expanding to lower effective temperatures and still losing mass, so a more accurate treatment of mass loss is likely much more involved.
@@ -2179,15 +2231,15 @@ do_one inlist_wd_nova_burst_header final.mod
       Part of your inlist should look like
     </p>
     <h4><span class="text-monospace">inlist_wd_nova_burst</span> (partial)</h4>
-<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">      </span><span class="c1">! NOTE: for super eddington wind,</span><span class="w">
-      </span><span class="c1">! we use Ledd averaged over mass to optical depth tau = 100</span><span class="w">
-      </span><span class="n">super_eddington_scaling_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
-         </span><span class="c1">! parameter for mass loss driven by super Eddington luminosity</span><span class="w">
-      </span><span class="n">super_eddington_wind_Ledd_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-         </span><span class="c1">! multiply Ledd by this factor when computing super Eddington wind</span><span class="w">
-         </span><span class="c1">! e.g., if this is 2, then only get wind when L &gt; 2*Ledd</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="c1">! NOTE: for super eddington wind,</span><span class="w">
+</span><span class="c1">! we use Ledd averaged over mass to optical depth tau = 100</span><span class="w">
+</span><span class="n">super_eddington_scaling_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+   </span><span class="c1">! parameter for mass loss driven by super Eddington luminosity</span><span class="w">
+</span><span class="n">super_eddington_wind_Ledd_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5</span><span class="w">
+   </span><span class="c1">! multiply Ledd by this factor when computing super Eddington wind</span><span class="w">
+   </span><span class="c1">! e.g., if this is 2, then only get wind when L &gt; 2*Ledd</span></code></pre></figure>
     <p class='card-text'>
-      Start your model from the beginning with <kbd>./rn</kbd>.
+      Restart your model from an early model like 200 (<kbd>./re x200</kbd>) or from the beginning with <kbd>./rn</kbd>.
     </p>
     <h4 class='card-text'>What's Going On?</h4>
     <p class='card-text'>
@@ -2203,7 +2255,7 @@ do_one inlist_wd_nova_burst_header final.mod
       </video>
     </div>
     <p class="card-text">
-      In this video, see how the model has trouble getting through the mass loss phase? Part of this is because it is right at the cusp of triggering super Eddington winds, but the other issues is that whenever the winds cease, accretion immediately resumes (see the abundance plott for confirmation), which then affects the opacity in the outer layers, which triggers the winds, etc.
+      In this video, see how the model has trouble getting through the mass loss phase? Part of this is because it is right at the cusp of triggering super Eddington winds, but the other issue is that whenever the winds cease, accretion immediately resumes (see the abundance plott for confirmation), which then affects the opacity in the outer layers, which triggers the winds, etc. In this case, we got out of it eventually, but these sorts of oscillations in behavior can spell doom for your simulation, and it's usually best to find a way to force a smoother transition.
     </p>
   </div>
 </div>
@@ -2222,7 +2274,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <ol>
   <li>Identify the hook you want to use from those available in <code>$MESA_DIR/star/other</code></li>
   <li>
-    Copy and rename the "null" version of the subroutine in proper file in <code>$MESA_DIR/star/other</code> into your <code>run_star_extras.f90</code>
+    Copy and rename the "null" version of the subroutine from the proper file in <code>$MESA_DIR/star/other</code> into your <code>run_star_extras.f90</code>
   </li>
   <li>
     Point to your new subroutine in the <code>extras_controls</code> subroutine in <code>run_star_extras.f90</code>
@@ -2234,7 +2286,7 @@ do_one inlist_wd_nova_burst_header final.mod
     Compile your project with <kbd>./mk</kbd>
   </li>
   <li>
-    Add a line to the <code>controls</code> namelist to tell <samp>MESA</samp> to use your routine (usually the control is something like <code>use_other_* = .true.</code>, where <code>*</code> is standing in for something more specific)
+    Add a line to the <code>&controls</code> namelist to tell <samp>MESA</samp> to use your routine (usually the control is something like <code>use_other_* = .true.</code>, where <code>*</code> is standing in for something more specific)
   </li>
   <li>
     Run or restart your project and ensure that the expected output is coming from the routine
@@ -2480,10 +2532,10 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body collapse" id="hint-3p8">
     <p class="card-text">
-      Nothing should have changed for the beginning of your runs since minilab 2. You should be able to restart from several hundred steps in, so probably around photo <code>x300</code>, assuming that corresponds with model 300 and not 1300. You can do this via <kbd>./re x300</kbd>. You can try different photos to see which start you during the thermonuclear runaway, but before the expansion and surge to the red.
+      Nothing should have changed for the beginning of your runs since minilab 2. You should be able to restart from several hundred steps in, so probably around photo <code>x300</code>, assuming that corresponds with model 300 and not 1300 or 2300. You can do this via <kbd>./re x300</kbd>. You can try different photos to see which start you during the thermonuclear runaway, but before the expansion and surge to the red.
     </p>
     <p class="card-text">
-      If you can't find a good photo to start from, just start the model anew with <kbd>./rn</kbd>. It's just going to take awhile.
+      If you can't find a good photo to start from, just start the model anew with <kbd>./rn</kbd>. It'll just take longer (don't worry, this is the last one).
     </p>
   </div>
 </div>
@@ -2509,6 +2561,15 @@ do_one inlist_wd_nova_burst_header final.mod
 <div class="text-center mb-2">
   <a href="https://docs.google.com/spreadsheets/d/18iE_dkCjDJO3SqNb6p-Ngrkguk5huHBGcjNFQmn0HeE/edit?usp=sharing" target=_blank>
     <button class='btn btn-lg btn-primary'>Record my Data (use third tab on bottom)</button>
+  </a>
+</div>
+<p>
+  Again for your reference, a completed project is available for download below.
+</p>
+
+<div class="text-center mb-2">
+  <a href="downloads/wolf_3.zip" download>
+    <button class='btn btn-lg btn-info'>Download Completed Project</button>
   </a>
 </div>
 
