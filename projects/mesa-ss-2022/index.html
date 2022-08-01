@@ -173,7 +173,7 @@
 </ul>
 <h4 id="part1a" class='mt-4'>Starting from a Test Case</h4>
 <p>
-  The test suites in <samp>MESA star</samp> (located in <code>$MESA_DIR/star/test_suite</code>) <samp>MESA binary</samp> (located in <code>$MESA_DIR/binary/test_suite</code>), and <samp>MESA astero</samp> (you get the idea) help detect bugs in development by checking that the behavior of a known application doesn't change substantially as commits are made. They are also useful as starting points for your own projects. We'll do that in this exercise.
+  The test suites in <samp>MESA star</samp> (located in <code>$MESA_DIR/star/test_suite</code>), <samp>MESA binary</samp> (located in <code>$MESA_DIR/binary/test_suite</code>), and <samp>MESA astero</samp> (you get the idea) help detect bugs in development by checking that the behavior of a known application doesn't change substantially as commits are made. They are also useful as starting points for your own projects. We'll do that in this exercise.
 </p>
 
 <p class='lead bg-secondary p-2'>
@@ -620,7 +620,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body collapse" id="hint-1p6b">
     <p class='card-text'>
-      In both <code>inlist_wd_nova_burst</code> in the <code>&controls</code> namelist, set <code>mesh_delta_coeff = 3.0</code>. This is more important in <code>inlist_wd_nova_burst</code>, but you can do it in <code>inlist_setup</code>, too. These controls exist in both, but they are set to 1.0 initially.
+      In both <code>inlist_setup</code> and <code>inlist_wd_nova_burst</code> in the <code>&controls</code> namelist, set <code>mesh_delta_coeff = 3.0</code>. This is more important in <code>inlist_wd_nova_burst</code>, but you can do it in <code>inlist_setup</code>, too. These controls exist in both, but they are set to 1.0 initially.
     </p>
   </div>
 </div>
@@ -1155,7 +1155,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <p>
   Let's start by adding information to the text summary, which is a little
   more straightforward. Text summary fields can be any value that can be
-  included in a history file, so you can find the options in <code>$MESA_DIR/star/defaults/history_columns.defaults</code>.
+  included in a history file, so you can find the options in <code>$MESA_DIR/star/defaults/history_columns.list</code>.
 </p>
 <div class="bg-secondary px-2 pt-1 mb-1">
   <p class='lead'>
@@ -1338,7 +1338,7 @@ do_one inlist_wd_nova_burst_header final.mod
     </p>
     <p class="card-text">
       As a result, you will need to uncomment this in
-      <code>history.columns</code>. Furthermore, you will need to delete (or at
+      <code>history_columns.list</code>. Furthermore, you will need to delete (or at
       least rename) your current <code>history.data</code> file since
       <samp>MESA</samp> will not be able to write to the file with a new column
       inserted in the middle. After you've done this, you can restart from the
@@ -1416,13 +1416,17 @@ do_one inlist_wd_nova_burst_header final.mod
       <code>History_Panels1_yaxis_name</code> and
       <code>History_Panels1_other_yaxis_name</code>.
     </p>
+    
+    <p class="card-text">
+      You may also have chosen to use <code>photosphere_L</code> instead of <code>log_L</code> for the first panel. In that case, you would also need to set <code>History_Panels1_yaxis_log(1) = .true.</code>. If you went that route, then you would also need to uncommment the appropriate line in <code>history_columns.list</code>, as indicated below.
+    </p>
 
     <p class="card-text">
       To get the <code>log_L_div_Ledd</code> panel to play nicely, we also had
-      to uncomment that column in <code>history.columns</code>:
+      to uncomment that column in <code>history_columns.list</code>:
     </p>
 
-    <h4><samp>history.columns</samp> (partial)</h4>
+    <h4><samp>history_columns.list</samp> (partial)</h4>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">  </span><span class="n">log_g</span><span class="w"> </span><span class="c1">! log10 gravity</span><span class="w">
   </span><span class="c1">!gravity</span><span class="w">
   </span><span class="c1">!log_Ledd</span><span class="w">
@@ -1495,7 +1499,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </span><span class="n">History_Panels1_ymin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
   </span><span class="n">History_Panels1_ymax</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">6d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
   </span><span class="n">History_Panels1_other_ymin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-2.5d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
-  </span><span class="n">History_Panels1_other_ymax</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-1.0d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
+  </span><span class="n">History_Panels1_other_ymax</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
   </span><span class="n">History_Panels1_ymin</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-3d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
   </span><span class="n">History_Panels1_ymax</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
   </span><span class="n">History_Panels1_other_ymin</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-7.0d0</span><span class="w"> </span><span class="c1">! only used if /= -101d0</span><span class="w">
@@ -1511,7 +1515,7 @@ do_one inlist_wd_nova_burst_header final.mod
 <p>
   Suppose you also wanted to track the mass fractions of hydrogen and helium at
   the point of peak nuclear energy generation. You can look for a column like
-  this in <code>history.columns</code>, but no such column exists. We will have
+  this in <code>history_columns.list</code>, but no such column exists. We will have
   to add some of our own code to accomplish this. Here's a quick summary of how
   this is done inside <code>src/run_star_extras.f90</code>:
 </p>
@@ -1889,7 +1893,7 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 <div class='buffer-tiny'></div>
 <p class='lead bg-secondary p-2'>
-  <span class='text-primary font-weight-bold'>Challenge 3.1:</span> Edit <code>inlist_nova</code> so that the model accretes matter at the right M&#775; you chose.
+  <span class='text-primary font-weight-bold'>Challenge 3.1:</span> Edit <code>inlist_wd_nova_burst</code> so that the model accretes matter at the right M&#775; you chose.
 </p>
 
 <div class="card border-success mb-3">
@@ -1900,7 +1904,7 @@ do_one inlist_wd_nova_burst_header final.mod
   </div>
   <div class="card-body collapse" id="sol-3p1">
     <p class="card-text">
-      Change the line above in <code>inlist_nova</code> to <code> mass_change = <span class="mdot-base">???</span>d-7</code>
+      Change the line above in <code>inlist_wd_nova_burst</code> to <code> mass_change = <span class="mdot-base">???</span>d-7</code>
     </p>
     <p class="card-text">
       You should similarly update the following line in the
@@ -1909,6 +1913,9 @@ do_one inlist_wd_nova_burst_header final.mod
       right value:
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="n">relax_mass_change_final_mdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.5d-7</span></code></pre></figure>
+    <p class="card-text">
+      To be clear, you should <span class="font-weight-bold">update</span> this line from <code>3.5d-7</code> to your accretion rate of <code><span class="mdot-base">???</span>d-7</code>.
+    </p>
   </div>
 </div>
 
@@ -1988,7 +1995,7 @@ do_one inlist_wd_nova_burst_header final.mod
       The beginnings of flashes are the easiest to identify, so estimate the time between the two subsequent sharp rises in the luminosity to get the recurrence time.
     </p>
     <p class='card-text'>
-      The SSS phase duration is a little more nebulous. Estimate the the duration from the time of minimum effective temperature until the photospheric and hydrogen-burning luminosities precipitously depart from each other as they plummet.
+      The SSS phase duration is a little more nebulous. Estimate the the duration from the time of minimum effective temperature until the photospheric and hydrogen-burning luminosities precipitously depart from each other as they plummet. This may be too hard to do with a single pgstar frame, so consider making a movie out of your pgstar frames, and then find the frame when mass loss stops and roughly when the photospheric and nuclear luminosities begin to diverge.
     </p>
     <p class="card-text">
       The example below is taken from a simulation on a higher-mass white dwarf
@@ -2029,7 +2036,7 @@ do_one inlist_wd_nova_burst_header final.mod
       To make these into a movie, the SDK comes with a nifty script that does the heavy lifting for you: <code>images_to_movie</code>. To use it, do something like the following:
     </p>
     <p class='card-text text-center'>
-      <kbd>images_to_move 'png/nova_grid*.png' my_movie.mp4</kbd>
+      <kbd>images_to_movie 'png/nova_grid*.png' my_movie.mp4</kbd>
     </p>
     <p class='card-text'>
       This takes all files that match the pattern <code>nova_grid_*.png</code> in the png directory and then makes a movie by using each as a frame. The resulting movie is named <code>my_movie.mp4</code>.
@@ -2146,7 +2153,7 @@ do_one inlist_wd_nova_burst_header final.mod
    </span><span class="n">extras_check_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keep_going</span><span class="w">
    </span><span class="c1">! Deactivate HR limits by default</span><span class="w">
    </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
-   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
+   </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_hard_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="w">
    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">L_burst</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">waiting_for_burst</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
          </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_bursts</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
@@ -2155,9 +2162,9 @@ do_one inlist_wd_nova_burst_header final.mod
       </span><span class="k">end</span><span class="w"> </span><span class="k">if</span><span class="w">
       </span><span class="c1">! Preferentially increase time resolution based on motion through</span><span class="w">
       </span><span class="c1">! HR diagram.</span><span class="w">
-      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">power_h_burn</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">1.1d0</span><span class="w"> </span><span class="ow">.and.</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">Teff</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">5e5</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">power_h_burn</span><span class="w"> </span><span class="p">/</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">1.1d0</span><span class="w"> </span><span class="ow">.and.</span><span class="w"> </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">Teff</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">5d5</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
          </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5d-3</span><span class="w">
-         </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-2</span><span class="w">
+         </span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">delta_HR_hard_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1d-2</span><span class="w">
       </span><span class="k">endif</span><span class="w">
    </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">%</span><span class="w"> </span><span class="n">L_phot</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">L_between</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num_bursts</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">
@@ -2217,7 +2224,7 @@ do_one inlist_wd_nova_burst_header final.mod
   For illustrative purposes, we will make use of the control <code>super_eddington_wind_Ledd_factor</code>, which is already set to 1 in <code>inlist_wd_nova_burst</code>. As the comment indicates, this is a factor by which the Eddington luminosity is scaled by in computing the wind. We will increase this to 1.5 in the next challenge to make the winds start later and end sooner.
 </p>
 <p class='lead bg-secondary p-2'>
-  <span class='font-weight-bold text-primary'>Challenge 3.5:</span> Increase the value of <code>super_eddington_wind_Ledd_factor</code> to 1.5. Start your model over from the beginning (don't restart), and observe what happens during the initial flash. Depending on your accretion rate, it may get stuck in this phase. See if you can figure out what's going on.
+  <span class='font-weight-bold text-primary'>Challenge 3.5:</span> Increase the value of <code>super_eddington_wind_Ledd_factor</code> to 1.5. Either start your model from an early model (perhaps model 200 if photo <code>x200</code> still points to that) or start your model over from the beginning (i.e. don't restart), and observe what happens during the initial flash. Depending on your accretion rate, it may get stuck in this phase. See if you can figure out what's going on.
 </p>
 
 <div class="card border-success mb-3">
@@ -2255,7 +2262,7 @@ do_one inlist_wd_nova_burst_header final.mod
       </video>
     </div>
     <p class="card-text">
-      In this video, see how the model has trouble getting through the mass loss phase? Part of this is because it is right at the cusp of triggering super Eddington winds, but the other issue is that whenever the winds cease, accretion immediately resumes (see the abundance plott for confirmation), which then affects the opacity in the outer layers, which triggers the winds, etc. In this case, we got out of it eventually, but these sorts of oscillations in behavior can spell doom for your simulation, and it's usually best to find a way to force a smoother transition.
+      In this video, see how the model has trouble getting through the mass loss phase? Part of this is because it is right at the cusp of triggering super Eddington winds, but the other issue is that whenever the winds cease, accretion immediately resumes (see the abundance plot for confirmation), which then affects the opacity in the outer layers, which triggers the winds, etc. In this case, we got out of it eventually, but these sorts of oscillations in behavior can spell doom for your simulation, and it's usually best to find a way to force a smoother transition.
     </p>
   </div>
 </div>
@@ -2332,12 +2339,12 @@ do_one inlist_wd_nova_burst_header final.mod
       Edit the <span class="font-weight-bold">two</span> lines containing the text <code>subroutine null_other_adjust_mdot</code> and edit it to <code>subroutine nova_adjust_mdot</code> to get:
     </p>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="w">   </span><span class="c1">! your routine will be called after winds and before mass adjustment</span><span class="w">
-   </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_other_adjust_mdot</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
+   </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_adjust_mdot</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
       </span><span class="k">use</span><span class="w"> </span><span class="n">star_def</span><span class="w">
       </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">in</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">id</span><span class="w">
       </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="k">out</span><span class="p">)</span><span class="w"> </span><span class="p">::</span><span class="w"> </span><span class="n">ierr</span><span class="w">
       </span><span class="n">ierr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
-   </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_other_adjust_mdot</span></code></pre></figure>
+   </span><span class="k">end</span><span class="w"> </span><span class="k">subroutine</span><span class="w"> </span><span class="n">nova_adjust_mdot</span></code></pre></figure>
   </div>
 </div>
 
@@ -2434,7 +2441,7 @@ do_one inlist_wd_nova_burst_header final.mod
 </p>
 
 <p>
-  But still, we don't even have the star info structure set up yet! Look now at the <code>extras_startup</code> subroutine (or one or many other subroutines, actually). This code is also shown below for convenience:
+  But still, we don't even have the star info structure (what we usually call <code>s</code>) set up yet! Many subroutines do this for us out of the box, so we might take it for granted. Look now at the <code>extras_startup</code> subroutine (or one or many other subroutines, actually). This code is also shown below for convenience:
 </p>
 <h4><span class="text-monospace">src/run_star_extras.f90</span> (partial)</h4>
 <figure class="highlight"><pre><code class="language-fortran" data-lang="fortran"><span class="k">subroutine</span><span class="w"> </span><span class="n">extras_startup</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">restart</span><span class="p">,</span><span class="w"> </span><span class="n">ierr</span><span class="p">)</span><span class="w">
@@ -2487,6 +2494,7 @@ do_one inlist_wd_nova_burst_header final.mod
     <p class='card-text'>
       Note that the model is considered "in a burst" whenever <code>waiting_for_burst</code> is <code>.false.</code>. You might as well reuse this nifty variable in your code!
     </p>
+    <p class="card-text">You might also notice that there is another member, <code>s% star_mdot</code>. Frustratingly, this is <span class="font-weight-bold">not</span> what we want to use. If you have extra time, try to figure out what the difference between <code>s% mstar_dot</code> and <code>s% star_mdot</code> by grepping around in <code>$MESA_DIR/star/private</code>.</p>
   </div>
 </div>
 
@@ -2522,7 +2530,7 @@ do_one inlist_wd_nova_burst_header final.mod
 </div>
 
 <p class='bg-secondary lead p-2'>
-  <span class='font-weight-bold text-primary'>Challenge 3.8:</span> Test your model again with the functional <code>nova_adjust_mdot</code> by recompiling and then restarting before the first burst gets to mass loss. Report the same data to the appropriate place in the google sheet.
+  <span class='font-weight-bold text-primary'>Challenge 3.8:</span> Test your model again with the functional <code>nova_adjust_mdot</code> by recompiling and then restarting before the first burst gets to mass loss. Report the same data to the appropriate place in the google sheet. Keep the new value of <code>super_eddington_wind_Ledd_factor</code> from Challenge 3.5.
 </p>
 <div class="card border-primary mb-3">
   <div class="card-header bg-primary text-white">
