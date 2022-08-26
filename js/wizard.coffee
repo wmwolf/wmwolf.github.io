@@ -503,6 +503,48 @@ course_data =
     years_offered: 'all'
     terms_offered: 'spring'
 
+  PHYS_361:
+    field: 'PHYS'
+    number: 361
+    name: 'LabVIEW Basics'
+    lecture_hours: 2
+    lab_hours: 0
+    credits: 2
+    description: "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control."
+    le: []
+    requirements: 
+      coreqs: ['PHYS 350']
+    years_offered: 'all'
+    terms_offered: 'fall'
+
+  PHYS_362:
+    field: 'PHYS'
+    number: 362
+    name: 'LabVIEW Applications'
+    lecture_hours: 2
+    lab_hours: 0
+    credits: 2
+    description: "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring."
+    le: []
+    requirements: 
+      prereqs: ['PHYS 361']
+    years_offered: 'all'
+    terms_offered: 'spring'
+
+  PHYS_363:
+    field: 'PHYS'
+    number: 363
+    name: 'LabVIEW cRIO'
+    lecture_hours: 1
+    lab_hours: 0
+    credits: 1
+    description: "Lecture and laboratory exercises cover the theory and application of the cRIO automation controller using the graphical programming language LabVIEW. Topics include Real-Time operating system, field programmable gate array (FPGA) and network shared variables."
+    le: []
+    requirements: 
+      coreqs: ['PHYS 362']
+    years_offered: 'all'
+    terms_offered: 'spring'
+
   PHYS_365:
     field: 'PHYS'
     number: 365
@@ -603,49 +645,6 @@ course_data =
       custom: 'Students need to have completed an adviser-approved capstone project before entering this class. This can be accomplished through various means: PHYS 399, PHYS 430, PHYS 495, PHYS 499, through an academic or industrial internship, or through another approved means.'
     years_offered: 'all'
     terms_offered: 'fall'
-
-obsolete_course_data =
-  PHYS_361:
-    field: 'PHYS'
-    number: 361
-    name: 'LabVIEW Basics'
-    lecture_hours: 2
-    lab_hours: 0
-    credits: 2
-    description: "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control."
-    le: []
-    requirements: 
-      coreqs: ['PHYS 350']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_362:
-    field: 'PHYS'
-    number: 362
-    name: 'LabVIEW Applications'
-    lecture_hours: 2
-    lab_hours: 0
-    credits: 2
-    description: "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 361']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_363:
-    field: 'PHYS'
-    number: 363
-    name: 'LabVIEW cRIO'
-    lecture_hours: 1
-    lab_hours: 0
-    credits: 1
-    description: "Lecture and laboratory exercises cover the theory and application of the cRIO automation controller using the graphical programming language LabVIEW. Topics include Real-Time operating system, field programmable gate array (FPGA) and network shared variables."
-    le: []
-    requirements: 
-      coreqs: ['PHYS 362']
-    years_offered: 'all'
-    terms_offered: 'spring'
 
 class Course
   constructor: (@course_info) ->
@@ -1167,9 +1166,9 @@ PHYS_340 = new Course(course_data.PHYS_340)
 PHYS_350 = new Course(course_data.PHYS_350)
 PHYS_356 = new Course(course_data.PHYS_356)
 PHYS_360 = new Course(course_data.PHYS_360)
-# PHYS_361 = new Course(course_data.PHYS_361)
-# PHYS_362 = new Course(course_data.PHYS_362)
-# PHYS_363 = new Course(course_data.PHYS_363)
+PHYS_361 = new Course(course_data.PHYS_361)
+PHYS_362 = new Course(course_data.PHYS_362)
+PHYS_363 = new Course(course_data.PHYS_363)
 PHYS_365 = new Course(course_data.PHYS_365)
 PHYS_367 = new Course(course_data.PHYS_367)
 PHYS_375 = new Course(course_data.PHYS_375)
@@ -1189,12 +1188,12 @@ PHYS_486 = new Course(course_data.PHYS_486)
 # will not immediately cause PHYS 451 to be marked as available because it is
 # refreshed *before* PHYS 333 since it's earlier on the list.
 
-# Fall 2022: Removed PHYS 361, 362, and 363
+# Fall 2022: Removed PHYS 205, 361, 362, and 363
 
 courses = [
   MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345,
   CHEM_105, CHEM_106, CHEM_109, CHEM_115,
-  PHYS_115, PHYS_186, PHYS_205, PHYS_226, PHYS_229, PHYS_231, PHYS_232,
+  PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232,
   PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_333,
   PHYS_340, PHYS_350, PHYS_356, PHYS_360,
   PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486,
@@ -1205,8 +1204,9 @@ courses = [
 for course in courses
   course.update_requirements(courses)
 
-# Fall 2022: Removed PHYS 361, 362, and 363, which were electives or required
-# courses in each degree plan
+# Fall 2022: Removed PHYS 205, 361, 362, and 363, which were electives or required
+# courses in each degree plan. PHYS 205 was a "basic elective" for the minor
+# and appeared nowhere else
 
 degree_plan_data = [
   {
@@ -1339,7 +1339,7 @@ degree_plan_data = [
       },
       {
         title: 'Basic Electives'
-        courses: [PHYS_115, PHYS_186, PHYS_205, PHYS_226, PHYS_229, PHYS_240,
+        courses: [PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_240,
         PHYS_308, PHYS_315]
       },
       {
