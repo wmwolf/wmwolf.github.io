@@ -243,7 +243,7 @@ var Papers = {
     "+OR+citations(bibcode:2015ApJS..220...15P)" +
     "+OR+citations(bibcode:2018ApJS..234...34P)" +
     "+OR+citations(bibcode:2019ApJS..243...10P)" +
-    "+OR+citations(bibcode:2022arXiv220803651J)"
+    "+OR+citations(bibcode:2022arXiv220803651J)" +
     // get the titles, authors, and bibcodes of matching papers
     "&fl=title,author,bibcode" + 
     // restrict search to refereed articles
