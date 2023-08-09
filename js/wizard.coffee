@@ -599,7 +599,7 @@ course_data =
     le: []
     requirements: 
       combo: 
-        min: 2
+        min: 1
         options: ['PHYS 340', 'PHYS 350', 'PHYS 360']
     years_offered: 'all'
     terms_offered: 'fall'
@@ -1279,6 +1279,34 @@ degree_plan_data = [
       {
         title: 'Elective Support (uncounted towards major)'
         courses: [MSE_221, MSE_350]
+      }
+    ]
+  },
+  {
+    name: 'Astrophysics'
+    credits_needed: 36
+    counted:
+      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232', 'PHYS 332', 'PHYS 333',
+      'PHYS 340', 'PHYS 365', 'PHYS 367', 'PHYS 430', 'PHYS 486']
+      choices: [[['PHYS 226'], ['PHYS 229']],
+                [['PHYS 375'], ['PHYS 445'], ['PHYS 465']]]
+    uncounted:
+      requirements: ['MATH 312', 'PHYS 240']
+      choices: []
+    extra_electives: []
+    course_groups: [
+      {
+        title: 'Introductory and Prerequisite Courses'
+        courses: [MATH_112, MATH_114, MATH_215, MATH_216, PHYS_186, PHYS_226,
+          PHYS_229, PHYS_231, PHYS_232, PHYS_240]
+      },
+      {
+        title: 'Intermediate Courses'
+        courses: [MATH_312, PHYS_332, PHYS_333, PHYS_340, PHYS_365, PHYS_367]
+      },
+      {
+        title: 'Advanced Courses'
+        courses: [PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486]
       }
     ]
   },
