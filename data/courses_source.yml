@@ -1,0 +1,639 @@
+MATH_112:
+  field: 'MATH'
+  number: 112
+  name: 'Precalculus Mathematics'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: 'Prepares students to enter the Math 114, Math 215, Math 216 sequence. Includes absolute value; logarithmic, exponential, and trigonometric functions; inequalities; conic sections; complex numbers; and topics from theory of equations.'
+  le: ['S2']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'all' 
+
+MATH_114:
+  field: 'MATH'
+  number: 114
+  name: 'Calculus I'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: 'Limits, theory, and application of the derivative; introduction to integration.'
+  le: ['S2']
+  requirements:
+    prereqs: ['MATH 112']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MATH_215:
+  field: 'MATH'
+  number: 215
+  name: 'Calculus II'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Applications and techniques of integration; improper integrals; sequences and series; power series and Taylor's formula."
+  le: ['S2']
+  requirements:
+    prereqs: ['MATH 114']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MATH_216:
+  field: 'MATH'
+  number: 216
+  name: 'Calculus III'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Introduction to functions of several variables, including partial derivatives, multiple integrals, the calculus of vector-valued functions, and Green's Theorem, Stokes' Theorem, and the Divergence Theorem."
+  le: []
+  requirements:
+    prereqs: ['MATH 215']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MATH_312:
+  field: 'MATH'
+  number: 312
+  name: 'Differential Equations and Linear Algebra'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Linear algebra: basis, dimension, matrix algebra, determinants, inverses, systems of linear equations, eigenvalues/eigenvectors. (Optional) matrices as linear transformations. Differential equations: first-order linear, separable; second-order linear with constant coefficients; higher order differential equations; first-order linear systems with constant coefficients; Laplace transforms; power series solutions. (Optional) Proof of Existence and Uniqueness Theorems."
+  le: []
+  requirements:
+    prereqs: ['MATH 215']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MATH_345:
+  field: 'MATH'
+  number: 345
+  name: 'Introduction to Probability and Mathematical Statistics'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Counting techniques, discrete and continuous random variables, probability distributions, sampling distributions, estimation, hypothesis testing, linear regression, correlation, nonparametric statistics. Students who desire more extensive probability and statistics should take Math 346/Math 546, Math 347/Math 547."
+  le: []
+  requirements: {coreqs: ['MATH 215']}
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+CHEM_115:
+  field: 'CHEM'
+  number: 115
+  name: 'Chemical Principles'
+  lecture_hours: 3
+  lab_hours: 6
+  credits: 6
+  description: "Principles of chemistry, including chemical properties and the periodic table, atomic structure, chemical bonding, equilibria, thermodynamics, acid-base reactions, oxidation-reduction reactions and complexation reactions."
+  le: ['K1', 'K1L']
+  requirements:
+    exclude: ['CHEM 105', 'CHEM 106', 'CHEM 109']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+CHEM_105:
+  field: 'CHEM'
+  number: 105
+  name: 'General Chemistry I Lecture'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Principles of chemistry, including atomic structure, physical and periodic properties, structure and bonding, reactions, thermochemistry, and stoichiometry."
+  le: []
+  requirements:
+    exclude: ['CHEM 115']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+CHEM_106:
+  field: 'CHEM'
+  number: 106
+  name: 'General Chemistry I Laboratory'
+  lecture_hours: 1
+  lab_hours: 2
+  credits: 2
+  description: "A general chemistry lab/discussion experience. Gases, reactions, stoichiometry, solution chemistry, thermochem. Data collection, management, and interpretation."
+  le: ['K1', 'K1L']
+  requirements:
+    coreqs: ['CHEM 105']
+    exclude: ['CHEM 115']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+CHEM_109:
+  field: 'CHEM'
+  number: 109
+  name: 'General Chemistry II with Lab'
+  lecture_hours: 3
+  lab_hours: 3
+  credits: 4
+  description: "Solution properties and intermolecular forces; equilibrium, thermodynamic and kinetic aspects of chemical reactions; acid-base, precipitation, and redox reactions."
+  le: []
+  requirements:
+    prereqs: ['CHEM 104', 'CHEM 105']
+    exclude: ['CHEM 115']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MSE_120:
+  field: 'MSE'
+  number: 120
+  name: 'Introduction to Engineering'
+  lecture_hours: 1
+  lab_hours: 2
+  credits: 2
+  description: "A comprehensive study of the engineering design process. Discussion of engineering disciplines with comparisons. The laboratory portion of the course includes design projects from various engineering disciplines."
+  le: ['S3']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MSE_221:
+  field: 'MSE'
+  number: 221
+  name: 'Living in a Materials World'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Processing and structure’s impact on materials properties and performance. Societal benefits of sustainable, biomimetic, or responsible materials selection."
+  le: []
+  requirements:
+    corez: ['MATH 114']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+MSE_315:
+  field: 'MSE'
+  number: 315
+  name: 'Materials Characterization'
+  lecture_hours: 2
+  lab_hours: 4
+  credits: 4
+  description: "A survey of commonly used materials characterization methods (XPS, SEM, AFM, XRD, XRF), including their theory of operation and hands-on experience. Includes a discussion of the measurement process and instrumental analysis of samples."
+  le: ['S3']
+  requirements:
+    prereqs: ['PHYS 231']
+    combo: 
+      min: 1
+      options: ['CHEM 105', 'CHEM 115']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+MSE_350:
+  field: 'MSE'
+  number: 350
+  name: 'Thermodynamics of Materials'
+  lecture_hours: 3
+  lab_hours: 2
+  credits: 4
+  description: "Survey of the laws of thermodynamics and their application in Materials Science including phase equilibria. Mathematical skills relevant to engineering applications are discussed in the lab section."
+  le: []
+  requirements:
+    prereqs: ['MSE 221', 'MATH 215']
+    coreqs: ['PHYS 232']
+    combo: 
+      min: 1
+      options: ['CHEM 109', 'CHEM 115']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+MSE_357:
+  field: 'MSE'
+  number: 357
+  name: 'Phase Transformation & Kinetics'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Phase transformations are explored with emphasis on microstructure development, the impact of diffusion, and nucleation/growth mechanisms."
+  le: []
+  requirements:
+    prereqs: ['MSE 221', 'MATH 215']
+    combo: 
+      min: 1
+      options: ['CHEM 109', 'CHEM 115']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+MSE_372:
+  field: 'MSE'
+  number: 372
+  name: 'Transport Phenomena'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Principles of momentum, heat, and mass transport. Applications of appropriate differential equations and boundary conditions to solve problems in materials processing."
+  le: []
+  requirements:
+    prereqs: ['MATH 312']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+MSE_374:
+  field: 'MSE'
+  number: 374
+  name: 'Electrical, Optical and Magnetic Properties of Materials'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "A description of the behaviors of crystalline solids. Topics include crystallography, diffraction, and the electrical, optical and magnetic properties of materials. Semiconducting materials and devices will also be discussed."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 332']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+MSE_451:
+  field: 'MSE'
+  number: 451
+  name: 'Computational Materials Science'
+  lecture_hours: 2
+  lab_hours: 3
+  credits: 3
+  description: "Theory and application of computational methods to model, understand and predict the behavior of materials. Labs provide hands-on experience in solving real materials problems using computational approaches. Note: can also take after CHEM 434, which is not part of this databse."
+  le: []
+  requirements:
+    combo: 
+      min: 1
+      options: ['PHYS 333', 'MSE 350', 'CHEM 434']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_115:
+  field: 'PHYS'
+  number: 115
+  name: 'Survey of Astronomy'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "A one-semester presentation of our current understanding of the universe, including the solar system, birth and death of stars, unusual phenomena such as black holes and quasars, evolution of galaxies and the universe, and our link with the cosmos."
+  le: ['K1']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'all'
+
+PHYS_186:
+  field: 'PHYS'
+  number: 186
+  name: 'Introductory Seminar'
+  lecture_hours: 0.5
+  lab_hours: 0
+  credits: 0.5
+  description: "Students will explore avenues for obtaining an internship, discuss plans for participating in the required research project, attend the weekly Physics Seminar, develop academic plans, and participate in postgraduate planning."
+  le: []
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_205:
+  field: 'PHYS'
+  number: 205
+  name: 'Physics of Renewable Energy'
+  lecture_hours: 3
+  lab_hours: 2
+  credits: 4
+  description: "Explores the basic physics principles behind various types of renewable energy sources. Discusses impact renewable energy sources have on mitigating global warming and climate change."
+  le: ['K1', 'K1L', 'R3']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_226:
+  field: 'PHYS'
+  number: 226
+  name: 'Astronomy-Solar System'
+  lecture_hours: 3
+  lab_hours: 2
+  credits: 4
+  description: "The physical nature of the solar system, including earth motions, celestial coordinates, time, telescopes, moon, planets, sun, and origin of solar system."
+  le: ['K1', 'K1L', 'I1']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_229:
+  field: 'PHYS'
+  number: 229
+  name: 'Astronomy-Stars and Galaxies'
+  lecture_hours: 3
+  lab_hours: 2
+  credits: 4
+  description: "The physical nature of the universe, including stellar evolution, multiple and variable stars, the Milky Way galaxy, other galaxies, and origin of the universe."
+  le: ['K1', 'K1L']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_231:
+  field: 'PHYS'
+  number: 231
+  name: 'University Physics I'
+  lecture_hours: 4
+  lab_hours: 2
+  credits: 5
+  description: "Physics for science and engineering students, including the study of mechanics, simple harmonic motion, and wave motion."
+  le: ['K1', 'K1L']
+  requirements: 
+    coreqs: ['MATH 114']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+PHYS_232:
+  field: 'PHYS'
+  number: 232
+  name: 'University Physics II'
+  lecture_hours: 4
+  lab_hours: 2
+  credits: 5
+  description: "A continuation of Physics 231, including the study of electricity, magnetism, and optics."
+  le: ['K1', 'K1L']
+  requirements: 
+    coreqs: ['MATH 215']
+    prereqs: ['PHYS 231']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+PHYS_240:
+  field: 'PHYS'
+  number: 240
+  name: 'Computational Physics'
+  lecture_hours: 2
+  lab_hours: 2
+  credits: 3
+  description: "An introduction to the use of computational tools for solving physical problems. Topics include an introduction to computing, visualization techniques, numerical integration, and numerical solutions to differential equations."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 231']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+PHYS_255:
+  field: 'PHYS'
+  number: 255
+  name: 'Statics'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Designed primarily for pre-engineering students. Includes static equilibrium of rigid bodies, centroids, analysis of structures, friction, and moments of inertia."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 231']
+    coreqs: ['MATH 215']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_308:
+  field: 'PHYS'
+  number: 308
+  name: 'Science of Musical Sound'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Physical concepts related to production of tones and speech. Application to musical instruments and auditorium acoustics, with experimental demonstrations of vibrational phenomena and electronic sound analysis and synthesis. No prior physics or university mathematics assumed."
+  le: ['K1']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_315:
+  field: 'PHYS'
+  number: 315
+  name: 'The Mysterious Universe'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "A view of the world as revealed by contemporary physical thought. Topics include size and origin of universe, ultimate nature of matter; modern ideas of space, time and energy; possibilities of extraterrestrial life; and values and limitations of science."
+  le: ['K1', 'I1']
+  requirements: null
+  years_offered: 'all'
+  terms_offered: 'all'
+
+PHYS_332:
+  field: 'PHYS'
+  number: 332
+  name: 'University Physics III'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Physics for science and engineering students, including the study of fluids, heat, thermodynamics, relativity, and an introduction to modern physics."
+  le: ['I1']
+  requirements: 
+    prereqs: ['PHYS 232', 'MATH 215']
+  years_offered: 'all'
+  terms_offered: 'all'
+
+PHYS_333:
+  field: 'PHYS'
+  number: 333
+  name: 'Quantum Physics'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Introduction to the experimental and theoretical basis of quantum physics, including particle aspects of radiation, matter waves, Bohr model of the atom, Schrodinger wave mechanics and its application to the hydrogen atom and multi-electron atoms."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 332', 'MATH 216']
+  years_offered: 'even'
+  terms_offered: 'fall'
+
+PHYS_340:
+  field: 'PHYS'
+  number: 340
+  name: 'Optics'
+  lecture_hours: 3
+  lab_hours: 3
+  credits: 4
+  description: "Lecture and laboratory work cover geometrical and physical optics, image formation, optical instruments, interference, diffraction, polarization, and modern topics including lasers."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 232', 'MATH 215']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_350:
+  field: 'PHYS'
+  number: 350
+  name: 'Electric and Electronic Circuits'
+  lecture_hours: 3
+  lab_hours: 3
+  credits: 4
+  description: "General introduction to electrical circuits and electronics including analysis of DC and AC circuits, simple passive filters, diodes, transistors, operational amplifiers, simple digital electronics, and circuit design and construction."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 232', 'MATH 215']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_356:
+  field: 'PHYS'
+  number: 356
+  name: 'Dynamics'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "A continuation of Physics 255. Dynamics of rigid bodies, moments of inertia, work, energy, impulse, and momentum."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 255', 'MATH 215']
+    exclude: ['PHYS 356']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_360:
+  field: 'PHYS'
+  number: 360
+  name: 'Electronics'
+  lecture_hours: 3
+  lab_hours: 3
+  credits: 4
+  description: "Description, analysis, and laboratory measurements of digital and analog devices including transistor amplifiers, operational amplifiers, oscillators, gates, flip-flops, analog-digital converters, and microprocessors."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 350', 'MATH 240']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_361:
+  field: 'PHYS'
+  number: 361
+  name: 'LabVIEW Basics'
+  lecture_hours: 2
+  lab_hours: 0
+  credits: 2
+  description: "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control."
+  le: []
+  requirements: 
+    coreqs: ['PHYS 350']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_362:
+  field: 'PHYS'
+  number: 362
+  name: 'LabVIEW Applications'
+  lecture_hours: 2
+  lab_hours: 0
+  credits: 2
+  description: "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 361']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_363:
+  field: 'PHYS'
+  number: 363
+  name: 'LabVIEW cRIO'
+  lecture_hours: 1
+  lab_hours: 0
+  credits: 1
+  description: "Lecture and laboratory exercises cover the theory and application of the cRIO automation controller using the graphical programming language LabVIEW. Topics include Real-Time operating system, field programmable gate array (FPGA) and network shared variables."
+  le: []
+  requirements: 
+    coreqs: ['PHYS 362']
+  years_offered: 'all'
+  terms_offered: 'spring'
+
+PHYS_365:
+  field: 'PHYS'
+  number: 365
+  name: 'Theoretical Mechanics'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Newton's laws, accelerated frames, central-force orbits, angular momentum of systems, coupled oscillations, generalized coordinates, and Lagrange's equations."
+  le: []
+  requirements: 
+    prereqs: ['MATH 216', 'PHYS 231', 'PHYS 240']
+    exclude: ['PHYS 356']
+  years_offered: 'odd'
+  terms_offered: 'fall'
+
+PHYS_367:
+  field: 'PHYS'
+  number: 367
+  name: 'Astrophysics'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "Physics applied to astronomical objects. The birth, structure, and evolution of stars are studied in detail. Nebulae, the interstellar medium, and stellar remnants are also investigated."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 240', 'PHYS 332']
+  years_offered: 'odd'
+  terms_offered: 'fall'
+
+PHYS_375:
+  field: 'PHYS'
+  number: 375
+  name: 'Electromagnetic Fields'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Electric and magnetic fields, dielectric and magnetic properties of materials, and electromagnetic phenomena. Field theory leading to the development of Maxwell's equations and the plane electromagnetic wave."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 240', 'PHYS 332', 'MATH 216', 'MATH 312']
+  years_offered: 'even'
+  terms_offered: 'spring'
+
+PHYS_430:
+  field: 'PHYS'
+  number: 430
+  name: 'Advanced Laboratory Technique'
+  lecture_hours: 0
+  lab_hours: 4
+  credits: 2
+  description: "Laboratory course for students with special interests in experimental physics. The emphasis is on widely applicable modern experimental methods."
+  le: []
+  requirements: 
+    combo: 
+      min: 1
+      options: ['PHYS 340', 'PHYS 350', 'PHYS 360']
+  years_offered: 'all'
+  terms_offered: 'fall'
+
+PHYS_445:
+  field: 'PHYS'
+  number: 445
+  name: 'Thermal Physics'
+  lecture_hours: 4
+  lab_hours: 0
+  credits: 4
+  description: "Statistical mechanics and thermodynamics including the laws of classical thermodynamics, equations of state, thermodynamical processes, and applications to classical and quantum mechanical systems."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 332', 'MATH 216'] 
+  years_offered: 'even'
+  terms_offered: 'fall'
+
+PHYS_465:
+  field: 'PHYS'
+  number: 465
+  name: 'Quantum Mechanics'
+  lecture_hours: 3
+  lab_hours: 0
+  credits: 3
+  description: "A continuation of Physics 333, including Dirac notation, operator methods, one dimensional potentials, spin and angular momentum, and the philosophical interpretation of quantum mechanics."
+  le: []
+  requirements: 
+    prereqs: ['PHYS 333', 'MATH 312'] 
+  years_offered: 'odd'
+  terms_offered: 'spring'
+
+PHYS_486:
+  field: 'PHYS'
+  number: 486
+  name: 'Senior Seminar'
+  lecture_hours: 0.5
+  lab_hours: 0
+  credits: 0.5
+  description: "Students will present a capstone project seminar, develop presentation skills (oral and poster), take a nationally normed test covering undergraduate physics, discuss their post-graduate plans, and assist the department in assessing the major."
+  le: ['S3']
+  requirements: 
+    custom: 'Students need to have completed an adviser-approved capstone project before entering this class. This can be accomplished through various means: PHYS 399, PHYS 430, PHYS 495, PHYS 499, through an academic or industrial internship, or through another approved means.'
+  years_offered: 'all'
+  terms_offered: 'fall'
