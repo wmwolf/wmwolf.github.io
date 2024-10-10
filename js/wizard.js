@@ -1665,16 +1665,21 @@
         PHYS_332,
         PHYS_333,
         PHYS_340,
-        PHYS_365,
         PHYS_367]
         },
         {
           title: 'Advanced Courses',
-          courses: [PHYS_375,
+          courses: [PHYS_365,
+        PHYS_375,
         PHYS_430,
         PHYS_445,
         PHYS_465,
         PHYS_486]
+        },
+        {
+          title: 'Electives (not needed for credit towards major)',
+          courses: [PHYS_350,
+        PHYS_360]
         }
       ]
     },
