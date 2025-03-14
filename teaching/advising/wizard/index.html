@@ -41,53 +41,78 @@
         <h1 class='display-3'>Physics Advising Wizard</h1>
       </div>
       <div class="sticky bg-white no-print py-3">
-  <div class='row'>
-    <div class="col-4 col-md-3 mb-2">
-      <h3 class='text-right'>Degree</h3>
-    </div>
-    <div class="col-8 col-md-3 mb-2">
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          
-        </button>
-        <div class="dropdown-menu" aria-labelledby="degree-plan-dropdown" id='degree-plan-menu'>
-          <!-- This gets filled in by javascript -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Left Section - Degree and Term -->
+      <div class="col-12 col-lg-6">
+        <!-- Degree Row -->
+        <div class="row mb-2">
+          <div class="col-5">
+            <h3 class='text-right'>Degree</h3>
+          </div>
+          <div class="col-7">
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                
+              </button>
+              <div class="dropdown-menu" aria-labelledby="degree-plan-dropdown" id='degree-plan-menu'>
+                <!-- This gets filled in by javascript -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Term Row -->
+        <div class="row">
+          <div class="col-5">
+            <h3 class='text-right'>Term</h3>
+          </div>
+          <div class="col-7">
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Term 0
+              </button>
+              <div class="dropdown-menu" aria-labelledby="year-term-dropdown" id='year-term-menu'>
+                <a class="dropdown-item year-term-option active" data-position=0 href="#">Term 0</a>
+                <a class="dropdown-item year-term-option" data-position=1 href="#">Term 1</a>
+                <a class="dropdown-item year-term-option" data-position=2 href="#">Term 2</a>
+                <a class="dropdown-item year-term-option" data-position=3 href="#">Term 3</a>
+                <a class="dropdown-item year-term-option" data-position=4 href="#">Term 4</a>
+                <a class="dropdown-item year-term-option" data-position=5 href="#">Term 5</a>
+                <a class="dropdown-item year-term-option" data-position=6 href="#">Term 6</a>
+                <a class="dropdown-item year-term-option" data-position=7 href="#">Term 7</a>
+                <a class="dropdown-item year-term-option" data-position=8 href="#">Term 8</a>
+                <a class="dropdown-item year-term-option" data-position=9 href="#">Term 9</a>
+                <a class="dropdown-item year-term-option" data-position=10 href="#">Term 10</a>
+                <a class="dropdown-item year-term-option" data-position=11 href="#">Term 11</a>
+              </div>
+              <button class="btn btn-success" id="next-term"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-4 col-md-3 mb-2">
-      <h3 class='text-right'>
-        Credits
-      </h3>
-    </div>
-    <div class="col-8 col-md-3">
-      <h3 class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / <span id="credits-needed"></span></h3>
-    </div>
-  </div>
-  <div class='row'>
-    <div class="col-4 col-md-3">
-      <h3 class='text-right'>Term</h3>
-    </div>
-    <div class="col-8 col-md-9">
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Term 0
-        </button>
-        <div class="dropdown-menu" aria-labelledby="year-term-dropdown" id='year-term-menu'>
-          <a class="dropdown-item year-term-option active" data-position=0 href="#">Term 0</a>
-          <a class="dropdown-item year-term-option" data-position=1 href="#">Term 1</a>
-          <a class="dropdown-item year-term-option" data-position=2 href="#">Term 2</a>
-          <a class="dropdown-item year-term-option" data-position=3 href="#">Term 3</a>
-          <a class="dropdown-item year-term-option" data-position=4 href="#">Term 4</a>
-          <a class="dropdown-item year-term-option" data-position=5 href="#">Term 5</a>
-          <a class="dropdown-item year-term-option" data-position=6 href="#">Term 6</a>
-          <a class="dropdown-item year-term-option" data-position=7 href="#">Term 7</a>
-          <a class="dropdown-item year-term-option" data-position=8 href="#">Term 8</a>
-          <a class="dropdown-item year-term-option" data-position=9 href="#">Term 9</a>
-          <a class="dropdown-item year-term-option" data-position=10 href="#">Term 10</a>
-          <a class="dropdown-item year-term-option" data-position=11 href="#">Term 11</a>
+      
+      <!-- Right Section - Credits and Requirements -->
+      <div class="col-12 col-lg-6 mt-3 mt-lg-0">
+        <!-- Credits Row -->
+        <div class="row mb-2">
+          <div class="col-5">
+            <h3 class='text-right'>Credits</h3>
+          </div>
+          <div class="col-7">
+            <h3 class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / <span id="credits-needed"></span></h3>
+          </div>
         </div>
-        <button class="btn btn-success" id="next-term"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        
+        <!-- Requirements Row -->
+        <div class="row">
+          <div class="col-5">
+            <h3 class='text-right'>Requirements</h3>
+          </div>
+          <div class="col-7">
+            <h3 class="text-danger font-weight-bold" id='requirement-status'>Incomplete</h3>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -211,7 +236,7 @@
 <footer class="footer no-print"> 
   <p class="text-center">
     Contact <a
-    href="mailto:wolfwm@uwec.edu">Webmaster</a> &bull; Last modified  February 2025 
+    href="mailto:wolfwm@uwec.edu">Webmaster</a> &bull; Last modified  March 2025 
   </p>
 </footer>
 

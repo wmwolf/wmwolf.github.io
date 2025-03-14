@@ -1,650 +1,34 @@
 # to add a course:
-# - add entry to course_data object
+# - add entry to course_data.json object
 # - instantiate Course instance from entry in course_data object
 # - add course to courses array
 # - add course to any course plan's requirements and associated groups
+#
+# to deprecate a course:
+# - set deprecated: true in the course_data.json entry
+# - optionally set last_offered_year and last_offered_term
+#
+# to schedule availability:
+# - set first_offered_year and first_offered_term for future courses
+# - set last_offered_year and last_offered_term for courses being phased out
 
-course_data = 
-  MATH_112:
-    field: 'MATH'
-    number: 112
-    name: 'Precalculus Mathematics'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: 'Prepares students to enter the Math 114, Math 215, Math 216 sequence. Includes absolute value; logarithmic, exponential, and trigonometric functions; inequalities; conic sections; complex numbers; and topics from theory of equations.'
-    le: ['S2']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'all' 
+# Load course data from JSON file
+courseDataJson = null
 
-  MATH_114:
-    field: 'MATH'
-    number: 114
-    name: 'Calculus I'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: 'Limits, theory, and application of the derivative; introduction to integration.'
-    le: ['S2']
-    requirements:
-      prereqs: ['MATH 112']
-    years_offered: 'all'
-    terms_offered: 'all'
+loadCourseData = ->
+  $.ajax
+    url: '/js/course_data.json'
+    dataType: 'json'
+    async: false
+    success: (data) ->
+      courseDataJson = data
+    error: (xhr, status, error) ->
+      console.error("Error loading course data: #{error}")
+      
+loadCourseData()
 
-  MATH_215:
-    field: 'MATH'
-    number: 215
-    name: 'Calculus II'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Applications and techniques of integration; improper integrals; sequences and series; power series and Taylor's formula."
-    le: ['S2']
-    requirements:
-      prereqs: ['MATH 114']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  MATH_216:
-    field: 'MATH'
-    number: 216
-    name: 'Calculus III'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Introduction to functions of several variables, including partial derivatives, multiple integrals, the calculus of vector-valued functions, and Green's Theorem, Stokes' Theorem, and the Divergence Theorem."
-    le: []
-    requirements:
-      prereqs: ['MATH 215']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  MATH_312:
-    field: 'MATH'
-    number: 312
-    name: 'Differential Equations and Linear Algebra'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Linear algebra: basis, dimension, matrix algebra, determinants, inverses, systems of linear equations, eigenvalues/eigenvectors. (Optional) matrices as linear transformations. Differential equations: first-order linear, separable; second-order linear with constant coefficients; higher order differential equations; first-order linear systems with constant coefficients; Laplace transforms; power series solutions. (Optional) Proof of Existence and Uniqueness Theorems."
-    le: []
-    requirements:
-      prereqs: ['MATH 215']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  MATH_345:
-    field: 'MATH'
-    number: 345
-    name: 'Introduction to Probability and Mathematical Statistics'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Counting techniques, discrete and continuous random variables, probability distributions, sampling distributions, estimation, hypothesis testing, linear regression, correlation, nonparametric statistics. Students who desire more extensive probability and statistics should take Math 346/Math 546, Math 347/Math 547."
-    le: []
-    requirements:
-      coreqs: ['MATH 215']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  CHEM_115:
-    field: 'CHEM'
-    number: 115
-    name: 'Chemical Principles'
-    lecture_hours: 3
-    lab_hours: 6
-    credits: 6
-    description: "Principles of chemistry, including chemical properties and the periodic table, atomic structure, chemical bonding, equilibria, thermodynamics, acid-base reactions, oxidation-reduction reactions and complexation reactions."
-    le: ['K1', 'K1L']
-    requirements:
-      exclude: ['CHEM 105', 'CHEM 106', 'CHEM 109']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  CHEM_105:
-    field: 'CHEM'
-    number: 105
-    name: 'General Chemistry I Lecture'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Principles of chemistry, including atomic structure, physical and periodic properties, structure and bonding, reactions, thermochemistry, and stoichiometry."
-    le: []
-    requirements:
-      exclude: ['CHEM 115']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  CHEM_106:
-    field: 'CHEM'
-    number: 106
-    name: 'General Chemistry I Laboratory'
-    lecture_hours: 1
-    lab_hours: 2
-    credits: 2
-    description: "A general chemistry lab/discussion experience. Gases, reactions, stoichiometry, solution chemistry, thermochem. Data collection, management, and interpretation."
-    le: ['K1', 'K1L']
-    requirements:
-      coreqs: ['CHEM 105']
-      exclude: ['CHEM 115']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  CHEM_109:
-    field: 'CHEM'
-    number: 109
-    name: 'General Chemistry II with Lab'
-    lecture_hours: 3
-    lab_hours: 3
-    credits: 4
-    description: "Solution properties and intermolecular forces; equilibrium, thermodynamic and kinetic aspects of chemical reactions; acid-base, precipitation, and redox reactions."
-    le: []
-    requirements:
-      prereqs: ['CHEM 104', 'CHEM 105']
-      exclude: ['CHEM 115']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  MSE_120:
-    field: 'MSE'
-    number: 120
-    name: 'Introduction to Engineering'
-    lecture_hours: 1
-    lab_hours: 2
-    credits: 2
-    description: "A comprehensive study of the engineering design process. Discussion of engineering disciplines with comparisons. The laboratory portion of the course includes design projects from various engineering disciplines."
-    le: ['S3']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  MSE_221:
-    field: 'MSE'
-    number: 221
-    name: 'Living in a Materials World'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Processing and structure’s impact on materials properties and performance. Societal benefits of sustainable, biomimetic, or responsible materials selection."
-    le: []
-    requirements:
-      corez: ['MATH 114']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  MSE_315:
-    field: 'MSE'
-    number: 315
-    name: 'Materials Characterization'
-    lecture_hours: 2
-    lab_hours: 4
-    credits: 4
-    description: "A survey of commonly used materials characterization methods (XPS, SEM, AFM, XRD, XRF), including their theory of operation and hands-on experience. Includes a discussion of the measurement process and instrumental analysis of samples."
-    le: ['S3']
-    requirements:
-      prereqs: ['PHYS 231']
-      combo: 
-        min: 1
-        options: ['CHEM 105', 'CHEM 115']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  MSE_350:
-    field: 'MSE'
-    number: 350
-    name: 'Thermodynamics of Materials'
-    lecture_hours: 3
-    lab_hours: 2
-    credits: 4
-    description: "Survey of the laws of thermodynamics and their application in Materials Science including phase equilibria. Mathematical skills relevant to engineering applications are discussed in the lab section."
-    le: []
-    requirements:
-      prereqs: ['MSE 221', 'MATH 215']
-      coreqs: ['PHYS 232']
-      combo: 
-        min: 1
-        options: ['CHEM 109', 'CHEM 115']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  MSE_357:
-    field: 'MSE'
-    number: 357
-    name: 'Phase Transformation & Kinetics'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Phase transformations are explored with emphasis on microstructure development, the impact of diffusion, and nucleation/growth mechanisms."
-    le: []
-    requirements:
-      prereqs: ['MSE 221', 'MATH 215']
-      combo: 
-        min: 1
-        options: ['CHEM 109', 'CHEM 115']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  MSE_372:
-    field: 'MSE'
-    number: 372
-    name: 'Transport Phenomena'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Principles of momentum, heat, and mass transport. Applications of appropriate differential equations and boundary conditions to solve problems in materials processing."
-    le: []
-    requirements:
-      prereqs: ['MATH 312']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  MSE_374:
-    field: 'MSE'
-    number: 374
-    name: 'Electrical, Optical and Magnetic Properties of Materials'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "A description of the behaviors of crystalline solids. Topics include crystallography, diffraction, and the electrical, optical and magnetic properties of materials. Semiconducting materials and devices will also be discussed."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 332']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  MSE_451:
-    field: 'MSE'
-    number: 451
-    name: 'Computational Materials Science'
-    lecture_hours: 2
-    lab_hours: 3
-    credits: 3
-    description: "Theory and application of computational methods to model, understand and predict the behavior of materials. Labs provide hands-on experience in solving real materials problems using computational approaches. Note: can also take after CHEM 434, which is not part of this databse."
-    le: []
-    requirements:
-      combo: 
-        min: 1
-        options: ['PHYS 333', 'MSE 350', 'CHEM 434']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_115:
-    field: 'PHYS'
-    number: 115
-    name: 'Survey of Astronomy'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "A one-semester presentation of our current understanding of the universe, including the solar system, birth and death of stars, unusual phenomena such as black holes and quasars, evolution of galaxies and the universe, and our link with the cosmos."
-    le: ['K1']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  PHYS_186:
-    field: 'PHYS'
-    number: 186
-    name: 'Introductory Seminar'
-    lecture_hours: 0.5
-    lab_hours: 0
-    credits: 0.5
-    description: "Students will explore avenues for obtaining an internship, discuss plans for participating in the required research project, attend the weekly Physics Seminar, develop academic plans, and participate in postgraduate planning."
-    le: []
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_205:
-    field: 'PHYS'
-    number: 205
-    name: 'Physics of Renewable Energy'
-    lecture_hours: 3
-    lab_hours: 2
-    credits: 4
-    description: "Explores the basic physics principles behind various types of renewable energy sources. Discusses impact renewable energy sources have on mitigating global warming and climate change."
-    le: ['K1', 'K1L', 'R3']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_226:
-    field: 'PHYS'
-    number: 226
-    name: 'Astronomy-Solar System'
-    lecture_hours: 3
-    lab_hours: 2
-    credits: 4
-    description: "The physical nature of the solar system, including earth motions, celestial coordinates, time, telescopes, moon, planets, sun, and origin of solar system."
-    le: ['K1', 'K1L', 'I1']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_229:
-    field: 'PHYS'
-    number: 229
-    name: 'Astronomy-Stars and Galaxies'
-    lecture_hours: 3
-    lab_hours: 2
-    credits: 4
-    description: "The physical nature of the universe, including stellar evolution, multiple and variable stars, the Milky Way galaxy, other galaxies, and origin of the universe."
-    le: ['K1', 'K1L']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_231:
-    field: 'PHYS'
-    number: 231
-    name: 'University Physics I'
-    lecture_hours: 4
-    lab_hours: 2
-    credits: 5
-    description: "Physics for science and engineering students, including the study of mechanics, simple harmonic motion, and wave motion."
-    le: ['K1', 'K1L']
-    requirements:
-      coreqs: ['MATH 114']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  PHYS_232:
-    field: 'PHYS'
-    number: 232
-    name: 'University Physics II'
-    lecture_hours: 4
-    lab_hours: 2
-    credits: 5
-    description: "A continuation of Physics 231, including the study of electricity, magnetism, and optics."
-    le: ['K1', 'K1L']
-    requirements:
-      coreqs: ['MATH 215'],
-      prereqs: ['PHYS 231']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  PHYS_240:
-    field: 'PHYS'
-    number: 240
-    name: 'Computational Physics'
-    lecture_hours: 2
-    lab_hours: 2
-    credits: 3
-    description: "An introduction to the use of computational tools for solving physical problems. Topics include an introduction to computing, visualization techniques, numerical integration, and numerical solutions to differential equations."
-    le: []
-    requirements:
-      prereqs: ['PHYS 231']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  PHYS_255:
-    field: 'PHYS'
-    number: 255
-    name: 'Statics'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Designed primarily for pre-engineering students. Includes static equilibrium of rigid bodies, centroids, analysis of structures, friction, and moments of inertia."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 231']
-      coreqs: ['MATH 215']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_308:
-    field: 'PHYS'
-    number: 308
-    name: 'Science of Musical Sound'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Physical concepts related to production of tones and speech. Application to musical instruments and auditorium acoustics, with experimental demonstrations of vibrational phenomena and electronic sound analysis and synthesis. No prior physics or university mathematics assumed."
-    le: ['K1']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_315:
-    field: 'PHYS'
-    number: 315
-    name: 'The Mysterious Universe'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "A view of the world as revealed by contemporary physical thought. Topics include size and origin of universe, ultimate nature of matter; modern ideas of space, time and energy; possibilities of extraterrestrial life; and values and limitations of science."
-    le: ['K1', 'I1']
-    requirements: null
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  PHYS_332:
-    field: 'PHYS'
-    number: 332
-    name: 'University Physics III'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Physics for science and engineering students, including the study of fluids, heat, thermodynamics, relativity, and an introduction to modern physics."
-    le: ['I1']
-    requirements: 
-      prereqs: ['PHYS 232', 'MATH 215']
-    years_offered: 'all'
-    terms_offered: 'all'
-
-  PHYS_333:
-    field: 'PHYS'
-    number: 333
-    name: 'Quantum Physics'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Introduction to the experimental and theoretical basis of quantum physics, including particle aspects of radiation, matter waves, Bohr model of the atom, Schrodinger wave mechanics and its application to the hydrogen atom and multi-electron atoms."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 332', 'MATH 216']
-    years_offered: 'even'
-    terms_offered: 'fall'
-
-  PHYS_340:
-    field: 'PHYS'
-    number: 340
-    name: 'Optics'
-    lecture_hours: 3
-    lab_hours: 3
-    credits: 4
-    description: "Lecture and laboratory work cover geometrical and physical optics, image formation, optical instruments, interference, diffraction, polarization, and modern topics including lasers."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 232', 'MATH 215']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_350:
-    field: 'PHYS'
-    number: 350
-    name: 'Electric and Electronic Circuits'
-    lecture_hours: 3
-    lab_hours: 3
-    credits: 4
-    description: "General introduction to electrical circuits and electronics including analysis of DC and AC circuits, simple passive filters, diodes, transistors, operational amplifiers, simple digital electronics, and circuit design and construction."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 232', 'MATH 215']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_356:
-    field: 'PHYS'
-    number: 356
-    name: 'Dynamics'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "A continuation of Physics 255. Dynamics of rigid bodies, moments of inertia, work, energy, impulse, and momentum."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 255', 'MATH 215']
-      exclude: ['PHYS 356']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_360:
-    field: 'PHYS'
-    number: 360
-    name: 'Electronics'
-    lecture_hours: 3
-    lab_hours: 3
-    credits: 4
-    description: "Description, analysis, and laboratory measurements of digital and analog devices including transistor amplifiers, operational amplifiers, oscillators, gates, flip-flops, analog-digital converters, and microprocessors."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 350', 'MATH 240']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_361:
-    field: 'PHYS'
-    number: 361
-    name: 'LabVIEW Basics'
-    lecture_hours: 2
-    lab_hours: 0
-    credits: 2
-    description: "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control."
-    le: []
-    requirements: 
-      coreqs: ['PHYS 350']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_362:
-    field: 'PHYS'
-    number: 362
-    name: 'LabVIEW Applications'
-    lecture_hours: 2
-    lab_hours: 0
-    credits: 2
-    description: "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 361']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_363:
-    field: 'PHYS'
-    number: 363
-    name: 'LabVIEW cRIO'
-    lecture_hours: 1
-    lab_hours: 0
-    credits: 1
-    description: "Lecture and laboratory exercises cover the theory and application of the cRIO automation controller using the graphical programming language LabVIEW. Topics include Real-Time operating system, field programmable gate array (FPGA) and network shared variables."
-    le: []
-    requirements: 
-      coreqs: ['PHYS 362']
-    years_offered: 'all'
-    terms_offered: 'spring'
-
-  PHYS_365:
-    field: 'PHYS'
-    number: 365
-    name: 'Theoretical Mechanics'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Newton's laws, accelerated frames, central-force orbits, angular momentum of systems, coupled oscillations, generalized coordinates, and Lagrange's equations."
-    le: []
-    requirements: 
-      prereqs: ['MATH 216', 'PHYS 231', 'PHYS 240']
-      exclude: ['PHYS 356']
-    years_offered: 'odd'
-    terms_offered: 'fall'
-
-  PHYS_367:
-    field: 'PHYS'
-    number: 367
-    name: 'Astrophysics'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "Physics applied to astronomical objects. The birth, structure, and evolution of stars are studied in detail. Nebulae, the interstellar medium, and stellar remnants are also investigated."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 240', 'PHYS 332']
-    years_offered: 'odd'
-    terms_offered: 'fall'
-
-  PHYS_375:
-    field: 'PHYS'
-    number: 375
-    name: 'Electromagnetic Fields'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Electric and magnetic fields, dielectric and magnetic properties of materials, and electromagnetic phenomena. Field theory leading to the development of Maxwell's equations and the plane electromagnetic wave."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 240', 'PHYS 332', 'MATH 216', 'MATH 312']
-    years_offered: 'even'
-    terms_offered: 'spring'
-
-  PHYS_430:
-    field: 'PHYS'
-    number: 430
-    name: 'Advanced Laboratory Technique'
-    lecture_hours: 0
-    lab_hours: 4
-    credits: 2
-    description: "Laboratory course for students with special interests in experimental physics. The emphasis is on widely applicable modern experimental methods."
-    le: []
-    requirements: 
-      combo: 
-        min: 1
-        options: ['PHYS 340', 'PHYS 350', 'PHYS 360']
-    years_offered: 'all'
-    terms_offered: 'fall'
-
-  PHYS_445:
-    field: 'PHYS'
-    number: 445
-    name: 'Thermal Physics'
-    lecture_hours: 4
-    lab_hours: 0
-    credits: 4
-    description: "Statistical mechanics and thermodynamics including the laws of classical thermodynamics, equations of state, thermodynamical processes, and applications to classical and quantum mechanical systems."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 332', 'MATH 216'] 
-    years_offered: 'even'
-    terms_offered: 'fall'
-
-  PHYS_465:
-    field: 'PHYS'
-    number: 465
-    name: 'Quantum Mechanics'
-    lecture_hours: 3
-    lab_hours: 0
-    credits: 3
-    description: "A continuation of Physics 333, including Dirac notation, operator methods, one dimensional potentials, spin and angular momentum, and the philosophical interpretation of quantum mechanics."
-    le: []
-    requirements: 
-      prereqs: ['PHYS 333', 'MATH 312'] 
-    years_offered: 'odd'
-    terms_offered: 'spring'
-
-  PHYS_486:
-    field: 'PHYS'
-    number: 486
-    name: 'Senior Seminar'
-    lecture_hours: 0.5
-    lab_hours: 0
-    credits: 0.5
-    description: "Students will present a capstone project seminar, develop presentation skills (oral and poster), take a nationally normed test covering undergraduate physics, discuss their post-graduate plans, and assist the department in assessing the major."
-    le: ['S3']
-    requirements:
-      custom: 'Students need to have completed an adviser-approved capstone project before entering this class. This can be accomplished through various means: PHYS 399, PHYS 430, PHYS 495, PHYS 499, through an academic or industrial internship, or through another approved means.'
-    years_offered: 'all'
-    terms_offered: 'fall'
+deprecated_synonyms = courseDataJson?.deprecated_synonyms || ['discontinued', 'deprecated', 'legacy', 'old']
+course_data = courseDataJson?.course_data
 
 class Course
   constructor: (@course_info) ->
@@ -657,24 +41,32 @@ class Course
     @credits = @course_info.credits
     @description = @course_info.description
     @le = @course_info.le
+    @deprecated = @course_info.deprecated || false
+    @last_offered_year = @course_info.last_offered_year
+    @last_offered_term = @course_info.last_offered_term
+    @first_offered_year = @course_info.first_offered_year
+    @first_offered_term = @course_info.first_offered_term
 
-    # designations are strings, regualar values hold actual courses
-    # actual courses need to be set up later, since there's not guarantee 
+    # designations are strings, reguaar values hold actual courses
+    # actual courses need to be set up later, since there's no guarantee 
     # the courses already exist, nor is there a way to get at them
     # 
     # prereqs: course must be taken BEFORE enrolling
     # coreqs: course must be taken BEFORE or WHILE enrolling
     # prereq_options: some number of these courses must be taken BEFORE enrolling
+    # options: at least one of these courses must be taken BEFORE enrolling
     # exclude: cannot enroll if any of these courses have been completed
     @prereq_designations = []
     @coreq_designations = []
     @combo_option_designations = []
+    @option_designations = []
     @exclude_designations = []
 
     @prereqs = []
     @coreqs = []
     @combo_options = []
     @combo_option_min = 0
+    @options = []
     @exclusions = []
 
     unless @course_info.requirements == null
@@ -687,6 +79,9 @@ class Course
       unless @course_info.requirements.combo == undefined
         @combo_option_designations = @course_info.requirements.combo.options
         @combo_option_min = @course_info.requirements.combo.min
+      
+      unless @course_info.requirements.options == undefined
+        @option_designations = @course_info.requirements.options
 
       unless @course_info.requirements.exclude == undefined
         @exclude_designations = @course_info.requirements.exclude
@@ -700,24 +95,49 @@ class Course
     @all_bg_classes = (@context_classes.map (cls) -> 'bg-' + cls).join(' ')
     @all_btn_classes = (@context_classes.map (cls) -> 'btn-' + cls).join(' ')
 
-    # CSS IDs and Selectors
-    @completed_id = "#{@field}-#{@number}-completed"
-    @enrolling_id = "#{@field}-#{@number}-enrolling"
-    @card_id = "#{@field}#{@number}"
-    @modal_id = "#{@field}-#{@number}"
-
-    @completed_sel = '#' + @completed_id
-    @enrolling_sel = '#' + @enrolling_id
-    @card_sel = '#' + @card_id
-    @header_sel = @card_sel + '>h5.card-header'
-    @modal_sel = '#' + @modal_id
+    # Generate id suffix for distinguishing between similar courses
+    # This makes deprecated/legacy versions have unique identifiers
+    @id_suffix = @compute_id_suffix()
+    
+    # Generate all the IDs and selectors
+    @setup_ids_and_selectors()
 
     # state variables
     @completed = false
     @enrolling = false
     @year_term_taken = false
 
-    # base HTML card
+    # Generate the HTML card
+    @generate_html_card()
+    
+  # Compute a suffix to add to IDs for distinguishing different versions of courses
+  compute_id_suffix: ->
+    id_suffix = ""
+    
+    # Add a suffix for deprecated courses to distinguish them
+    if @deprecated
+      # For regular deprecated courses, just use "_legacy"
+      id_suffix = "_legacy"
+      
+    # You could add more suffix rules here for other special cases
+    
+    return id_suffix
+
+  # Set up all the IDs and selectors used for HTML elements
+  setup_ids_and_selectors: ->
+    @completed_id = "#{@field}-#{@number}#{@id_suffix}-completed"
+    @enrolling_id = "#{@field}-#{@number}#{@id_suffix}-enrolling"
+    @card_id = "#{@field}#{@number}#{@id_suffix}"
+    @modal_id = "#{@field}-#{@number}#{@id_suffix}"
+
+    @completed_sel = '#' + @completed_id
+    @enrolling_sel = '#' + @enrolling_id
+    @card_sel = '#' + @card_id
+    @header_sel = @card_sel + '>h5.card-header'
+    @modal_sel = '#' + @modal_id
+  
+  # Generate the HTML for the course card
+  generate_html_card: ->
     @html_card = "<div class='card' id='#{@card_id}'>\n"
     @html_card += "  <h5 class='card-header'>#{@field} #{@number} <span class='font-italic'>(#{@credits} credits)</span></h5>\n"
     @html_card += "  <div class='card-body'>\n"
@@ -751,6 +171,7 @@ class Course
     @enrolling = not @enrolling
 
   update_modal: (year_term) ->
+    # Update modal content
     $('#course-info-label').html("#{@field} #{@number}: #{@name}")
     $('#course-description').html('')
     $('#course-description').append("<p>#{@description}</p>")
@@ -764,15 +185,40 @@ class Course
     if @combo_option_designations.length > 0
       $('#course-description').append("<p><span class='font-italic'>Must have taken at least #{@combo_option_min} of:</span> #{@combo_option_designations.join(', ')}</p>")
 
+    # Update availability information
     availability = 'Offered '
-    if @terms_offered == 'all'
+    
+    # Check for special cases first (deprecated or future courses)
+    if @deprecated
+      if @last_offered_year && @last_offered_term
+        availability = "<span class='text-danger'>Discontinued. Last offered in the #{@last_offered_term} term of #{@last_offered_year}.</span>"
+      else
+        availability = "<span class='text-danger'>Discontinued. No longer offered.</span>"
+    else if @first_offered_year? && @first_offered_term?
+      # Format varies based on whether it's a new version or just a future course
+      if @name.toLowerCase().includes('new version')
+        availability = "<span class='text-success'>New version. First offered in the #{@first_offered_term} term of #{@first_offered_year}.</span>"
+      else
+        availability = "<span class='text-info'>Coming soon. First offered in the #{@first_offered_term} term of #{@first_offered_year}."
+        
+        # Add additional information about regular offering pattern
+        if @years_offered == 'all'
+          availability += " Will be offered in the #{@terms_offered} term every year thereafter.</span>"
+        else
+          availability += " Will be offered in the #{@terms_offered} term of #{@years_offered} years thereafter.</span>"
+    # Regular offerings (not deprecated or future)
+    else if @terms_offered == 'all'
       availability += 'every term.'
     else if @years_offered == 'all'
       availability += "in the <span class='font-weight-bold'>#{@terms_offered} term</span> every year."
     else
       availability += "in the <span class='font-weight-bold'>#{@terms_offered} term of #{@years_offered} years</span>."
+    
     $('#course-description').append("<p>#{availability}</p>")
-    $('#modal-enrolling').prop('disabled', !@available(year_term) || @completed)
+    
+    # Update button states
+    isAvailable = @available(year_term)
+    $('#modal-enrolling').prop('disabled', !isAvailable || @completed)
 
 
   # update coreqs and prereqs from list of courses. Uses designations to 
@@ -792,10 +238,41 @@ class Course
       for course in courses
         if "#{course.field} #{course.number}" == designation
           @combo_options.push(course)
-    for designation in @exclude_designations
+    for designation in @option_designations
       for course in courses
         if "#{course.field} #{course.number}" == designation
-          @exclusions.push(course)
+          @options.push(course)
+          
+    # For exclusions, we need special handling to ensure all versions are properly excluded
+    for designation in @exclude_designations
+      matched = false
+      
+      # Check if this is a PHYS 332 exclusion
+      if designation == "PHYS 332" || designation == "PHYS 332 legacy" || designation.includes("University Physics III")
+        if @field == "PHYS" && @number == 332
+          # When PHYS 332 is excluding PHYS 332 legacy or vice versa, 
+          # we need to handle the special case
+          if @deprecated 
+            # This is PHYS 332 legacy, so exclude the non-legacy version
+            for course in courses
+              if course.field == "PHYS" && course.number == 332 && !course.deprecated
+                @exclusions.push(course)
+                matched = true
+          else
+            # This is normal PHYS 332, so exclude the legacy version
+            for course in courses
+              if course.field == "PHYS" && course.number == 332 && course.deprecated
+                @exclusions.push(course)
+                matched = true
+      
+      # Fall back to normal exclusion handling if not matched yet
+      if !matched
+        for course in courses
+          basic_match = "#{course.field} #{course.number}" == designation
+          name_match = course.name == designation || course.name.includes(designation)
+          if basic_match || name_match
+            @exclusions.push(course)
+            matched = true
 
   # find courses that have this course as a direct dependence
   downstream: (courses) ->
@@ -808,6 +285,29 @@ class Course
   available: (year_term) ->
     year = year_term.year
     term = year_term.term
+    
+    # Helper function to compare terms (spring comes before fall in the same year)
+    term_value = (y, t) ->
+      value = y * 10
+      value += if t == 'fall' then 5 else 0
+      return value
+    
+    current_term_value = term_value(year, term)
+    
+    # Check if course is available during the given term
+    # If the course is scheduled for the future, it's not available now
+    if @first_offered_year? && @first_offered_term?
+      first_offered_value = term_value(@first_offered_year, @first_offered_term)
+      if current_term_value < first_offered_value
+        return false
+    
+    # If the course is deprecated, check if we've passed its last offering
+    if @deprecated && @last_offered_year? && @last_offered_term?
+      last_offered_value = term_value(@last_offered_year, @last_offered_term)
+      if current_term_value > last_offered_value
+        return false
+    
+    # Check prerequisites, corequisites, etc.
     res = true
     for prereq in @prereqs
       res = res && prereq.completed
@@ -821,25 +321,50 @@ class Course
       if combo_option.completed
         combo_count += 1
     res = res && (combo_count >= @combo_option_min)
+    
+    # handle options - at least one option must be completed
+    if @options.length > 0
+      option_completed = false
+      for option in @options
+        if option.completed
+          option_completed = true
+          break
+      res = res && option_completed
 
     # handle courses that exclude other courses (ex. 356 & 365)  
     for course in @exclusions
-      res = res && !(course.completed || course.enrolling)
+      excluded_state = course.completed || course.enrolling
+      res = res && !excluded_state
 
     # offered this year?
     res = res && ((@years_offered == 'all') || \
       ((@years_offered == 'even') && (year % 2 == 0)) || \
       ((@years_offered == 'odd') && (year % 2 == 1)) )
     # offered this term?
-    res = res && ((@terms_offered == 'all') || @terms_offered == year_term.term)
-    res
+    res = res && ((@terms_offered == 'all') || @terms_offered == term)
     
+    res
+
   clear_formatting: ->
     $(@card_sel).removeClass(@all_border_classes)
     $(@header_sel).removeClass(@all_bg_classes)
     $(@header_sel).removeClass('text-white font-weight-bold')
     $(@modal_sel).removeClass(@all_btn_classes)
+    # Remove shadow effect
+    $(@card_sel).css('box-shadow', '')
+    # Also remove any badges
+    $(@header_sel + " span.badge").remove()
     # $(@modal_sel).addClass('btn-secondary')
+    
+  update_badge: ->
+    # Ensure there are no existing badges first
+    $(@header_sel + " span.badge").remove()
+    
+    # Add the appropriate badge if needed
+    if @deprecated && @last_offered_year? && @last_offered_term?
+      $(@header_sel).append(" <span class='badge badge-danger'>Discontinued</span>")
+    else if @first_offered_year? && @first_offered_term?
+      $(@header_sel).append(" <span class='badge badge-info'>Coming #{@first_offered_term} #{@first_offered_year}</span>")
 
   mark_available: (degree_plan) ->
     @completed = false
@@ -850,6 +375,8 @@ class Course
       if degree_plan.required(this)
         $(@card_sel).addClass('border-thick')
         $(@header_sel).addClass('font-weight-bold')
+        # Add shadow to required and available courses
+        $(@card_sel).css('box-shadow', '0 6px 12px rgba(0,0,0,0.5)')
     $(@card_sel).addClass('border-warning')
     $(@header_sel).addClass('bg-warning text-white')
     $(@completed_sel).prop('disabled', false)
@@ -857,6 +384,9 @@ class Course
     $(@completed_sel).prop('checked', false)
     $(@enrolling_sel).prop('checked', false)
     $(@modal_sel).addClass('btn-warning')
+    
+    # Add visual indicator for future courses
+    @update_badge()
 
   mark_unavailable: (degree_plan) ->
     @completed = false
@@ -872,7 +402,12 @@ class Course
     $(@enrolling_sel).prop('disabled', true)
     $(@completed_sel).prop('checked', false)
     $(@enrolling_sel).prop('checked', false)
+    
+    # Always add btn-secondary regardless of whether course is deprecated or future
     $(@modal_sel).addClass('btn-secondary')
+    
+    # Add visual indicator for deprecated or future courses
+    @update_badge()
 
   mark_completed: (year_term, degree_plan) ->
     @completed = true
@@ -1086,6 +621,30 @@ class DegreePlan
             return false
       return true
 
+  # Check if all required courses are completed
+  all_required_courses_complete: ->
+    # Check all required courses
+    for course in @counted_classes.requirements
+      if !course.completed && !course.enrolling
+        return false
+    
+    # Check all course choices (need at least one complete from each combo)
+    for combo in @counted_classes.choices
+      combo_satisfied = false
+      
+      # A combo is satisfied if at least one sequence is complete
+      for sequence in combo
+        if @sequence_completed(sequence)
+          combo_satisfied = true
+          break
+          
+      # If no sequence in this combo is complete, requirement is not met
+      if !combo_satisfied
+        return false
+      
+    # All requirements are met
+    return true
+    
   # compute how many credits count towards the degree requirement
   credit_count: ->
     credit_count = 0
@@ -1151,7 +710,7 @@ MSE_372  = new Course(course_data.MSE_372)
 MSE_451  = new Course(course_data.MSE_451)
 PHYS_115 = new Course(course_data.PHYS_115)
 PHYS_186 = new Course(course_data.PHYS_186)
-PHYS_205 = new Course(course_data.PHYS_205)
+# PHYS_205 = new Course(course_data.PHYS_205)
 PHYS_226 = new Course(course_data.PHYS_226)
 PHYS_229 = new Course(course_data.PHYS_229)
 PHYS_231 = new Course(course_data.PHYS_231)
@@ -1160,18 +719,21 @@ PHYS_240 = new Course(course_data.PHYS_240)
 PHYS_255 = new Course(course_data.PHYS_255)
 PHYS_308 = new Course(course_data.PHYS_308)
 PHYS_315 = new Course(course_data.PHYS_315)
+PHYS_332_legacy = new Course(course_data.PHYS_332_legacy)
 PHYS_332 = new Course(course_data.PHYS_332)
+
 PHYS_333 = new Course(course_data.PHYS_333)
 PHYS_340 = new Course(course_data.PHYS_340)
 PHYS_350 = new Course(course_data.PHYS_350)
 PHYS_356 = new Course(course_data.PHYS_356)
 PHYS_360 = new Course(course_data.PHYS_360)
-PHYS_361 = new Course(course_data.PHYS_361)
-PHYS_362 = new Course(course_data.PHYS_362)
-PHYS_363 = new Course(course_data.PHYS_363)
+# PHYS_361 = new Course(course_data.PHYS_361)
+# PHYS_362 = new Course(course_data.PHYS_362)
+# PHYS_363 = new Course(course_data.PHYS_363)
 PHYS_365 = new Course(course_data.PHYS_365)
 PHYS_367 = new Course(course_data.PHYS_367)
 PHYS_375 = new Course(course_data.PHYS_375)
+PHYS_415 = new Course(course_data.PHYS_415)
 PHYS_430 = new Course(course_data.PHYS_430)
 PHYS_445 = new Course(course_data.PHYS_445)
 PHYS_465 = new Course(course_data.PHYS_465)
@@ -1189,14 +751,16 @@ PHYS_486 = new Course(course_data.PHYS_486)
 # refreshed *before* PHYS 333 since it's earlier on the list.
 
 # Fall 2022: Removed PHYS 205, 361, 362, and 363
+# Spring 2025: Added (deprecated) PHYS_332_legacy, deprecated PHYS 333 and
+# PHYS 465, updated PHYS 332
 
 courses = [
   MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345,
   CHEM_105, CHEM_106, CHEM_109, CHEM_115,
   PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232,
-  PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_333,
-  PHYS_340, PHYS_350, PHYS_356, PHYS_360,
-  PHYS_365, PHYS_367, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486,
+  PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy,
+  PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_365, PHYS_367, 
+  PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486,
   MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451
 ]
 
@@ -1204,18 +768,22 @@ courses = [
 for course in courses
   course.update_requirements(courses)
 
+
 # Fall 2022: Removed PHYS 205, 361, 362, and 363, which were electives or required
 # courses in each degree plan. PHYS 205 was a "basic elective" for the minor
 # and appeared nowhere else
+# Spring 2025: Added (deprecated) PHYS_332_legacy, deprecated PHYS 333 and
+# PHYS 465, updated PHYS 332. Added PHYS 415.
 
 degree_plan_data = [
   {
     name: 'Liberal Arts'
     credits_needed: 36
     counted:
-      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232', 'PHYS 332', 'PHYS 333',
+      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232',
       'PHYS 350', 'PHYS 365', 'PHYS 486']
-      choices: [[['PHYS 340'], ['PHYS 360']]]
+      choices: [[['PHYS 340'], ['PHYS 360']],
+                [['PHYS 332'], ['PHYS 332 legacy']]]
     uncounted:
       requirements: ['MATH 312', 'PHYS 240']
       choices: []
@@ -1227,7 +795,7 @@ degree_plan_data = [
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_365]
+        courses: [MATH_312, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_365]
       },
       {
         title: 'Advanced Courses'
@@ -1235,7 +803,7 @@ degree_plan_data = [
       },
       {
         title: 'Electives'
-        courses: [PHYS_367, PHYS_375, PHYS_430,
+        courses: [PHYS_367, PHYS_375, PHYS_415, PHYS_430,
         PHYS_445, PHYS_465, MSE_315, MSE_357, MSE_372, MSE_374, MSE_451]
       },
       {
@@ -1249,9 +817,11 @@ degree_plan_data = [
     name: 'Applied'
     credits_needed: 36
     counted:
-      requirements: ['PHYS 231', 'PHYS 232', 'PHYS 332',
+      requirements: ['PHYS 231', 'PHYS 232', 
       'PHYS 340', 'PHYS 350', 'PHYS 360', 'PHYS 430', 'PHYS 486']
-      choices: [[['PHYS 186'], ['MSE 120']], [['PHYS 255', 'PHYS 356'], ['PHYS 365'], ['PHYS 375']]]
+      choices: [[['PHYS 186'], ['MSE 120']],
+                [['PHYS 255', 'PHYS 356'], ['PHYS 365'], ['PHYS 375']],
+                [['PHYS 332 legacy'], ['PHYS 332']]]
     uncounted:
       requirements: ['MATH 312', 'MATH 345', 'PHYS 240']
       choices: [[['CHEM 115'], ['CHEM 105', 'CHEM 106', 'CHEM 109']]]
@@ -1264,8 +834,8 @@ degree_plan_data = [
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, MATH_345, PHYS_255, PHYS_332, PHYS_340,
-        PHYS_350, PHYS_365]
+        courses: [MATH_312, MATH_345, PHYS_255, PHYS_332, PHYS_332_legacy,
+        PHYS_340, PHYS_350, PHYS_365]
       },
       {
         title: 'Advanced Courses'
@@ -1273,7 +843,7 @@ degree_plan_data = [
       },
       {
         title: 'Electives'
-        courses: [PHYS_333, PHYS_367, PHYS_445,
+        courses: [PHYS_333, PHYS_367, PHYS_415, PHYS_445,
           PHYS_465, MSE_315, MSE_357, MSE_372, MSE_374, MSE_451]
       },
       {
@@ -1286,10 +856,11 @@ degree_plan_data = [
     name: 'Astrophysics'
     credits_needed: 36
     counted:
-      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232', 'PHYS 332', 'PHYS 333',
+      requirements: ['PHYS 186', 'PHYS 231', 'PHYS 232', 'PHYS 332',
       'PHYS 340', 'PHYS 365', 'PHYS 367', 'PHYS 430', 'PHYS 486']
       choices: [[['PHYS 226'], ['PHYS 229']],
-                [['PHYS 375'], ['PHYS 445'], ['PHYS 465']]]
+                [['PHYS 375'], ['PHYS 415'], ['PHYS 445'], ['PHYS 465']],
+                [['PHYS 332 legacy'], ['PHYS 332']]]
     uncounted:
       requirements: ['MATH 312', 'PHYS 240']
       choices: []
@@ -1302,11 +873,12 @@ degree_plan_data = [
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, PHYS_332, PHYS_333, PHYS_340, PHYS_367]
+        courses: [MATH_312, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340,
+        PHYS_367]
       },
       {
         title: 'Advanced Courses'
-        courses: [PHYS_365, PHYS_375, PHYS_430, PHYS_445, PHYS_465, PHYS_486]
+        courses: [PHYS_365, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486]
       },
       {
         title: 'Electives (not needed for credit towards major)'
@@ -1320,7 +892,8 @@ degree_plan_data = [
     counted:
       requirements: ['MSE 120', 'PHYS 231', 'PHYS 232', 'PHYS 332',
       'PHYS 340', 'PHYS 350']
-      choices: [[['PHYS 255', 'PHYS 356'], ['PHYS 365']]]
+      choices: [[['PHYS 255', 'PHYS 356'], ['PHYS 365']],
+                [['PHYS 332'], ['PHYS 332 legacy']]]
     uncounted:
       requirements: ['MATH 312', 'PHYS 240']
       choices: []
@@ -1332,7 +905,7 @@ degree_plan_data = [
       },
       {
         title: 'Intermediate Courses'
-        courses: [MATH_312, PHYS_255, PHYS_332, PHYS_340, PHYS_350, PHYS_365]
+        courses: [MATH_312, PHYS_255, PHYS_332, PHYS_332_legacy, PHYS_340, PHYS_350, PHYS_365]
       },
       {
         title: 'Advanced Courses'
@@ -1340,9 +913,9 @@ degree_plan_data = [
       },
       {
         title: 'Electives'
-        courses: [PHYS_333, PHYS_360, PHYS_367,
-        PHYS_375, PHYS_430, PHYS_445, PHYS_465, MSE_374, MSE_357, MSE_372, MSE_451]
-      }
+        courses: [PHYS_333, PHYS_360, PHYS_367, PHYS_375, PHYS_415,
+        PHYS_430, PHYS_445, PHYS_465, MSE_374, MSE_357, MSE_372, MSE_451]
+      },
       {
         title: 'Elective Support (uncounted towards major)'
         courses: [CHEM_105, CHEM_106, CHEM_109, CHEM_115, MSE_221, MSE_350]
@@ -1353,12 +926,12 @@ degree_plan_data = [
     name: 'Minor'
     credits_needed: 24
     counted:
-      requirements: ['PHYS 231', 'PHYS 232', 'PHYS 332']
-      choices: []
+      requirements: ['PHYS 231', 'PHYS 232']
+      choices: [[['PHYS 332'], ['PHYS 332 legacy']]]
     uncounted:
       requirements: ['MATH 215']
       choices: []
-    extra_electives: ['PHYS 115', 'PHYS 186', 'PHYS 205', 'PHYS 226',
+    extra_electives: ['PHYS 115', 'PHYS 186', 'PHYS 226', #, 'PHYS 205'
     'PHYS 229', 'PHYS 240', 'PHYS 308', 'PHYS 315']
     course_groups: [
       {
@@ -1367,7 +940,7 @@ degree_plan_data = [
       },
       {
         title: 'Required Courses'
-        courses: [PHYS_231, PHYS_232, PHYS_332]
+        courses: [PHYS_231, PHYS_232, PHYS_332, PHYS_332_legacy]
       },
       {
         title: 'Basic Electives'
@@ -1377,7 +950,7 @@ degree_plan_data = [
       {
         title: 'Advanced Electives'
         courses: [PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360,
-        PHYS_365, PHYS_367, PHYS_375, PHYS_430,
+        PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430,
         PHYS_445, PHYS_465, PHYS_486]
       }
     ]
@@ -1408,11 +981,77 @@ degree_plan_data = [
 # ]
 
 get_course = (designation) ->
+  # Parse the field and number from the designation
   field = designation.split(' ')[0]
   number = Number(designation.split(' ')[1])
+  is_looking_for_deprecated = false
+  
+  # First check if the designation contains any deprecated terms
+  for term in deprecated_synonyms
+    is_looking_for_deprecated = is_looking_for_deprecated || designation.toLowerCase().includes(term)
+  
+  # Handle special case for PHYS 332
+  if field == 'PHYS' && number == 332 
+    # If specifically asking for legacy/deprecated version
+    if is_looking_for_deprecated
+      return PHYS_332_legacy
+    
+    # If asking for regular version (or unspecified)
+    return PHYS_332
+  
+  # For all other courses, check if we're looking for a deprecated version  
+  # First try to find an exact match with the deprecated status
   for course in courses
-    if course.field == field and course.number == number
+    if course.field == field && course.number == number && course.deprecated == is_looking_for_deprecated
       return course
+      
+  # If no exact match found, just match on field and number
+  for course in courses
+    if course.field == field && course.number == number
+      return course
+  
+  console.error("No course found for: #{designation}")
+
+# Find a course object from an HTML element ID
+# This handles IDs with suffixes like "_legacy"
+get_course_from_element_id = (element_id) ->
+  # Split the ID by dashes
+  parts = element_id.split('-')
+  
+  # Extract the field name and number
+  if parts.length >= 2
+    field = parts[0]
+    number_with_suffix = parts[1]
+    
+    # Check if there's a suffix like "_legacy"
+    has_legacy_suffix = number_with_suffix.includes('_')
+    
+    # For PHYS 332, we need special handling due to multiple versions
+    if field == "PHYS" && number_with_suffix.startsWith("332")
+      if has_legacy_suffix && number_with_suffix.includes("_legacy")
+        # This is the legacy version
+        return PHYS_332_legacy
+      else if number_with_suffix == "332"
+        # This is the new version
+        return PHYS_332
+    
+    # For other courses or if PHYS 332 wasn't matched
+    if has_legacy_suffix
+      # Extract the base number without suffix
+      base_number = number_with_suffix.split('_')[0]
+      # Look up with legacy flag
+      for course in courses
+        if course.field == field && course.number.toString() == base_number && course.deprecated
+          return course
+    
+    # Fall back to standard lookup if all else fails
+    course_name = "#{field} #{number_with_suffix.split('_')[0]}"
+    course = get_course(course_name)
+    return course
+  
+  # If we couldn't parse the ID, log an error and return null
+  console.error("Could not parse element ID: #{element_id}")
+  return null
 
 # set up degree plans
 degree_plans = (degree_plan_data.map (dpd) -> new DegreePlan(dpd))
@@ -1470,7 +1109,7 @@ wizard =
     },
     {
       title: 'Intermediate Courses'
-      courses: [MATH_312, PHYS_255, PHYS_332, PHYS_333, PHYS_340, PHYS_350, PHYS_365]
+      courses: [MATH_312, PHYS_255, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_365]
     },
     {
       title: 'Advanced Courses'
@@ -1509,6 +1148,15 @@ wizard =
       $('#credit-status').removeClass('text-danger').addClass('text-success')
     else
       $('#credit-status').addClass('text-danger').removeClass('text-success')
+      
+    # update required courses status
+    required_complete = wizard.degree_plan.all_required_courses_complete()
+    if required_complete
+      $('#requirement-status').removeClass('text-danger').addClass('text-success')
+      $('#requirement-status').text('Complete')
+    else
+      $('#requirement-status').addClass('text-danger').removeClass('text-success')
+      $('#requirement-status').text('Incomplete')
 
     # update the course plan
     wizard.build_course_plan()
@@ -1531,6 +1179,11 @@ wizard =
           if course.year_term_taken.value() == year_term.value()
             this_year_term_courses.push(course)
       if this_year_term_courses.length > 0
+        # Calculate the total credits for this term
+        term_total_credits = 0
+        for course in this_year_term_courses
+          term_total_credits += course.credits
+          
         table_html += "  <thead class='thead-dark'>\n"
         table_html += "    <tr><th scope='col' colspan=3 class='text-center'>#{year_term}</th></tr>\n"
         table_html += "  </thead>\n"
@@ -1548,6 +1201,12 @@ wizard =
           table_html += "      <td>#{course.name}</td>\n"
           table_html += "      <td>#{course.credits}</td>\n"
           table_html += "    </tr>\n"
+        
+        # Add the credit summary row
+        table_html += "    <tr class='bg-light font-weight-bold'>\n"
+        table_html += "      <td colspan='2' class='text-right'>Term Total:</td>\n"
+        table_html += "      <td>#{term_total_credits}</td>\n"
+        table_html += "    </tr>\n"
         table_html += "  </tbody>\n"
     unless table_html == ""
       table_html = "<table class='table table-hover table-sm'>\n#{table_html}</table>\n"
@@ -1556,37 +1215,56 @@ wizard =
   setup_course_listeners: ->
     # activate switch listeners
     $('input.completed').click( ->
-      this_course = get_course(this.id.split('-')[0..1].join(' '))
+      # Get the ID of the checkbox
+      checkbox_id = this.id
+      
+      # Get the course based on the element ID
+      this_course = get_course_from_element_id(checkbox_id)
+      
       this_course.toggle_completed()
       wizard.refresh(wizard.year_term)
     )
+    
     $('input.enrolling').click( ->
-      get_course(this.id.split('-')[0..1].join(' ')).toggle_enrolling()
+      # Get the ID of the checkbox
+      checkbox_id = this.id
+      
+      # Get the course based on the element ID
+      this_course = get_course_from_element_id(checkbox_id)
+      
+      this_course.toggle_enrolling()
       wizard.refresh(wizard.year_term)
     )
 
     # activate modal description listeners
     $('button.description').click( ->
-      course = get_course(this.id.split('-')[0..1].join(' '))
+      # Store the original button ID to help track which course we're dealing with
+      button_id = this.id
+      
+      # Get the course based on the button's ID
+      course = get_course_from_element_id(button_id)
+      
+      # Update modal content for this course
       course.update_modal(wizard.year_term)
       $('#course-info').modal()
 
+      # Set the current course in a data attribute so we know which one to manipulate
+      $('#course-info').data('current-course', course)
+
       $('#modal-enrolling').click( (event) ->
         event.preventDefault
-        # leverage the fact that the title has the course name in it, with a
-        # colon right after it. Janky, but it works for now!
-        course = get_course($('#course-info-label').text().split(':')[0])
+        # Get the course from the data attribute we set above
+        course = $('#course-info').data('current-course')
         course.enrolling = true
         course.completed = false
-        # for i in [0...5]
         wizard.refresh(wizard.year_term)
         $('#course-info').modal('hide')
       )
+      
       $('#modal-completed').click( (event) ->
         event.preventDefault
-        # leverage the fact that the title has the course name in it, with a
-        # colon right after it. Janky, but it works for now!
-        course = get_course($('#course-info-label').text().split(':')[0])
+        # Get the course from the data attribute we set above
+        course = $('#course-info').data('current-course')
         course.enrolling = false
         course.completed = true
         wizard.refresh(wizard.year_term)
