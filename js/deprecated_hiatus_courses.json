@@ -1,0 +1,60 @@
+course_data = {
+  "PHYS_205": {
+    "field": "PHYS",
+    "number": 205,
+    "name": "Physics of Renewable Energy",
+    "lecture_hours": 3,
+    "lab_hours": 2,
+    "credits": 4,
+    "description": "Explores the basic physics principles behind various types of renewable energy sources. Discusses impact renewable energy sources have on mitigating global warming and climate change.",
+    "le": ["K1", "K1L", "R3"],
+    "requirements": null,
+    "years_offered": "all",
+    "terms_offered": "fall"
+  },  
+  "PHYS_361": {
+    "field": "PHYS",
+    "number": 361,
+    "name": "LabVIEW Basics",
+    "lecture_hours": 2,
+    "lab_hours": 0,
+    "credits": 2,
+    "description": "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control.",
+    "le": [],
+    "requirements": {
+    "coreqs": ["PHYS 350"]
+    },
+    "years_offered": "all",
+    "terms_offered": "fall"
+  },
+  "PHYS_362": {
+    "field": "PHYS",
+    "number": 362,
+    "name": "LabVIEW Applications",
+    "lecture_hours": 2,
+    "lab_hours": 0,
+    "credits": 2,
+    "description": "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring.",
+    "le": [],
+    "requirements": {
+    "prereqs": ["PHYS 361"]
+    },
+    "years_offered": "all",
+    "terms_offered": "spring"
+  },
+  "PHYS_363": {
+    "field": "PHYS",
+    "number": 363,
+    "name": "LabVIEW cRIO",
+    "lecture_hours": 1,
+    "lab_hours": 0,
+    "credits": 1,
+    "description": "Lecture and laboratory exercises cover the theory and application of the cRIO automation controller using the graphical programming language LabVIEW. Topics include Real-Time operating system, field programmable gate array (FPGA) and network shared variables.",
+    "le": [],
+    "requirements": {
+    "coreqs": ["PHYS 362"]
+    },
+    "years_offered": "all",
+    "terms_offered": "spring"
+  },
+}
