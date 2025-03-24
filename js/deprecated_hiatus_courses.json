@@ -1,4 +1,5 @@
-course_data = {
+// contains all courses that are currently on hiatus or have been deprecated
+{
   "PHYS_205": {
     "field": "PHYS",
     "number": 205,

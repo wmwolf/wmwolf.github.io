@@ -182,6 +182,8 @@ class Course
       $('#course-description').append("<p><span class='font-italic'>Corequisites:</span> #{@coreq_designations.join(', ')}</p>")
     if @exclude_designations.length > 0
       $('#course-description').append("<p><span class='font-italic'>No credit if taken with/after:</span> #{@exclude_designations.join(', ')}</p>")
+    if @option_designations.length > 0
+      $('#course-description').append("<p><span class='font-italic'>Must have taken one of:</span> #{@option_designations.join(', ')}</p>")
     if @combo_option_designations.length > 0
       $('#course-description').append("<p><span class='font-italic'>Must have taken at least #{@combo_option_min} of:</span> #{@combo_option_designations.join(', ')}</p>")
 

@@ -436,7 +436,7 @@
       "le": ["I1"],
       "requirements": {
         "prereqs": ["PHYS 232", "MATH 215"],
-        "exclude": ["PHYS 332", "University Physics III"]
+        "exclude": ["PHYS 332"]
       },
       "years_offered": "all",
       "terms_offered": "all",
@@ -455,7 +455,7 @@
       "le": ["I1"],
       "requirements": {
         "prereqs": ["PHYS 232", "MATH 215"],
-        "exclude": ["PHYS 332 legacy", "PHYS 332 (Discontinued)"]
+        "exclude": ["PHYS 332 legacy"]
       },
       "years_offered": "all",
       "terms_offered": "all",
@@ -568,7 +568,10 @@
       "le": [],
       "requirements": {
         "prereqs": ["PHYS 240"],
-        "options": ["PHYS 332 legacy", "PHYS 332"]
+        "combo": {
+          "min": 1,
+          "options": ["PHYS 332 legacy", "PHYS 332"]
+        }
       },
       "years_offered": "odd",
       "terms_offered": "fall"
@@ -584,7 +587,10 @@
       "le": [],
       "requirements": {
         "prereqs": ["PHYS 240", "MATH 216", "MATH 312"],
-        "options": ["PHYS 332 legacy", "PHYS 332"]
+        "combo": {
+          "min": 1,
+          "options": ["PHYS 332 legacy", "PHYS 332"]
+        }
       },
       "years_offered": "even",
       "terms_offered": "spring"
@@ -618,12 +624,15 @@
       "le": [],
       "requirements": {
         "prereqs": ["MATH 312", "MATH 216", "PHYS 240"],
-        "options": ["PHYS 332", "PHYS 332 legacy"]
+        "combo": {
+          "min": 1,
+          "options": ["PHYS 332 legacy", "PHYS 332"]
+        }
       },
       "years_offered": "odd",
       "terms_offered": "spring",
       "first_offered_year": 2027,
-      "first_offered_term": "spring"
+      "last_offered_term": "spring"
     },
     "PHYS_445": {
       "field": "PHYS",
@@ -636,7 +645,10 @@
       "le": [],
       "requirements": {
         "prereqs": ["MATH 216"],
-        "options": ["PHYS 332", "PHYS 332 legacy"]
+        "combo": {
+          "min": 1,
+          "options": ["PHYS 332 legacy", "PHYS 332"]
+        }
       },
       "years_offered": "even",
       "terms_offered": "fall"
