@@ -13,21 +13,6 @@
     "years_offered": "all",
     "terms_offered": "fall"
   },  
-  "PHYS_361": {
-    "field": "PHYS",
-    "number": 361,
-    "name": "LabVIEW Basics",
-    "lecture_hours": 2,
-    "lab_hours": 0,
-    "credits": 2,
-    "description": "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control.",
-    "le": [],
-    "requirements": {
-    "coreqs": ["PHYS 350"]
-    },
-    "years_offered": "all",
-    "terms_offered": "fall"
-  },
   "PHYS_362": {
     "field": "PHYS",
     "number": 362,
