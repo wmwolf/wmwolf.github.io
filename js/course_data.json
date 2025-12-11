@@ -458,9 +458,7 @@
         "exclude": ["PHYS 332 legacy"]
       },
       "years_offered": "all",
-      "terms_offered": "all",
-      "first_offered_year": 2025,
-      "first_offered_term": "fall"
+      "terms_offered": "all"
     },
     "PHYS_333": {
       "field": "PHYS",
@@ -536,7 +534,22 @@
       "description": "Description, analysis, and laboratory measurements of digital and analog devices including transistor amplifiers, operational amplifiers, oscillators, gates, flip-flops, analog-digital converters, and microprocessors.",
       "le": [],
       "requirements": {
-        "prereqs": ["PHYS 350", "MATH 240"]
+        "prereqs": ["PHYS 350", "PHYS 240"]
+      },
+      "years_offered": "all",
+      "terms_offered": "spring"
+    },
+    "PHYS_361": {
+      "field": "PHYS",
+      "number": 361,
+      "name": "LabVIEW Basics",
+      "lecture_hours": 3,
+      "lab_hours": 0,
+      "credits": 2,
+      "description": "Lecture and laboratory work cover an introduction to the graphical programming language LabVIEW. LabVIEW has been widely adopted as the industry standard for computerized data acquisition, analysis and instrument control.",
+      "le": [],
+      "requirements": {
+      "coreqs": ["PHYS 350"]
       },
       "years_offered": "all",
       "terms_offered": "spring"
@@ -630,9 +643,7 @@
         }
       },
       "years_offered": "odd",
-      "terms_offered": "spring",
-      "first_offered_year": 2027,
-      "last_offered_term": "spring"
+      "terms_offered": "spring"
     },
     "PHYS_445": {
       "field": "PHYS",

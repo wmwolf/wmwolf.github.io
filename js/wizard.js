@@ -15,7 +15,7 @@
   // - set last_offered_year and last_offered_term for courses being phased out
 
   // Load course data from JSON file
-  var CHEM_105, CHEM_106, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, courseDataJson, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, deprecated_synonyms, first_term, get_course, get_course_from_element_id, get_degree_plan, j, len, loadCourseData, second_term, today, wizard, year_terms;
+  var CHEM_105, CHEM_106, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, courseDataJson, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, deprecated_synonyms, first_term, get_course, get_course_from_element_id, get_degree_plan, j, len, loadCourseData, second_term, today, wizard, year_terms;
 
   courseDataJson = null;
 
@@ -986,7 +986,7 @@
 
   PHYS_360 = new Course(course_data.PHYS_360);
 
-  // PHYS_361 = new Course(course_data.PHYS_361)
+  PHYS_361 = new Course(course_data.PHYS_361)
   // PHYS_362 = new Course(course_data.PHYS_362)
   // PHYS_363 = new Course(course_data.PHYS_363)
   PHYS_365 = new Course(course_data.PHYS_365);
@@ -1019,7 +1019,8 @@
   // Fall 2022: Removed PHYS 205, 361, 362, and 363
   // Spring 2025: Added (deprecated) PHYS_332_legacy, deprecated PHYS 333 and
   // PHYS 465, updated PHYS 332
-  courses = [MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, CHEM_105, CHEM_106, CHEM_109, CHEM_115, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451];
+  // Fall 2025: Added back PHYS 361, but now at 3 credits
+  courses = [MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, CHEM_105, CHEM_106, CHEM_109, CHEM_115, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451];
 
 // firm up requirements so they work properly
   for (j = 0, len = courses.length; j < len; j++) {
@@ -1086,7 +1087,8 @@
         },
         {
           title: 'Electives',
-          courses: [PHYS_367,
+          courses: [PHYS_361,
+        PHYS_367,
         PHYS_375,
         PHYS_415,
         PHYS_430,
@@ -1181,6 +1183,7 @@
         {
           title: 'Electives',
           courses: [PHYS_333,
+            PHYS_361,
         PHYS_367,
         PHYS_415,
         PHYS_445,
@@ -1205,7 +1208,6 @@
         requirements: ['PHYS 186',
     'PHYS 231',
     'PHYS 232',
-    'PHYS 332',
     'PHYS 340',
     'PHYS 365',
     'PHYS 367',
@@ -1214,7 +1216,8 @@
         choices: [[['PHYS 226'],
     ['PHYS 229']],
     [['PHYS 375'],
-    ['PHYS 415'],
+    ['PHYS 333',
+      'PHYS 415'],
     ['PHYS 445'],
     ['PHYS 465']],
     [['PHYS 332 legacy'],
@@ -1273,7 +1276,6 @@
         requirements: ['MSE 120',
     'PHYS 231',
     'PHYS 232',
-    'PHYS 332',
     'PHYS 340',
     'PHYS 350'],
         choices: [[['PHYS 255',
@@ -1321,6 +1323,7 @@
           title: 'Electives',
           courses: [PHYS_333,
         PHYS_360,
+        PHYS_361,
         PHYS_367,
         PHYS_375,
         PHYS_415,
@@ -1396,6 +1399,7 @@
         PHYS_350,
         PHYS_356,
         PHYS_360,
+        PHYS_361,
         PHYS_365,
         PHYS_367,
         PHYS_375,
