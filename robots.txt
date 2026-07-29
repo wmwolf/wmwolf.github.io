@@ -1,0 +1,2 @@
+User-agent: *
+Disallow: /PHYS-445-Notes/Lecture-Notes-for-Thermal-Physics.pdf
