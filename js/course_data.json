@@ -26,7 +26,7 @@
       "description": "Introduction to fundamentals of robotics engineering: programming, motion, sensors, and controls. Foundations of human-robot systems and the application of robotics to improve quality of life. Lab will include hands-on building and operation of robotic systems.",
       "le": [],
       "requirements": {
-        "coreqs": ["MATH 109"]
+        "coreqs": ["MATH 112"]
       },
       "years_offered": "all",
       "terms_offered": "spring"
@@ -250,7 +250,7 @@
       "description": "Principles of chemistry, including chemical properties and the periodic table, atomic structure, chemical bonding, equilibria, thermodynamics, acid-base reactions, oxidation-reduction reactions and complexation reactions.",
       "le": ["K1", "K1L"],
       "requirements": {
-        "exclude": ["CHEM 105", "CHEM 106", "CHEM 109"]
+        "exclude": ["CHEM 108", "CHEM 109"]
       },
       "years_offered": "all",
       "terms_offered": "fall"
@@ -309,7 +309,7 @@
       "description": "Processing and structure's impact on materials properties and performance. Societal benefits of sustainable, biomimetic, or responsible materials selection.",
       "le": [],
       "requirements": {
-        "corez": ["MATH 114"]
+        "coreqs": ["MATH 114"]
       },
       "years_offered": "all",
       "terms_offered": "spring"
@@ -356,7 +356,7 @@
         "prereqs": ["PHYS 231"],
         "combo": {
           "min": 1,
-          "options": ["CHEM 105", "CHEM 115"]
+          "options": ["CHEM 108", "CHEM 115"]
         }
       },
       "years_offered": "all",
@@ -458,7 +458,7 @@
       "requirements": {
         "combo": {
           "min": 1,
-          "options": ["PHYS 333", "MSE 350", "CHEM 434"]
+          "options": ["PHYS 332", "MSE 350", "CHEM 434"]
         }
       },
       "years_offered": "all",
