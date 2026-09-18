@@ -1394,7 +1394,7 @@
     },
     {
       name: 'ASRE',
-      credits_needed: 92,
+      credits_needed: 91,
       counted: {
         requirements: [
           'AI 250',
