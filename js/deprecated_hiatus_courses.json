@@ -1,6 +1,38 @@
 // contains all courses that are currently on hiatus or have been deprecated
 {
-  "PHYS_205": {
+  "CHEM_105": {
+    "field": "CHEM",
+    "number": 105,
+    "name": "General Chemistry I Lecture",
+    "lecture_hours": 3,
+    "lab_hours": 0,
+    "credits": 3,
+    "description": "Principles of chemistry, including atomic structure, physical and periodic properties, structure and bonding, reactions, thermochemistry, and stoichiometry.",
+    "le": [],
+    "requirements": {
+      "exclude": ["CHEM 115"]
+    },
+    "years_offered": "all",
+    "terms_offered": "all",
+    "deprecated": true
+  },
+  "CHEM_106": {
+    "field": "CHEM",
+    "number": 106,
+    "name": "General Chemistry I Laboratory",
+    "lecture_hours": 1,
+    "lab_hours": 2,
+    "credits": 2,
+    "description": "A general chemistry lab/discussion experience. Gases, reactions, stoichiometry, solution chemistry, thermochem. Data collection, management, and interpretation.",
+    "le": ["K1", "K1L"],
+    "requirements": {
+      "coreqs": ["CHEM 105"],
+      "exclude": ["CHEM 115"]
+    },
+    "years_offered": "all",
+    "terms_offered": "all",
+    "deprecated": true
+  },  "PHYS_205": {
     "field": "PHYS",
     "number": 205,
     "name": "Physics of Renewable Energy",
@@ -12,21 +44,6 @@
     "requirements": null,
     "years_offered": "all",
     "terms_offered": "fall"
-  },  
-  "PHYS_362": {
-    "field": "PHYS",
-    "number": 362,
-    "name": "LabVIEW Applications",
-    "lecture_hours": 2,
-    "lab_hours": 0,
-    "credits": 2,
-    "description": "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring.",
-    "le": [],
-    "requirements": {
-    "prereqs": ["PHYS 361"]
-    },
-    "years_offered": "all",
-    "terms_offered": "spring"
   },
   "PHYS_363": {
     "field": "PHYS",

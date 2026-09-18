@@ -15,7 +15,7 @@
   // - set last_offered_year and last_offered_term for courses being phased out
 
   // Load course data from JSON file
-  var CHEM_105, CHEM_106, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, courseDataJson, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, deprecated_synonyms, first_term, get_course, get_course_from_element_id, get_degree_plan, j, len, loadCourseData, second_term, today, wizard, year_terms;
+  var AI_250, ASRE_150, ASRE_300, ASRE_310, ASRE_400, ASRE_486, ASRE_487, BME_425, CS_140, CS_150, CHEM_108, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_256, MSE_286, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_386, MSE_451, PHIL_120, PHIL_308, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, courseDataJson, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, deprecated_synonyms, first_term, get_course, get_course_from_element_id, get_degree_plan, j, len, loadCourseData, second_term, today, wizard, year_terms;
 
   courseDataJson = null;
 
@@ -57,7 +57,7 @@
       this.first_offered_year = this.course_info.first_offered_year;
       this.first_offered_term = this.course_info.first_offered_term;
       // designations are strings, reguaar values hold actual courses
-      // actual courses need to be set up later, since there's no guarantee 
+      // actual courses need to be set up later, since there's no guarantee
       // the courses already exist, nor is there a way to get at them
 
       // prereqs: course must be taken BEFORE enrolling
@@ -110,7 +110,7 @@
       // Generate id suffix for distinguishing between similar courses
       // This makes deprecated/legacy versions have unique identifiers
       this.id_suffix = this.compute_id_suffix();
-      
+
       // Generate all the IDs and selectors
       this.setup_ids_and_selectors();
       // state variables
@@ -121,18 +121,18 @@
       this.generate_html_card();
     }
 
-    
+
       // Compute a suffix to add to IDs for distinguishing different versions of courses
     compute_id_suffix() {
       var id_suffix;
       id_suffix = "";
-      
+
       // Add a suffix for deprecated courses to distinguish them
       if (this.deprecated) {
         // For regular deprecated courses, just use "_legacy"
         id_suffix = "_legacy";
       }
-      
+
       // You could add more suffix rules here for other special cases
       return id_suffix;
     }
@@ -150,7 +150,7 @@
       return this.modal_sel = '#' + this.modal_id;
     }
 
-    
+
       // Generate the HTML for the course card
     generate_html_card() {
       this.html_card = `<div class='card' id='${this.card_id}'>\n`;
@@ -210,7 +210,7 @@
       }
       // Update availability information
       availability = 'Offered ';
-      
+
       // Check for special cases first (deprecated or future courses)
       if (this.deprecated) {
         if (this.last_offered_year && this.last_offered_term) {
@@ -224,7 +224,7 @@
           availability = `<span class='text-success'>New version. First offered in the ${this.first_offered_term} term of ${this.first_offered_year}.</span>`;
         } else {
           availability = `<span class='text-info'>Coming soon. First offered in the ${this.first_offered_term} term of ${this.first_offered_year}.`;
-          
+
           // Add additional information about regular offering pattern
           if (this.years_offered === 'all') {
             availability += ` Will be offered in the ${this.terms_offered} term every year thereafter.</span>`;
@@ -241,13 +241,13 @@
         availability += `in the <span class='font-weight-bold'>${this.terms_offered} term of ${this.years_offered} years</span>.`;
       }
       $('#course-description').append(`<p>${availability}</p>`);
-      
+
       // Update button states
       isAvailable = this.available(year_term);
       return $('#modal-enrolling').prop('disabled', !isAvailable || this.completed);
     }
 
-    // update coreqs and prereqs from list of courses. Uses designations to 
+    // update coreqs and prereqs from list of courses. Uses designations to
     // query an array of courses, and then makes the actual course objects the
     // prerequisistes, corequisites, etc.
     update_requirements(courses) {
@@ -295,17 +295,17 @@
         }
       }
       ref4 = this.exclude_designations;
-      
+
       // For exclusions, we need special handling to ensure all versions are properly excluded
       results = [];
       for (r = 0, len8 = ref4.length; r < len8; r++) {
         designation = ref4[r];
         matched = false;
-        
+
         // Check if this is a PHYS 332 exclusion
         if (designation === "PHYS 332" || designation === "PHYS 332 legacy" || designation.includes("University Physics III")) {
           if (this.field === "PHYS" && this.number === 332) {
-            // When PHYS 332 is excluding PHYS 332 legacy or vice versa, 
+            // When PHYS 332 is excluding PHYS 332 legacy or vice versa,
             // we need to handle the special case
             if (this.deprecated) {
 
@@ -370,7 +370,7 @@
       var combo_count, combo_option, coreq, course, current_term_value, excluded_state, first_offered_value, j, k, l, last_offered_value, len, len1, len2, len3, len4, m, n, option, option_completed, prereq, ref, ref1, ref2, ref3, ref4, res, term, term_value, year;
       year = year_term.year;
       term = year_term.term;
-      
+
       // Helper function to compare terms (spring comes before fall in the same year)
       term_value = function(y, t) {
         var value;
@@ -379,7 +379,7 @@
         return value;
       };
       current_term_value = term_value(year, term);
-      
+
       // Check if course is available during the given term
       // If the course is scheduled for the future, it's not available now
       if ((this.first_offered_year != null) && (this.first_offered_term != null)) {
@@ -388,7 +388,7 @@
           return false;
         }
       }
-      
+
       // If the course is deprecated, check if we've passed its last offering
       if (this.deprecated && (this.last_offered_year != null) && (this.last_offered_term != null)) {
         last_offered_value = term_value(this.last_offered_year, this.last_offered_term);
@@ -396,7 +396,7 @@
           return false;
         }
       }
-      
+
       // Check prerequisites, corequisites, etc.
       res = true;
       ref = this.prereqs;
@@ -420,7 +420,7 @@
         }
       }
       res = res && (combo_count >= this.combo_option_min);
-      
+
       // handle options - at least one option must be completed
       if (this.options.length > 0) {
         option_completed = false;
@@ -435,7 +435,7 @@
         res = res && option_completed;
       }
       ref4 = this.exclusions;
-      // handle courses that exclude other courses (ex. 356 & 365)  
+      // handle courses that exclude other courses (ex. 356 & 365)
       for (n = 0, len4 = ref4.length; n < len4; n++) {
         course = ref4[n];
         excluded_state = course.completed || course.enrolling;
@@ -463,7 +463,7 @@
     update_badge() {
       // Ensure there are no existing badges first
       $(this.header_sel + " span.badge").remove();
-      
+
       // Add the appropriate badge if needed
       if (this.deprecated && (this.last_offered_year != null) && (this.last_offered_term != null)) {
         return $(this.header_sel).append(" <span class='badge badge-danger'>Discontinued</span>");
@@ -492,7 +492,7 @@
       $(this.completed_sel).prop('checked', false);
       $(this.enrolling_sel).prop('checked', false);
       $(this.modal_sel).addClass('btn-warning');
-      
+
       // Add visual indicator for future courses
       return this.update_badge();
     }
@@ -513,10 +513,10 @@
       $(this.enrolling_sel).prop('disabled', true);
       $(this.completed_sel).prop('checked', false);
       $(this.enrolling_sel).prop('checked', false);
-      
+
       // Always add btn-secondary regardless of whether course is deprecated or future
       $(this.modal_sel).addClass('btn-secondary');
-      
+
       // Add visual indicator for deprecated or future courses
       return this.update_badge();
     }
@@ -604,7 +604,7 @@
         } else {
           return this.mark_unavailable(degree_plan);
         }
-      
+
       // staying in the same year-term (changed status of one course)
       } else if (new_year_term.value() === old_year_term.value()) {
         if (this.completed) {
@@ -822,7 +822,7 @@
         }
       }
       ref1 = this.counted_classes.choices;
-      
+
       // Check all course choices (need at least one complete from each combo)
       for (k = 0, len1 = ref1.length; k < len1; k++) {
         combo = ref1[k];
@@ -840,12 +840,12 @@
           return false;
         }
       }
-      
+
       // All requirements are met
       return true;
     }
 
-    
+
       // compute how many credits count towards the degree requirement
     credit_count() {
       var course, credit_count, j, len;
@@ -913,7 +913,7 @@
 
   };
 
-  
+
   // combine course data with the course class to make useful objects
   MATH_112 = new Course(course_data.MATH_112);
 
@@ -927,17 +927,23 @@
 
   MATH_345 = new Course(course_data.MATH_345);
 
-  CHEM_105 = new Course(course_data.CHEM_105);
-
-  CHEM_106 = new Course(course_data.CHEM_106);
+  CHEM_108 = new Course(course_data.CHEM_108);
 
   CHEM_109 = new Course(course_data.CHEM_109);
 
   CHEM_115 = new Course(course_data.CHEM_115);
 
+  CS_140 = new Course(course_data.CS_140);
+
+  CS_150 = new Course(course_data.CS_150);
+
   MSE_120 = new Course(course_data.MSE_120);
 
   MSE_221 = new Course(course_data.MSE_221);
+
+  MSE_256 = new Course(course_data.MSE_256);
+
+  MSE_286 = new Course(course_data.MSE_286);
 
   MSE_350 = new Course(course_data.MSE_350);
 
@@ -949,7 +955,29 @@
 
   MSE_372 = new Course(course_data.MSE_372);
 
+  MSE_386 = new Course(course_data.MSE_386);
+
   MSE_451 = new Course(course_data.MSE_451);
+
+  AI_250 = new Course(course_data.AI_250);
+
+  BME_425 = new Course(course_data.BME_425);
+
+  PHIL_120 = new Course(course_data.PHIL_120);
+
+  PHIL_308 = new Course(course_data.PHIL_308);
+
+  ASRE_150 = new Course(course_data.ASRE_150);
+
+  ASRE_300 = new Course(course_data.ASRE_300);
+
+  ASRE_310 = new Course(course_data.ASRE_310);
+
+  ASRE_400 = new Course(course_data.ASRE_400);
+
+  ASRE_486 = new Course(course_data.ASRE_486);
+
+  ASRE_487 = new Course(course_data.ASRE_487);
 
   PHYS_115 = new Course(course_data.PHYS_115);
 
@@ -987,7 +1015,8 @@
   PHYS_360 = new Course(course_data.PHYS_360);
 
   PHYS_361 = new Course(course_data.PHYS_361)
-  // PHYS_362 = new Course(course_data.PHYS_362)
+
+  PHYS_362 = new Course(course_data.PHYS_362)
   // PHYS_363 = new Course(course_data.PHYS_363)
   PHYS_365 = new Course(course_data.PHYS_365);
 
@@ -1020,9 +1049,27 @@
   // Spring 2025: Added (deprecated) PHYS_332_legacy, deprecated PHYS 333 and
   // PHYS 465, updated PHYS 332
   // Fall 2025: Added back PHYS 361, but now at 3 credits
-  courses = [MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, CHEM_105, CHEM_106, CHEM_109, CHEM_115, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, MSE_120, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_451];
+  // Fall 2026: Added back PHYS 362, and added a bunch of stuff for ASRE courses.
+  //  Also swapped out CHEM 105/106 for CHEM 108. PHYS 361 back down to 2 credits
+  courses = [PHIL_120, PHIL_308, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, CHEM_108, CHEM_109, CS_140, CS_150, CHEM_115, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, MSE_120, MSE_256, MSE_286, MSE_315, MSE_221, MSE_350, MSE_357, MSE_372, MSE_374, MSE_386, MSE_451, BME_425, AI_250, ASRE_150, ASRE_300, ASRE_310, ASRE_400, ASRE_486, ASRE_487];
 
-// firm up requirements so they work properly
+  // Every name in the array above is var-hoisted, so adding a course to the
+  // list but forgetting its `new Course(course_data.XXX)` line leaves an
+  // `undefined` hole in the array instead of raising a ReferenceError. The hole
+  // stays invisible until update_requirements dereferences it, and the error
+  // then names whichever course happened to be looking up a prerequisite rather
+  // than the course that is actually missing. Fail loudly here instead, naming
+  // the courses that exist in course_data.json but were never instantiated.
+  if (courses.some((course) => course == null)) {
+    const instantiated = courses.filter((course) => course != null).map((course) => `${course.field} ${course.number}`);
+    const uninstantiated = Object.keys(course_data).filter((key) => {
+      return !instantiated.includes(`${course_data[key].field} ${course_data[key].number}`);
+    });
+    const culprits = uninstantiated.length > 0 ? uninstantiated.join(', ') : '(unknown: compare the courses array against the constructors above)';
+    throw new Error(`Advising wizard: the global 'courses' array has ${courses.length - instantiated.length} undefined entries. Missing 'new Course(course_data.X)' line(s) for: ${culprits}`);
+  }
+
+  // firm up requirements so they work properly
   for (j = 0, len = courses.length; j < len; j++) {
     course = courses[j];
     course.update_requirements(courses);
@@ -1088,6 +1135,7 @@
         {
           title: 'Electives',
           courses: [PHYS_361,
+            PHYS_362,
         PHYS_367,
         PHYS_375,
         PHYS_415,
@@ -1102,8 +1150,7 @@
         },
         {
           title: 'Elective Support (uncounted towards major)',
-          courses: [CHEM_105,
-        CHEM_106,
+          courses: [CHEM_108,
         CHEM_109,
         CHEM_115,
         MSE_221,
@@ -1136,8 +1183,7 @@
     'MATH 345',
     'PHYS 240'],
         choices: [[['CHEM 115'],
-    ['CHEM 105',
-    'CHEM 106',
+    ['CHEM 108',
     'CHEM 109']]]
       },
       extra_electives: ['MSE 374',
@@ -1156,8 +1202,7 @@
         PHYS_231,
         PHYS_232,
         PHYS_240,
-        CHEM_105,
-        CHEM_106,
+        CHEM_108,
         CHEM_109,
         CHEM_115]
         },
@@ -1184,6 +1229,7 @@
           title: 'Electives',
           courses: [PHYS_333,
             PHYS_361,
+            PHYS_362,
         PHYS_367,
         PHYS_415,
         PHYS_445,
@@ -1265,7 +1311,7 @@
         {
           title: 'Electives (not needed for credit towards major)',
           courses: [PHYS_350,
-        PHYS_360]
+        PHYS_360, PHYS_361, PHYS_362]
         }
       ]
     },
@@ -1323,7 +1369,8 @@
           title: 'Electives',
           courses: [PHYS_333,
         PHYS_360,
-        PHYS_361,
+            PHYS_361,
+        PHYS_362,
         PHYS_367,
         PHYS_375,
         PHYS_415,
@@ -1337,13 +1384,97 @@
         },
         {
           title: 'Elective Support (uncounted towards major)',
-          courses: [CHEM_105,
-        CHEM_106,
+          courses: [CHEM_108,
         CHEM_109,
         CHEM_115,
         MSE_221,
         MSE_350]
         }
+      ]
+    },
+    {
+      name: 'ASRE',
+      credits_needed: 92,
+      counted: {
+        requirements: [
+          'AI 250',
+          'ASRE 150',
+          'ASRE 300',
+          'ASRE 310',
+          'ASRE 400',
+          'ASRE 486',
+          'ASRE 487',
+          'CHEM 108',
+          'CS 140',
+          'CS 150',
+          'MATH 114',
+          'MATH 215',
+          'MATH 312',
+          'MATH 345',
+          'MSE 120',
+          'MSE 256',
+          'MSE 286',
+          'MSE 386',
+          'PHYS 231',
+          'PHYS 232',
+          'PHYS 240',
+          'PHYS 255',
+          'PHYS 350',
+          'PHYS 356',
+          'PHYS 360'
+        ],
+        choices: [
+          [['PHYS 361', 'PHYS 362'], ['BME 425']],
+          [['PHIL 120'], ['PHIL 308']]
+        ]
+      },
+      course_groups: [
+        {
+          title: 'Introductory and Prerequisite Courses',
+          courses: [
+            MATH_112, MATH_114, MATH_215, MSE_120,
+            ASRE_150, PHYS_231, PHYS_232, PHYS_240,
+            CHEM_108, CHEM_115, CS_140,
+            MSE_256, PHIL_120, PHIL_308
+          ]
+        },
+        {
+          title: 'Intermediate Courses',
+          courses: [
+            CS_150, MATH_312, MATH_345, MSE_286,
+            MSE_386, PHYS_255, PHYS_350, PHYS_361,
+          ]
+        },
+        {
+          title: 'Advanced Courses',
+          courses: [
+            AI_250, ASRE_300, ASRE_310, ASRE_400,
+            ASRE_486, ASRE_487, BME_425, PHYS_356,
+            PHYS_360, PHYS_362
+          ]
+        }
+      ]
+    },
+    {
+      name: 'LabVIEW',
+      credits_needed: 12,
+      counted: {
+        requirements: ['PHYS 350', 'PHYS 360', 'PHYS 361', 'PHYS 362'],
+        choices: []
+      },
+      uncounted: {
+        requirements: [],
+        choices: [],
+      },
+      course_groups: [
+        {
+          title: 'Introductory and Prerequisite Courses',
+          courses: [MATH_112, MATH_114, MATH_215, PHYS_231, PHYS_232, PHYS_240]
+        },
+        {
+          title: 'Certificate Courses',
+          courses: [PHYS_350, PHYS_360, PHYS_361, PHYS_362]
+        },
       ]
     },
     {
@@ -1399,7 +1530,8 @@
         PHYS_350,
         PHYS_356,
         PHYS_360,
-        PHYS_361,
+            PHYS_361,
+        PHYS_362,
         PHYS_365,
         PHYS_367,
         PHYS_375,
@@ -1413,28 +1545,9 @@
     }
   ];
 
-  // obsolete_degree_plans = [
-  //   {
-  //     name: 'LabVIEW'
-  //     credits_needed: 13
-  //     counted:
-  //       requirements: ['PHYS 350', 'PHYS 360', 'PHYS 361', 'PHYS 362', 'PHYS 363']
-  //       choices: []
-  //     uncounted:
-  //       requirements: []
-  //       choices: []
-  //     course_groups: [
-  //       {
-  //         title: 'Introductory and Prerequisite Courses'
-  //         courses: [MATH_112, MATH_114, MATH_215, PHYS_231, PHYS_232, PHYS_240]
-  //       },
-  //       {
-  //         title: 'Certificate Courses'
-  //         courses: [PHYS_350, PHYS_360, PHYS_361, PHYS_362, PHYS_363]
-  //       },
-  //     ]
-  //   }
-  // ]
+  obsolete_degree_plans = [
+
+  ]
   get_course = function(designation) {
     var field, is_looking_for_deprecated, k, l, len1, len2, len3, m, number, term;
     // Parse the field and number from the designation
@@ -1447,20 +1560,20 @@
       term = deprecated_synonyms[k];
       is_looking_for_deprecated = is_looking_for_deprecated || designation.toLowerCase().includes(term);
     }
-    
+
     // Handle special case for PHYS 332
     if (field === 'PHYS' && number === 332) {
-      
+
       // If specifically asking for legacy/deprecated version
       if (is_looking_for_deprecated) {
         return PHYS_332_legacy;
       }
-      
+
       // If asking for regular version (or unspecified)
       return PHYS_332;
     }
 
-    // For all other courses, check if we're looking for a deprecated version  
+    // For all other courses, check if we're looking for a deprecated version
 // First try to find an exact match with the deprecated status
     for (l = 0, len2 = courses.length; l < len2; l++) {
       course = courses[l];
@@ -1485,15 +1598,15 @@
     var base_number, course_name, field, has_legacy_suffix, k, len1, number_with_suffix, parts;
     // Split the ID by dashes
     parts = element_id.split('-');
-    
+
     // Extract the field name and number
     if (parts.length >= 2) {
       field = parts[0];
       number_with_suffix = parts[1];
-      
+
       // Check if there's a suffix like "_legacy"
       has_legacy_suffix = number_with_suffix.includes('_');
-      
+
       // For PHYS 332, we need special handling due to multiple versions
       if (field === "PHYS" && number_with_suffix.startsWith("332")) {
         if (has_legacy_suffix && number_with_suffix.includes("_legacy")) {
@@ -1504,7 +1617,7 @@
           return PHYS_332;
         }
       }
-      
+
       // For other courses or if PHYS 332 wasn't matched
       if (has_legacy_suffix) {
         // Extract the base number without suffix
@@ -1517,13 +1630,13 @@
           }
         }
       }
-      
+
       // Fall back to standard lookup if all else fails
       course_name = `${field} ${number_with_suffix.split('_')[0]}`;
       course = get_course(course_name);
       return course;
     }
-    
+
     // If we couldn't parse the ID, log an error and return null
     console.error(`Could not parse element ID: ${element_id}`);
     return null;
@@ -1604,8 +1717,7 @@
       },
       {
         title: 'Other Courses',
-        courses: [CHEM_105,
-      CHEM_106,
+        courses: [CHEM_108,
       CHEM_109,
       CHEM_115,
       MATH_345]
@@ -1645,7 +1757,7 @@
       } else {
         $('#credit-status').addClass('text-danger').removeClass('text-success');
       }
-      
+
       // update required courses status
       required_complete = wizard.degree_plan.all_required_courses_complete();
       if (required_complete) {
@@ -1711,7 +1823,7 @@
             table_html += `      <td>${course.credits}</td>\n`;
             table_html += "    </tr>\n";
           }
-          
+
           // Add the credit summary row
           table_html += "    <tr class='bg-light font-weight-bold'>\n";
           table_html += "      <td colspan='2' class='text-right'>Term Total:</td>\n";
@@ -1731,7 +1843,7 @@
         var checkbox_id, this_course;
         // Get the ID of the checkbox
         checkbox_id = this.id;
-        
+
         // Get the course based on the element ID
         this_course = get_course_from_element_id(checkbox_id);
         this_course.toggle_completed();
@@ -1741,7 +1853,7 @@
         var checkbox_id, this_course;
         // Get the ID of the checkbox
         checkbox_id = this.id;
-        
+
         // Get the course based on the element ID
         this_course = get_course_from_element_id(checkbox_id);
         this_course.toggle_enrolling();
@@ -1752,10 +1864,10 @@
         var button_id;
         // Store the original button ID to help track which course we're dealing with
         button_id = this.id;
-        
+
         // Get the course based on the button's ID
         course = get_course_from_element_id(button_id);
-        
+
         // Update modal content for this course
         course.update_modal(wizard.year_term);
         $('#course-info').modal();
@@ -1801,7 +1913,7 @@
       $('#year-term-menu>a').click(function(event) {
         var new_term, old_year_term, position;
         event.preventDefault();
-        // update year-term, but hold on to old one so we can refresh, which 
+        // update year-term, but hold on to old one so we can refresh, which
         // requires knowing both the old and new term
         old_year_term = wizard.year_term;
         position = Number($(this).data('position'));
@@ -1824,7 +1936,7 @@
       $('#next-term').click(function(event) {
         var new_term, old_year_term;
         event.preventDefault();
-        // update year-term, but hold on to old one so we can refresh, which 
+        // update year-term, but hold on to old one so we can refresh, which
         // requires knowing both the old and new term
         old_year_term = wizard.year_term;
         wizard.year_term = wizard.year_term.next();
@@ -1834,7 +1946,7 @@
         // move active status to new choice
         $('#year-term-menu>a').removeClass('active');
         $(`#year-term-menu>a:contains('${new_term} ${wizard.year_term.year}')`).addClass('active');
-        
+
         // update button text
         new_term = wizard.year_term.term.replace(/^\w/, (c) => {
           return c.toUpperCase();
@@ -1878,7 +1990,7 @@
 
   $(document).ready(function() {
     wizard.setup();
-    // enable popovers  
+    // enable popovers
     $('[data-toggle="popover"]').popover();
     $('.popover-dismiss').popover({
       trigger: 'focus'

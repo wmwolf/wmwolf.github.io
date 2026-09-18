@@ -1,6 +1,157 @@
 {
   "deprecated_synonyms": ["discontinued", "deprecated", "legacy", "old"],
   "course_data": {
+    "AI_250": {
+      "field": "AI",
+      "number": 250,
+      "name": "Foundations of Artificial Intelligence",
+      "lecture_hours": 4,
+      "lab_hours": 0,
+      "credits": 4,
+      "description": "Introduction to concepts related to the use and creation of AI. Students will gain an understanding of AI concepts and techniques, their ethical implications, explore transparency in AI models, and examine influence of AI on society and workforce.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["MATH 345", "CS 140"]
+      },
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
+    "ASRE_150": {
+      "field": "ASRE",
+      "number": 150,
+      "name": "Introduction to Robotics",
+      "lecture_hours": 3,
+      "lab_hours": 2,
+      "credits": 4,
+      "description": "Introduction to fundamentals of robotics engineering: programming, motion, sensors, and controls. Foundations of human-robot systems and the application of robotics to improve quality of life. Lab will include hands-on building and operation of robotic systems.",
+      "le": [],
+      "requirements": {
+        "coreqs": ["MATH 109"]
+      },
+      "years_offered": "all",
+      "terms_offered": "spring"
+    },
+    "ASRE_300": {
+      "field": "ASRE",
+      "number": 300,
+      "name": "Sensors and Actuators",
+      "lecture_hours": 3,
+      "lab_hours": 2,
+      "credits": 4,
+      "description": "This course introduces the principles, design, and applications of sensors and actuators with a focus on their role in robotic and mechatronic systems. Students will study the physical foundations, operating characteristics, and performance parameters of a wide range of transducers and actuators, from classical devices to modern micro- and nano-scale technologies.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["ASRE 150", "PHYS 350"],
+        "coreqs": ["PHYS 255"]
+      },
+      "years_offered": "all",
+      "terms_offered": "spring"
+    },
+    "ASRE_310": {
+      "field": "ASRE",
+      "number": 310,
+      "name": "Control Theory and Applications",
+      "lecture_hours": 3,
+      "lab_hours": 2,
+      "credits": 4,
+      "description": "This course introduces the fundamental principles and practical applications of control theory, with an emphasis on assistive systems and robotic platforms. Students will explore classical control methods, such as PID and frequency-domain analysis, as well as modern control topics, including state-space modeling, observer design, and digital control.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["ASRE 150", "MATH 312"]
+      },
+      "years_offered": "all",
+      "terms_offered": "fall"
+    },
+    "ASRE_400": {
+      "field": "ASRE",
+      "number": 400,
+      "name": "System Integration in Assistive Robotics",
+      "lecture_hours": 3,
+      "lab_hours": 2,
+      "credits": 4,
+      "description": "This course explores the principles and practices of integrating sensors, actuators, and control systems into complete robotic platforms. Building on the foundations Sensors and Actuators and applying the concepts as taught in Control Theory and Applications, students will learn how to design, assemble, and validate multi-component robotic systems that operate autonomously and interact safely with humans and their environment.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["PHYS 350", "PHYS 255", "MATH 312", "ASRE 300"],
+        "coreqs": ["ASRE 310"]
+      },
+      "years_offered": "all",
+      "terms_offered": "spring"
+    },
+    "ASRE_486": {
+      "field": "ASRE",
+      "number": 486,
+      "name": "ASRE Capstone I",
+      "lecture_hours": 0,
+      "lab_hours": 4,
+      "credits": 2,
+      "description": "First of a two-course capstone sequence. Hands-on, project-based experiences including engineering design, engineering standards and project management.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["MSE 256", "MSE 386", "PHYS 350", "ASRE 300"]
+      },
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
+    "ASRE_487": {
+      "field": "ASRE",
+      "number": 487,
+      "name": "ASRE Capstone II",
+      "lecture_hours": 0,
+      "lab_hours": 4,
+      "credits": 2,
+      "description": "Second of a two-course capstone sequence. Conclusion of student-designed projects accompanied by preparation of multiple technical documents.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["ASRE 486"]
+      },
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
+    "BME_425": {
+      "field": "BME",
+      "number": 425,
+      "name": "Biomechanics",
+      "lecture_hours": 3,
+      "lab_hours": 2,
+      "credits": 4,
+      "description": "Statics and dynamics principles applied to the human body to determine forces provided by muscles and impacts on joints. Topics include statics, dynamics, inverse dynamics, fluid dynamics, materials properties of the body and prosthesis design. Labs include anthropometric measurements, analysis of human movement, and measurements of properties of biological materials.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["PHYS 232", "MATH 312"]
+      },
+      "years_offered": "even",
+      "terms_offered": "spring"
+    },
+    "CS_140": {
+      "field": "CS",
+      "number": 140,
+      "name": "Introduction to Computer Science",
+      "lecture_hours": 4,
+      "lab_hours": 0,
+      "credits": 4,
+      "description": "A comprehensive introduction to the fundamental concepts and principles of computer science. Students will explore key topics such as programming languages, algorithm design, simple data structures, and the software development lifecycle.",
+      "le": [],
+      "requirements": {"coreqs": ["MATH 112"]},
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
+    "CS_150": {
+      "field": "CS",
+      "number": 150,
+      "name": "Object-Oriented Programming",
+      "lecture_hours": 4,
+      "lab_hours": 0,
+      "credits": 4,
+      "description": "Students will explore fundamental object-oriented programming (OOP) principles, including abstraction, encapsulation, inheritance, aggregation/composition, and polymorphism. Through hands-on programming projects and collaborative exercises, students will enhance their skills in creating efficient, scalable, and maintainable software.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["CS 140"],
+        "coreqs": ["MATH 112"]
+      },
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
     "MATH_112": {
       "field": "MATH",
       "number": 112,
@@ -104,32 +255,16 @@
       "years_offered": "all",
       "terms_offered": "fall"
     },
-    "CHEM_105": {
+    "CHEM_108": {
       "field": "CHEM",
-      "number": 105,
-      "name": "General Chemistry I Lecture",
+      "number": 108,
+      "name": "General Chemistry I with Lab (FKA CHEM 105/106)",
       "lecture_hours": 3,
-      "lab_hours": 0,
-      "credits": 3,
-      "description": "Principles of chemistry, including atomic structure, physical and periodic properties, structure and bonding, reactions, thermochemistry, and stoichiometry.",
+      "lab_hours": 3,
+      "credits": 4,
+      "description": "",
       "le": [],
       "requirements": {
-        "exclude": ["CHEM 115"]
-      },
-      "years_offered": "all",
-      "terms_offered": "all"
-    },
-    "CHEM_106": {
-      "field": "CHEM",
-      "number": 106,
-      "name": "General Chemistry I Laboratory",
-      "lecture_hours": 1,
-      "lab_hours": 2,
-      "credits": 2,
-      "description": "A general chemistry lab/discussion experience. Gases, reactions, stoichiometry, solution chemistry, thermochem. Data collection, management, and interpretation.",
-      "le": ["K1", "K1L"],
-      "requirements": {
-        "coreqs": ["CHEM 105"],
         "exclude": ["CHEM 115"]
       },
       "years_offered": "all",
@@ -145,7 +280,7 @@
       "description": "Solution properties and intermolecular forces; equilibrium, thermodynamic and kinetic aspects of chemical reactions; acid-base, precipitation, and redox reactions.",
       "le": [],
       "requirements": {
-        "prereqs": ["CHEM 104", "CHEM 105"],
+        "prereqs": ["CHEM 108"],
         "exclude": ["CHEM 115"]
       },
       "years_offered": "all",
@@ -178,6 +313,35 @@
       },
       "years_offered": "all",
       "terms_offered": "spring"
+    },
+    "MSE_256": {
+      "field": "MSE",
+      "number": 256,
+      "name": "Introduction to Computer Aided Design",
+      "lecture_hours": 0,
+      "lab_hours": 3,
+      "credits": 1,
+      "description": "The course provides an introduction to 3-dimensional computer aided design and modeling.",
+      "le": [],
+      "requirements": {
+        "coreqs": ["MATH 112"]
+      },
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
+    "MSE_286": {
+      "field": "MSE",
+      "number": 286,
+      "name": "Engineering Sophomore Seminar",
+      "lecture_hours": 1,
+      "lab_hours": 0,
+      "credits": 1,
+      "description": "Career preparation for materials science, materials science and engineering, and biomedical engineering majors. Will include seminars with external speakers and class discussions of relevant issues.",
+      "le": [],
+      "requirements": {
+      },
+      "years_offered": "all",
+      "terms_offered": "fall"
     },
     "MSE_315": {
       "field": "MSE",
@@ -267,6 +431,21 @@
       "years_offered": "all",
       "terms_offered": "fall"
     },
+    "MSE_386": {
+      "field": "MSE",
+      "number": 386,
+      "name": "Engineering Junior Seminar",
+      "lecture_hours": 1,
+      "lab_hours": 0,
+      "credits": 1,
+      "description": "Career preparation for materials science and engineering and biomedical engineering majors, including ethics and other discussions relevant to the major. Will include seminars with external speakers and class discussions of topical issues.",
+      "le": [],
+      "requirements": {
+        "prereqs": ["MSE 286"]
+      },
+      "years_offered": "all",
+      "terms_offered": "fall"
+    },
     "MSE_451": {
       "field": "MSE",
       "number": 451,
@@ -282,6 +461,32 @@
           "options": ["PHYS 333", "MSE 350", "CHEM 434"]
         }
       },
+      "years_offered": "all",
+      "terms_offered": "spring"
+    },
+    "PHIL_120": {
+      "field": "PHIL",
+      "number": 120,
+      "name": "Ethical Reasoning",
+      "lecture_hours": 3,
+      "lab_hours": 0,
+      "credits": 3,
+      "description": "Prepares students to reason coherently, critically, and creatively about ethical issues by analyzing arguments and positions on contemporary moral problems in light of relevant concepts, distinctions, values, and theories.",
+      "le": [],
+      "requirements": null,
+      "years_offered": "all",
+      "terms_offered": "all"
+    },
+    "PHIL_308": {
+      "field": "PHIL",
+      "number": 308,
+      "name": "Ethics in Computing and Engineering",
+      "lecture_hours": 3,
+      "lab_hours": 0,
+      "credits": 3,
+      "description": "A topical introduction to ethical issues raised by computer technology and engineering, with special attention to the professional ethics of software engineering and computer organization and design. Combines theoretical frameworks with case studies to develop competence in informed ethical decision-making.",
+      "le": [],
+      "requirements": null,
       "years_offered": "all",
       "terms_offered": "spring"
     },
@@ -550,6 +755,21 @@
       "le": [],
       "requirements": {
       "coreqs": ["PHYS 350"]
+      },
+      "years_offered": "all",
+      "terms_offered": "fall"
+    },
+    "PHYS_362": {
+      "field": "PHYS",
+      "number": 362,
+      "name": "LabVIEW Applications",
+      "lecture_hours": 3,
+      "lab_hours": 0,
+      "credits": 2,
+      "description": "Lecture and laboratory exercises cover applications using the graphical programming language LabVIEW. Topics include advanced programming structures, CompactDAQ hardware, digital signal processing, motor control, encoders, PID process control, RS-232 instrument control, component testing, sensor monitoring.",
+      "le": [],
+      "requirements": {
+      "prereqs": ["PHYS 361"]
       },
       "years_offered": "all",
       "terms_offered": "spring"
