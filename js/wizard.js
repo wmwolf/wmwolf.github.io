@@ -15,9 +15,42 @@
   // - set last_offered_year and last_offered_term for courses being phased out
 
   // Load course data from JSON file
-  var AI_250, ASRE_150, ASRE_300, ASRE_310, ASRE_400, ASRE_486, ASRE_487, BME_425, CS_140, CS_150, CHEM_108, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_256, MSE_286, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_386, MSE_451, PHIL_120, PHIL_308, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, courseDataJson, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, deprecated_synonyms, first_term, get_course, get_course_from_element_id, get_degree_plan, j, len, loadCourseData, second_term, today, wizard, year_terms;
+  var format_term, list_courses, spell, NUMBER_WORDS, AI_250, ASRE_150, ASRE_300, ASRE_310, ASRE_400, ASRE_486, ASRE_487, BME_425, CS_140, CS_150, CHEM_108, CHEM_109, CHEM_115, Course, DegreePlan, MATH_112, MATH_114, MATH_215, MATH_216, MATH_312, MATH_345, MSE_120, MSE_221, MSE_256, MSE_286, MSE_315, MSE_350, MSE_357, MSE_372, MSE_374, MSE_386, MSE_451, PHIL_120, PHIL_308, PHYS_115, PHYS_186, PHYS_226, PHYS_229, PHYS_231, PHYS_232, PHYS_240, PHYS_255, PHYS_308, PHYS_315, PHYS_332, PHYS_332_legacy, PHYS_333, PHYS_340, PHYS_350, PHYS_356, PHYS_360, PHYS_361, PHYS_362, PHYS_365, PHYS_367, PHYS_375, PHYS_415, PHYS_430, PHYS_445, PHYS_465, PHYS_486, YearTerm, course, courseDataJson, course_data, courses, current_month, current_year, degree_plan_data, degree_plans, deprecated_synonyms, first_term, get_course, get_course_from_element_id, get_degree_plan, j, len, loadCourseData, second_term, today, STATE_VERSION, STORAGE_KEY, FIELD_CODES, TERM_CODES, b64url_encode, b64url_decode, NOTES_KEY, read_notes, write_notes, render_markdown, current_state, describe_save_time, find_course_for_state, clear_all_courses, apply_state, encode_state, decode_state, read_stored_state, write_stored_state, clear_stored_state, same_state, wizard, year_terms;
 
   courseDataJson = null;
+
+  // "Fall 2027" from the pieces the course data stores separately.
+  format_term = function(year, term) {
+    return term.replace(/^\w/, function(c) {
+      return c.toUpperCase();
+    }) + ' ' + year;
+  };
+
+  // Small numbers read better as words in a sentence.
+  NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six'];
+
+  spell = function(n) {
+    return NUMBER_WORDS[n] != null ? NUMBER_WORDS[n] : String(n);
+  };
+
+  // "PHYS 231", "PHYS 231 and MATH 114", "A, B, and C". Deduplicated, because
+  // a course and its retired version share a designation and "PHYS 332 and
+  // PHYS 332" helps nobody.
+  list_courses = function(names) {
+    names = names.filter(function(name, i) {
+      return names.indexOf(name) === i;
+    });
+    if (names.length === 0) {
+      return '';
+    }
+    if (names.length === 1) {
+      return names[0];
+    }
+    if (names.length === 2) {
+      return names[0] + ' and ' + names[1];
+    }
+    return names.slice(0, -1).join(', ') + ', and ' + names[names.length - 1];
+  };
 
   loadCourseData = function() {
     return $.ajax({
@@ -96,17 +129,10 @@
       }
       this.years_offered = this.course_info.years_offered;
       this.terms_offered = this.course_info.terms_offered;
-      // HTML helpers
-      this.context_classes = ['default', 'primary', 'secondary', 'success', 'warning', 'danger', 'thick'];
-      this.all_border_classes = (this.context_classes.map(function(cls) {
-        return 'border-' + cls;
-      })).join(' ');
-      this.all_bg_classes = (this.context_classes.map(function(cls) {
-        return 'bg-' + cls;
-      })).join(' ');
-      this.all_btn_classes = (this.context_classes.map(function(cls) {
-        return 'btn-' + cls;
-      })).join(' ');
+      // HTML helpers. State and requirement are two independent visual
+      // channels on the card; wizard.css turns these classes into colour,
+      // an icon, and a filled-vs-outlined header.
+      this.all_state_classes = 'wz-available wz-enrolling wz-completed wz-unavailable wz-required wz-forced';
       // Generate id suffix for distinguishing between similar courses
       // This makes deprecated/legacy versions have unique identifiers
       this.id_suffix = this.compute_id_suffix();
@@ -117,6 +143,9 @@
       this.completed = false;
       this.enrolling = false;
       this.year_term_taken = false;
+      // Added by hand despite not being open in its term: a substitution, an
+      // independent study, or a seat the catalog does not show.
+      this.forced = false;
       // Generate the HTML card
       this.generate_html_card();
     }
@@ -153,25 +182,24 @@
 
       // Generate the HTML for the course card
     generate_html_card() {
-      this.html_card = `<div class='card' id='${this.card_id}'>\n`;
-      this.html_card += `  <h5 class='card-header'>${this.field} ${this.number} <span class='font-italic'>(${this.credits} credits)</span></h5>\n`;
+      this.html_card = `<div class='card wz-card' id='${this.card_id}'>\n`;
+      this.html_card += "  <h5 class='card-header'>\n";
+      this.html_card += `    <span class='wz-card__icon' data-course='${this.modal_id}'></span>\n`;
+      this.html_card += `    <span class='wz-card__desig'>${this.field} ${this.number}</span>\n`;
+      this.html_card += `    <span class='wz-card__credits'>${this.credits} cr</span>\n`;
+      this.html_card += "  </h5>\n";
       this.html_card += "  <div class='card-body'>\n";
-      this.html_card += `    <h5 class='card-title'>${this.name}</h5>\n`;
-      // @html_card += "    <p class='card-text'>#{@description}</p>\n"
-      this.html_card += "    <div class='row'>\n";
-      this.html_card += "      <div class='col-5'>\n";
-      this.html_card += `        <button type='button' class='btn btn-sm description' id='${this.modal_id}'>Details</button>\n`;
-      this.html_card += "     </div>\n";
-      this.html_card += "      <div class='col-7 px-1'>\n";
-      this.html_card += "        <div class='custom-control custom-switch'>\n";
-      this.html_card += `          <input type='checkbox' class='custom-control-input completed' id='${this.completed_id}'>\n`;
-      this.html_card += `          <label for='${this.completed_id}' class='custom-control-label'>Completed</label>\n`;
-      this.html_card += "        </div>\n";
-      this.html_card += "        <div class='custom-control custom-switch'>\n";
-      this.html_card += `          <input type='checkbox' class='custom-control-input enrolling' id='${this.enrolling_id}'>\n`;
-      this.html_card += `          <label for='${this.enrolling_id}' class='custom-control-label'>Enrolling</label>\n`;
-      this.html_card += "        </div>\n";
+      this.html_card += `    <h5 class='card-title wz-card__name'>${this.name}</h5>\n`;
+      this.html_card += "    <div class='wz-card__actions'>\n";
+      this.html_card += "      <div class='custom-control custom-switch wz-switch wz-switch--done'>\n";
+      this.html_card += `        <input type='checkbox' class='custom-control-input completed' id='${this.completed_id}'>\n`;
+      this.html_card += `        <label for='${this.completed_id}' class='custom-control-label'>Completed</label>\n`;
       this.html_card += "      </div>\n";
+      this.html_card += "      <div class='custom-control custom-switch wz-switch wz-switch--enrol'>\n";
+      this.html_card += `        <input type='checkbox' class='custom-control-input enrolling' id='${this.enrolling_id}'>\n`;
+      this.html_card += `        <label for='${this.enrolling_id}' class='custom-control-label'>Enrolling</label>\n`;
+      this.html_card += "      </div>\n";
+      this.html_card += `      <button type='button' class='btn btn-sm wz-details description' id='${this.modal_id}'>Details</button>\n`;
       this.html_card += "    </div>\n";
       this.html_card += "  </div>\n";
       return this.html_card += "</div>";
@@ -190,7 +218,7 @@
     }
 
     update_modal(year_term) {
-      var availability, isAvailable;
+      var availability, isAvailable, reasons;
       // Update modal content
       $('#course-info-label').html(`${this.field} ${this.number}: ${this.name}`);
       $('#course-description').html('');
@@ -241,6 +269,15 @@
         availability += `in the <span class='font-weight-bold'>${this.terms_offered} term of ${this.years_offered} years</span>.`;
       }
       $('#course-description').append(`<p>${availability}</p>`);
+      reasons = this.blocking_reasons(year_term);
+      if (reasons.length > 0) {
+        $('#course-description').append(`<p class='mb-1'><span class='font-italic'>Not open in ${year_term}:</span></p>`);
+        $('#course-description').append(`<ul class='wz-reasons'>${reasons.map(function(r) {
+          return '<li>' + r + '</li>';
+        }).join('')}</ul>`);
+      }
+      // Enrolling from here is the same decision as forcing it from the card.
+      $('#modal-enrolling').text(reasons.length > 0 ? 'Add it anyway' : 'Enrolling');
 
       // Update button states
       isAvailable = this.available(year_term);
@@ -366,10 +403,14 @@
       return res;
     }
 
-    available(year_term) {
-      var combo_count, combo_option, coreq, course, current_term_value, excluded_state, first_offered_value, j, k, l, last_offered_value, len, len1, len2, len3, len4, m, n, option, option_completed, prereq, ref, ref1, ref2, ref3, ref4, res, term, term_value, year;
+    // Why this course cannot be taken in the given term, in the student's
+    // words. available() is just "nothing is in the way", so the two can
+    // never disagree about whether a course is open.
+    blocking_reasons(year_term) {
+      var combo_count, combo_names, combo_option, coreq, course, current_term_value, first_offered_value, j, k, l, last_offered_value, len, len1, len2, len3, len4, m, missing_coreqs, missing_options, missing_prereqs, n, option, prereq, reasons, ref, ref1, ref2, ref3, ref4, taken_with, term, term_value, year;
       year = year_term.year;
       term = year_term.term;
+      reasons = [];
 
       // Helper function to compare terms (spring comes before fall in the same year)
       term_value = function(y, t) {
@@ -380,37 +421,45 @@
       };
       current_term_value = term_value(year, term);
 
-      // Check if course is available during the given term
-      // If the course is scheduled for the future, it's not available now
+      // Not in the catalog yet, or gone from it
       if ((this.first_offered_year != null) && (this.first_offered_term != null)) {
         first_offered_value = term_value(this.first_offered_year, this.first_offered_term);
         if (current_term_value < first_offered_value) {
-          return false;
+          reasons.push(`Not offered until ${format_term(this.first_offered_year, this.first_offered_term)}.`);
         }
       }
-
-      // If the course is deprecated, check if we've passed its last offering
       if (this.deprecated && (this.last_offered_year != null) && (this.last_offered_term != null)) {
         last_offered_value = term_value(this.last_offered_year, this.last_offered_term);
         if (current_term_value > last_offered_value) {
-          return false;
+          reasons.push(`Last offered ${format_term(this.last_offered_year, this.last_offered_term)}.`);
         }
       }
 
-      // Check prerequisites, corequisites, etc.
-      res = true;
+      // Prerequisites have to be finished; corequisites may run alongside
+      missing_prereqs = [];
       ref = this.prereqs;
       for (j = 0, len = ref.length; j < len; j++) {
         prereq = ref[j];
-        res = res && prereq.completed;
+        if (!prereq.completed) {
+          missing_prereqs.push(prereq.toString());
+        }
       }
+      if (missing_prereqs.length > 0) {
+        reasons.push(`${list_courses(missing_prereqs)} ${missing_prereqs.length === 1 ? 'has' : 'have'} to be completed first.`);
+      }
+      missing_coreqs = [];
       ref1 = this.coreqs;
       for (k = 0, len1 = ref1.length; k < len1; k++) {
         coreq = ref1[k];
-        res = res && (coreq.completed || coreq.enrolling);
+        if (!(coreq.completed || coreq.enrolling)) {
+          missing_coreqs.push(coreq.toString());
+        }
       }
-      // handle course with a minimum number of prerequisites from a collection
-      // of courses
+      if (missing_coreqs.length > 0) {
+        reasons.push(`${list_courses(missing_coreqs)} ${missing_coreqs.length === 1 ? 'has' : 'have'} to come first or run alongside.`);
+      }
+
+      // "any two of these three" style requirements
       combo_count = 0;
       ref2 = this.combo_options;
       for (l = 0, len2 = ref2.length; l < len2; l++) {
@@ -419,44 +468,81 @@
           combo_count += 1;
         }
       }
-      res = res && (combo_count >= this.combo_option_min);
+      if (combo_count < this.combo_option_min) {
+        combo_names = this.combo_options.map(function(c) {
+          return c.toString();
+        });
+        combo_names = combo_names.filter(function(name, i) {
+          return combo_names.indexOf(name) === i;
+        });
+        if (combo_names.length <= this.combo_option_min) {
+          // No actual choice left once duplicates collapse: every one is needed.
+          reasons.push(`${list_courses(combo_names)} ${combo_names.length === 1 ? 'has' : 'have'} to be completed first.`);
+        } else {
+          reasons.push(`Needs any ${spell(this.combo_option_min)} of ${list_courses(combo_names)}. ${combo_count === 0 ? 'None' : spell(combo_count).replace(/^\w/, function(c) {
+            return c.toUpperCase();
+          })} so far.`);
+        }
+      }
 
-      // handle options - at least one option must be completed
+      // at least one of a set has to be done
       if (this.options.length > 0) {
-        option_completed = false;
+        missing_options = true;
         ref3 = this.options;
         for (m = 0, len3 = ref3.length; m < len3; m++) {
           option = ref3[m];
           if (option.completed) {
-            option_completed = true;
+            missing_options = false;
             break;
           }
         }
-        res = res && option_completed;
+        if (missing_options) {
+          reasons.push(`Needs one of ${list_courses(this.options.map(function(c) {
+            return c.toString();
+          }))} first.`);
+        }
       }
+
+      // courses that cannot be counted alongside this one
+      taken_with = [];
       ref4 = this.exclusions;
-      // handle courses that exclude other courses (ex. 356 & 365)
       for (n = 0, len4 = ref4.length; n < len4; n++) {
         course = ref4[n];
-        excluded_state = course.completed || course.enrolling;
-        res = res && !excluded_state;
+        if (course.completed || course.enrolling) {
+          taken_with.push(course.toString());
+        }
       }
-      // offered this year?
-      res = res && ((this.years_offered === 'all') || ((this.years_offered === 'even') && (year % 2 === 0)) || ((this.years_offered === 'odd') && (year % 2 === 1)));
-      // offered this term?
-      res = res && ((this.terms_offered === 'all') || this.terms_offered === term);
-      return res;
+      if (taken_with.length > 0) {
+        reasons.push(`Cannot be counted along with ${list_courses(taken_with)}.`);
+      }
+
+      // when the department actually runs it
+      if (!((this.years_offered === 'all') || ((this.years_offered === 'even') && (year % 2 === 0)) || ((this.years_offered === 'odd') && (year % 2 === 1)))) {
+        reasons.push(`Offered in ${this.years_offered} years only, and ${year} is ${year % 2 === 0 ? 'even' : 'odd'}.`);
+      }
+      if (!((this.terms_offered === 'all') || this.terms_offered === term)) {
+        reasons.push(`Offered in the ${this.terms_offered} only.`);
+      }
+      return reasons;
+    }
+
+    available(year_term) {
+      return this.blocking_reasons(year_term).length === 0;
     }
 
     clear_formatting() {
-      $(this.card_sel).removeClass(this.all_border_classes);
-      $(this.header_sel).removeClass(this.all_bg_classes);
-      $(this.header_sel).removeClass('text-white font-weight-bold');
-      $(this.modal_sel).removeClass(this.all_btn_classes);
-      // Remove shadow effect
-      $(this.card_sel).css('box-shadow', '');
+      $(this.card_sel).removeClass(this.all_state_classes);
+      $(this.card_sel + ' .wz-card__icon').removeAttr('tabindex').removeAttr('aria-label');
       // Also remove any badges
       return $(this.header_sel + " span.badge").remove();
+    }
+
+    // Mark the card as required by the selected plan. Required courses get a
+    // filled header; electives keep a white header with a coloured top rule.
+    apply_requirement(degree_plan) {
+      if (degree_plan && degree_plan.is_needed(this)) {
+        return $(this.card_sel).addClass('wz-required');
+      }
     }
 
     // $(@modal_sel).addClass('btn-secondary')
@@ -476,22 +562,14 @@
       this.completed = false;
       this.year_term_taken = false;
       this.enrolling = false;
+      this.forced = false;
       this.clear_formatting();
-      if (degree_plan) {
-        if (degree_plan.required(this)) {
-          $(this.card_sel).addClass('border-thick');
-          $(this.header_sel).addClass('font-weight-bold');
-          // Add shadow to required and available courses
-          $(this.card_sel).css('box-shadow', '0 6px 12px rgba(0,0,0,0.5)');
-        }
-      }
-      $(this.card_sel).addClass('border-warning');
-      $(this.header_sel).addClass('bg-warning text-white');
+      this.apply_requirement(degree_plan);
+      $(this.card_sel).addClass('wz-available');
       $(this.completed_sel).prop('disabled', false);
       $(this.enrolling_sel).prop('disabled', false);
       $(this.completed_sel).prop('checked', false);
       $(this.enrolling_sel).prop('checked', false);
-      $(this.modal_sel).addClass('btn-warning');
 
       // Add visual indicator for future courses
       return this.update_badge();
@@ -501,21 +579,18 @@
       this.completed = false;
       this.year_term_taken = false;
       this.enrolling = false;
+      this.forced = false;
       this.clear_formatting();
-      if (degree_plan) {
-        if (degree_plan.required(this)) {
-          $(this.card_sel).addClass('border-thick');
-          $(this.header_sel).addClass('font-weight-bold');
-        }
-      }
-      $(this.card_sel).addClass('border-secondary');
+      this.apply_requirement(degree_plan);
+      $(this.card_sel).addClass('wz-unavailable');
+      // The lock explains itself on hover or focus, so it has to be reachable.
+      $(this.card_sel + ' .wz-card__icon').attr('tabindex', '0').attr('aria-label', `Why ${this} is unavailable`);
       $(this.completed_sel).prop('disabled', false);
-      $(this.enrolling_sel).prop('disabled', true);
+      // Left clickable on purpose: clicking asks whether to add it anyway
+      // rather than doing nothing, which is how a substitution gets recorded.
+      $(this.enrolling_sel).prop('disabled', false);
       $(this.completed_sel).prop('checked', false);
       $(this.enrolling_sel).prop('checked', false);
-
-      // Always add btn-secondary regardless of whether course is deprecated or future
-      $(this.modal_sel).addClass('btn-secondary');
 
       // Add visual indicator for deprecated or future courses
       return this.update_badge();
@@ -527,19 +602,15 @@
       this.year_term_taken = year_term;
       this.enrolling = false;
       this.clear_formatting();
-      if (degree_plan) {
-        if (degree_plan.required(this)) {
-          $(this.card_sel).addClass('border-thick');
-          $(this.header_sel).addClass('font-weight-bold');
-        }
+      this.apply_requirement(degree_plan);
+      $(this.card_sel).addClass('wz-completed');
+      if (this.forced) {
+        $(this.card_sel).addClass('wz-forced');
       }
-      $(this.card_sel).addClass('border-success');
-      $(this.header_sel).addClass('bg-success text-white');
       $(this.completed_sel).prop('checked', true);
       $(this.enrolling_sel).prop('checked', false);
       $(this.completed_sel).prop('disabled', false);
       $(this.enrolling_sel).prop('disabled', true);
-      $(this.modal_sel).addClass('btn-success');
       ref = this.prereqs;
       for (j = 0, len = ref.length; j < len; j++) {
         course = ref[j];
@@ -573,19 +644,15 @@
       this.year_term_taken = year_term;
       this.enrolling = true;
       this.clear_formatting();
-      if (degree_plan) {
-        if (degree_plan.required(this)) {
-          $(this.card_sel).addClass('border-thick');
-          $(this.header_sel).addClass('font-weight-bold');
-        }
+      this.apply_requirement(degree_plan);
+      $(this.card_sel).addClass('wz-enrolling');
+      if (this.forced) {
+        $(this.card_sel).addClass('wz-forced');
       }
-      $(this.card_sel).addClass('border-primary');
-      $(this.header_sel).addClass('bg-primary text-white');
       $(this.completed_sel).prop('checked', false);
       $(this.enrolling_sel).prop('checked', true);
       $(this.completed_sel).prop('disabled', true);
-      $(this.enrolling_sel).prop('disabled', false);
-      return $(this.modal_sel).addClass('btn-primary');
+      return $(this.enrolling_sel).prop('disabled', false);
     }
 
     refresh(old_year_term, new_year_term, degree_plan) {
@@ -808,6 +875,50 @@
         }
         return true;
       }
+    }
+
+    // Every course you must actually take to finish this plan: the ones the
+    // plan lists, plus everything those depend on, followed all the way down.
+    // The plan does not list the calculus sequence, but you cannot reach
+    // PHYS 231 without it, so calculus is just as unavoidable as PHYS 231 is.
+    //
+    // This drives the card's filled-vs-outlined header only. Whether the
+    // degree is finished is still decided by all_required_courses_complete(),
+    // which looks at the plan's own lists and nothing else.
+    refresh_needed() {
+      var course, dep, frontier, j, k, len, len1, next, ref, seen;
+      seen = [];
+      frontier = [];
+      for (j = 0, len = courses.length; j < len; j++) {
+        course = courses[j];
+        // A retired course can still satisfy a requirement for someone who
+        // took it, but we never tell anyone they must take one.
+        if (this.required(course) && !course.deprecated) {
+          seen.push(course);
+          frontier.push(course);
+        }
+      }
+      while (frontier.length > 0) {
+        next = frontier.pop();
+        ref = next.prereqs.concat(next.coreqs);
+        for (k = 0, len1 = ref.length; k < len1; k++) {
+          dep = ref[k];
+          // A retired course is never something we can ask a student to take.
+          if (dep.deprecated || seen.includes(dep)) {
+            continue;
+          }
+          seen.push(dep);
+          frontier.push(dep);
+        }
+      }
+      return this.needed_courses = seen;
+    }
+
+    is_needed(course) {
+      if (this.needed_courses == null) {
+        this.refresh_needed();
+      }
+      return this.needed_courses.includes(course);
     }
 
     // Check if all required courses are completed
@@ -1676,6 +1787,335 @@
     year_terms = year_terms.slice(1, 13);
   }
 
+
+  // ======================================================================
+  // Saving, restoring and sharing a plan
+  //
+  // STATE_VERSION describes the SHAPE of a saved plan, not the catalog. It
+  // only changes when the serialisation below changes, in the same commit
+  // that changes it, and its whole job is to stop a future format from being
+  // misread as this one. Retiring a course needs no bump: a retired course is
+  // still a real course someone took, and the wizard already models that.
+  // A saved plan naming a course that no longer exists at all is reported to
+  // the student by name rather than migrated.
+  // ======================================================================
+
+  // 2: courses carry a "forced" flag, which needed a fourth byte each. Links
+  // written against version 1 are refused rather than misread; nothing was
+  // published at that version.
+  STATE_VERSION = 2;
+
+  STORAGE_KEY = 'uwec-physics-advising-wizard';
+
+  // Append only. An index here is baked into every link ever shared, so
+  // entries are never reordered or reused.
+  FIELD_CODES = ['PHYS', 'MATH', 'CHEM', 'MSE', 'CS', 'AI', 'ASRE', 'PHIL', 'BME'];
+
+  TERM_CODES = ['spring', 'fall'];
+
+  // ---------------------------------------------------------------- base64url
+  b64url_encode = function(bytes) {
+    var i, s;
+    s = '';
+    for (i = 0; i < bytes.length; i++) {
+      s += String.fromCharCode(bytes[i]);
+    }
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  };
+
+  b64url_decode = function(str) {
+    var bin, i, out, s;
+    s = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4 !== 0) {
+      s += '=';
+    }
+    bin = atob(s);
+    out = new Uint8Array(bin.length);
+    for (i = 0; i < bin.length; i++) {
+      out[i] = bin.charCodeAt(i);
+    }
+    return out;
+  };
+
+  // ------------------------------------------------------- reading the model
+  // A plan is fully described by the degree, the term you are looking at, and
+  // for each touched course its status and the term it is taken. Everything
+  // else on screen is derived from those, so nothing else is stored.
+  current_state = function() {
+    var course, entry, j, len, res;
+    res = {
+      version: STATE_VERSION,
+      plan: wizard.degree_plan.name,
+      year: wizard.year_term.year,
+      term: wizard.year_term.term,
+      courses: []
+    };
+    for (j = 0, len = courses.length; j < len; j++) {
+      course = courses[j];
+      if (!(course.completed || course.enrolling)) {
+        continue;
+      }
+      if (!course.year_term_taken) {
+        continue;
+      }
+      entry = {
+        field: course.field,
+        number: Number(course.number),
+        legacy: !!course.deprecated,
+        forced: !!course.forced,
+        status: course.completed ? 'completed' : 'enrolling',
+        year: course.year_term_taken.year,
+        term: course.year_term_taken.term
+      };
+      res.courses.push(entry);
+    }
+    return res;
+  };
+
+  find_course_for_state = function(entry) {
+    var course, j, len;
+    for (j = 0, len = courses.length; j < len; j++) {
+      course = courses[j];
+      if (course.field === entry.field && Number(course.number) === entry.number && !!course.deprecated === !!entry.legacy) {
+        return course;
+      }
+    }
+    return null;
+  };
+
+  clear_all_courses = function() {
+    var course, j, len;
+    for (j = 0, len = courses.length; j < len; j++) {
+      course = courses[j];
+      course.completed = false;
+      course.enrolling = false;
+      course.year_term_taken = false;
+      course.forced = false;
+    }
+  };
+
+  // ------------------------------------------------------- writing the model
+  // Assigns the raw fields directly and lets one repaint pass do the rest.
+  // Replaying clicks instead would re-run the prerequisite cascade in whatever
+  // order the entries happen to sit in, which can complete courses the student
+  // never marked.
+  apply_state = function(state) {
+    var course, entry, j, len, ref, skipped, taken;
+    skipped = [];
+    clear_all_courses();
+    ref = state.courses || [];
+    for (j = 0, len = ref.length; j < len; j++) {
+      entry = ref[j];
+      course = find_course_for_state(entry);
+      if (course == null) {
+        skipped.push(`${entry.field} ${entry.number}`);
+        continue;
+      }
+      taken = new YearTerm(entry.year, entry.term);
+      // A term that has since gone by cannot still be in progress, so treat a
+      // stale "enrolling" the way advancing a term would have.
+      if (entry.status === 'enrolling' && taken.value() < wizard.year_term.value()) {
+        course.completed = true;
+        course.enrolling = false;
+      } else {
+        course.completed = entry.status === 'completed';
+        course.enrolling = entry.status === 'enrolling';
+      }
+      course.year_term_taken = taken;
+      course.forced = !!entry.forced;
+    }
+    return skipped;
+  };
+
+  // --------------------------------------------------------------- URL codec
+  // Four bytes per course:
+  //   b0  field index
+  //   b1  low eight bits of the number
+  //   b2  high bits of the number | legacy << 2 | forced << 3 | status << 4
+  //   b3  (year - 2000) << 1 | term
+  // Terms are absolute, never an index into year_terms, because that list is
+  // built from today's date: position 3 is Spring 2028 this September and
+  // Spring 2029 the next one.
+  encode_state = function(state) {
+    var bytes, entry, field_code, j, len, plan_index, ref;
+    plan_index = degree_plans.findIndex(function(dp) {
+      return dp.name === state.plan;
+    });
+    bytes = [STATE_VERSION, plan_index < 0 ? 0 : plan_index, (state.year - 2000) & 0xFF, TERM_CODES.indexOf(state.term)];
+    ref = state.courses;
+    for (j = 0, len = ref.length; j < len; j++) {
+      entry = ref[j];
+      field_code = FIELD_CODES.indexOf(entry.field);
+      if (field_code < 0 || entry.number > 511) {
+        continue;
+      }
+      bytes.push(field_code);
+      bytes.push(entry.number & 0xFF);
+      bytes.push(((entry.number >> 8) & 0x03) | ((entry.legacy ? 1 : 0) << 2) | ((entry.forced ? 1 : 0) << 3) | ((entry.status === 'completed' ? 1 : 2) << 4));
+      bytes.push((((entry.year - 2000) & 0x7F) << 1) | TERM_CODES.indexOf(entry.term));
+    }
+    return b64url_encode(new Uint8Array(bytes));
+  };
+
+  decode_state = function(str) {
+    var b2, bytes, i, plan, state;
+    try {
+      bytes = b64url_decode(str);
+    } catch (error) {
+      return null;
+    }
+    if (bytes.length < 4 || bytes[0] !== STATE_VERSION) {
+      return null;
+    }
+    if ((bytes.length - 4) % 4 !== 0) {
+      return null;
+    }
+    plan = degree_plans[bytes[1]];
+    if (plan == null) {
+      return null;
+    }
+    state = {
+      version: bytes[0],
+      plan: plan.name,
+      year: 2000 + bytes[2],
+      term: TERM_CODES[bytes[3] & 1],
+      courses: []
+    };
+    for (i = 4; i < bytes.length; i += 4) {
+      b2 = bytes[i + 2];
+      state.courses.push({
+        field: FIELD_CODES[bytes[i]],
+        number: ((b2 & 0x03) << 8) | bytes[i + 1],
+        legacy: ((b2 >> 2) & 1) === 1,
+        forced: ((b2 >> 3) & 1) === 1,
+        status: ((b2 >> 4) & 0x0F) === 1 ? 'completed' : 'enrolling',
+        year: 2000 + ((bytes[i + 3] >> 1) & 0x7F),
+        term: TERM_CODES[bytes[i + 3] & 1]
+      });
+    }
+    return state;
+  };
+
+  // ------------------------------------------------------------ localStorage
+  read_stored_state = function() {
+    var raw, state;
+    try {
+      raw = window.localStorage.getItem(STORAGE_KEY);
+    } catch (error) {
+      return null; // private browsing, or storage disabled
+    }
+    if (!raw) {
+      return null;
+    }
+    try {
+      state = JSON.parse(raw);
+    } catch (error) {
+      return null;
+    }
+    if (state.version !== STATE_VERSION) {
+      return null;
+    }
+    return state;
+  };
+
+  // saved_at rides along only in localStorage, never in a link, so it does
+  // not affect encode_state or the shared-plan comparison. Adding it needs no
+  // STATE_VERSION bump: an older save simply has no timestamp, and the notice
+  // copes with that.
+  write_stored_state = function(state) {
+    var payload;
+    payload = Object.assign({}, state, {
+      saved_at: Date.now()
+    });
+    try {
+      return window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      return null; // out of quota or disabled; the URL still carries the plan
+    }
+  };
+
+  // "September 18 at 3:42 PM", or nothing at all for a save made before
+  // timestamps existed.
+  describe_save_time = function(saved_at) {
+    var d;
+    if (!saved_at) {
+      return null;
+    }
+    d = new Date(saved_at);
+    if (isNaN(d.getTime())) {
+      return null;
+    }
+    try {
+      return d.toLocaleDateString(void 0, {
+        month: 'long',
+        day: 'numeric'
+      }) + ' at ' + d.toLocaleTimeString(void 0, {
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  clear_stored_state = function() {
+    try {
+      return window.localStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      return null;
+    }
+  };
+
+  same_state = function(a, b) {
+    if ((a == null) || (b == null)) {
+      return false;
+    }
+    return encode_state(a) === encode_state(b);
+  };
+
+
+  // ---------------------------------------------------------------- notes
+  // Notes are kept on this device and never travel in a link. That is partly
+  // a privacy call, since a link gets pasted into mail and chat, and partly
+  // why rendering them is safe: the only author of this markdown is the
+  // person reading the page.
+  NOTES_KEY = 'uwec-physics-advising-wizard-notes';
+
+  read_notes = function() {
+    try {
+      return window.localStorage.getItem(NOTES_KEY) || '';
+    } catch (error) {
+      return '';
+    }
+  };
+
+  write_notes = function(text) {
+    try {
+      if (text) {
+        return window.localStorage.setItem(NOTES_KEY, text);
+      } else {
+        return window.localStorage.removeItem(NOTES_KEY);
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
+  // marked does not sanitise, so the opening angle bracket is escaped before
+  // parsing. That alone prevents an element from being formed, and leaving
+  // the closing bracket alone keeps blockquote syntax working.
+  render_markdown = function(src) {
+    var escaped, parse;
+    escaped = src.replace(/</g, '&lt;');
+    parse = (typeof marked !== "undefined" && marked !== null) ? marked.parse || marked : null;
+    if (typeof parse === 'function') {
+      try {
+        return parse(escaped);
+      } catch (error) {} // fall through to plain text
+    }
+    return '<p>' + escaped.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+  };
+
   // Fall 2022: Removed PHYS 361, PHYS 362, and PHYS 363, which were "Intermediate
   // Courses". Actually, only PHYS 361 was. PHYS 362 and PHYS 363 didn't appear.
   wizard = {
@@ -1723,28 +2163,257 @@
       MATH_345]
       }
     ],
+    // ------------------------------------------------------- persistence
+    // True while a saved plan is being poured back in, so the restore does
+    // not immediately save itself over the thing it is reading.
+    restoring: false,
+    // True when the plan on screen came from someone else's link. In this
+    // mode the URL is the only place the plan lives; localStorage is left
+    // alone so a shared link never overwrites the student's own work.
+    viewing_shared: false,
+    save_timer: null,
+
+    persist: function() {
+      var state;
+      if (wizard.restoring) {
+        return;
+      }
+      state = current_state();
+      if (!wizard.viewing_shared) {
+        write_stored_state(state);
+      }
+      // Keep the address bar honest so copying it by hand works as well as
+      // the button does. Debounced: browsers rate-limit replaceState.
+      if (wizard.save_timer) {
+        clearTimeout(wizard.save_timer);
+      }
+      return wizard.save_timer = setTimeout(function() {
+        return wizard.write_url(state);
+      }, 150);
+    },
+
+    write_url: function(state) {
+      var query;
+      query = '?p=' + encode_state(state);
+      if (/[?&]preview=1\b/.test(window.location.search)) {
+        query += '&preview=1';
+      }
+      try {
+        return window.history.replaceState(null, '', query + window.location.hash);
+      } catch (error) {
+        return null;
+      }
+    },
+
+    // Point the term dropdown, its button and the next-term button at
+    // whatever wizard.year_term currently is.
+    show_year_term: function() {
+      var label, position;
+      label = wizard.year_term.term.replace(/^\w/, function(c) {
+        return c.toUpperCase();
+      });
+      position = year_terms.findIndex(function(yt) {
+        return yt.value() === wizard.year_term.value();
+      });
+      $('#year-term-menu>a').removeClass('active');
+      if (position >= 0) {
+        $(`#year-term-menu>a[data-position='${position}']`).addClass('active');
+      }
+      $('#year-term-dropdown').text(`${label} ${wizard.year_term.year}`);
+      return $('#next-term').prop('disabled', wizard.year_term.value() === year_terms[year_terms.length - 1].value());
+    },
+
+    show_degree_plan: function() {
+      $('#degree-plan-menu>a.degree-plan-option').removeClass('active');
+      $(`#degree-plan-menu>a.degree-plan-option:contains(${wizard.degree_plan.name})`).addClass('active');
+      return $('#degree-plan-dropdown').html(wizard.degree_plan.name);
+    },
+
+    // Put a saved plan back on screen. Everything here is idempotent, so it
+    // is also how Reset and "back to my plan" work.
+    restore: function(state) {
+      var plan, skipped, target, was_restoring;
+      was_restoring = wizard.restoring;
+      wizard.restoring = true;
+      plan = get_degree_plan(state.plan);
+      if (plan != null) {
+        wizard.degree_plan = plan;
+      }
+      // A plan saved last year can point at a term that has since gone by,
+      // and the dropdown only covers terms from today forward.
+      target = new YearTerm(state.year, state.term);
+      wizard.year_term = target.value() < year_terms[0].value() ? year_terms[0] : target;
+      skipped = apply_state(state);
+      wizard.set_degree_plan(wizard.degree_plan);
+      wizard.show_degree_plan();
+      wizard.show_year_term();
+      wizard.restoring = was_restoring;
+      wizard.refresh(wizard.year_term);
+      return skipped;
+    },
+
+    reset: function() {
+      var state;
+      // Keeps the degree plan: losing that is rarely what "start over" means.
+      wizard.viewing_shared = false;
+      wizard.dismiss_shared_notice();
+      clear_stored_state();
+      wizard.clear_notes();
+      state = {
+        version: STATE_VERSION,
+        plan: wizard.degree_plan.name,
+        year: year_terms[0].year,
+        term: year_terms[0].term,
+        courses: []
+      };
+      return wizard.restore(state);
+    },
+
+    show_shared_notice: function() {
+      return $('#shared-notice').show();
+    },
+
+    dismiss_shared_notice: function() {
+      return $('#shared-notice').hide();
+    },
+
+    report_skipped: function(skipped) {
+      if (!(skipped != null ? skipped.length : void 0)) {
+        return;
+      }
+      $('#skipped-courses').text(skipped.join(', '));
+      return $('#skipped-notice').show();
+    },
+
+    // Decide where the plan on screen should come from. The URL wins when it
+    // disagrees with what is saved here, because following a link is an
+    // explicit act, but the student's own plan is left untouched so they can
+    // get back to it.
+    load_initial_state: function() {
+      var params, stored, url_state;
+      params = new URLSearchParams(window.location.search);
+      url_state = params.get('p') ? decode_state(params.get('p')) : null;
+      stored = read_stored_state();
+      if ((url_state != null) && (stored != null) && !same_state(url_state, stored)) {
+        wizard.viewing_shared = true;
+        wizard.report_skipped(wizard.restore(url_state));
+        return wizard.show_shared_notice();
+      } else if (url_state != null) {
+        return wizard.report_skipped(wizard.restore(url_state));
+      } else if (stored != null) {
+        wizard.report_skipped(wizard.restore(stored));
+        return wizard.show_restored_notice(stored.saved_at);
+      }
+    },
+
+    // Restoring from this device rewrites the address bar on its own, so
+    // without saying something there is no way to tell a recovered plan from
+    // a fresh one.
+    show_restored_notice: function(saved_at) {
+      var when;
+      when = describe_save_time(saved_at);
+      $('#restored-when').text(when ? ` You last changed it on ${when}.` : '');
+      return $('#restored-notice').show();
+    },
+
+    back_to_my_plan: function() {
+      var stored;
+      stored = read_stored_state();
+      wizard.viewing_shared = false;
+      wizard.dismiss_shared_notice();
+      if (stored != null) {
+        return wizard.restore(stored);
+      } else {
+        return wizard.reset();
+      }
+    },
+
+    // ------------------------------------------------------------- notes
+    notes_timer: null,
+
+    // The printed sheet shows the rendered markdown, so it is kept current
+    // whether or not the preview tab is the one on screen.
+    render_notes: function() {
+      var text;
+      text = $('#notes-input').val() || '';
+      $('#notes-rendered').html(render_markdown(text));
+      return $('#notes').toggleClass('is-empty', text.trim() === '');
+    },
+
+    autosize_notes: function() {
+      var el;
+      el = document.getElementById('notes-input');
+      if (el == null) {
+        return;
+      }
+      el.style.height = 'auto';
+      return el.style.height = Math.max(el.scrollHeight, 120) + 'px';
+    },
+
+    show_notes_tab: function(which) {
+      $('#notes').toggleClass('is-previewing', which === 'preview');
+      $('#notes-write').toggleClass('is-active', which === 'write').attr('aria-selected', which === 'write');
+      $('#notes-preview').toggleClass('is-active', which === 'preview').attr('aria-selected', which === 'preview');
+      if (which === 'write') {
+        return wizard.autosize_notes();
+      }
+    },
+
+    setup_notes: function() {
+      $('#notes-input').val(read_notes());
+      wizard.render_notes();
+      wizard.autosize_notes();
+      $('#notes-input').on('input', function() {
+        wizard.render_notes();
+        wizard.autosize_notes();
+        if (wizard.notes_timer) {
+          clearTimeout(wizard.notes_timer);
+        }
+        return wizard.notes_timer = setTimeout(function() {
+          return write_notes($('#notes-input').val());
+        }, 300);
+      });
+      $('#notes-write').click(function(event) {
+        event.preventDefault();
+        return wizard.show_notes_tab('write');
+      });
+      return $('#notes-preview').click(function(event) {
+        event.preventDefault();
+        return wizard.show_notes_tab('preview');
+      });
+    },
+
+    clear_notes: function() {
+      write_notes('');
+      $('#notes-input').val('');
+      wizard.render_notes();
+      return wizard.autosize_notes();
+    },
+
     clear_groups: function() {
       return $('#body').html('');
     },
     add_group: function(new_group) {
       var k, len1, ref, to_add;
-      to_add = "<hr class='my-4'>\n";
-      to_add += "<div class='row'><div class='col'>\n";
-      to_add += `  <h2>${new_group.title}</h2>\n`;
-      to_add += "</div></div>\n";
-      to_add += "<div class='row'>\n";
+      to_add = "<section class='wz-group'>\n";
+      to_add += `  <h2 class='wz-group__title'>${new_group.title}</h2>\n`;
+      to_add += "  <div class='row wz-grid'>\n";
       ref = new_group.courses;
       for (k = 0, len1 = ref.length; k < len1; k++) {
         course = ref[k];
-        to_add += "  <div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-3'>\n";
-        to_add += `    ${course.html_card}`;
-        to_add += "  </div>\n";
+        to_add += "    <div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>\n";
+        to_add += `      ${course.html_card}`;
+        to_add += "    </div>\n";
       }
-      to_add += "</div>\n";
+      to_add += "  </div>\n";
+      to_add += "</section>\n";
       return $('#body').append(to_add);
     },
     refresh: function(old_year_term) {
       var credit_count, k, len1, required_complete;
+      // Satisfying one arm of an either/or can retire a course and everything
+      // only it depended on, so this is recomputed every refresh.
+      wizard.degree_plan.refresh_needed();
       for (k = 0, len1 = courses.length; k < len1; k++) {
         course = courses[k];
         course.refresh(old_year_term, wizard.year_term, wizard.degree_plan);
@@ -1753,26 +2422,26 @@
       credit_count = wizard.degree_plan.credit_count();
       $('#credit_count').html(credit_count);
       if (credit_count >= wizard.degree_plan.credits_needed) {
-        $('#credit-status').removeClass('text-danger').addClass('text-success');
+        $('#credit-status').addClass('wz-met');
       } else {
-        $('#credit-status').addClass('text-danger').removeClass('text-success');
+        $('#credit-status').removeClass('wz-met');
       }
 
       // update required courses status
       required_complete = wizard.degree_plan.all_required_courses_complete();
       if (required_complete) {
-        $('#requirement-status').removeClass('text-danger').addClass('text-success');
-        $('#requirement-status').text('Complete');
+        $('#requirement-status').addClass('wz-met').text('Complete');
       } else {
-        $('#requirement-status').addClass('text-danger').removeClass('text-success');
-        $('#requirement-status').text('Incomplete');
+        $('#requirement-status').removeClass('wz-met').text('Incomplete');
       }
       // update the course plan
-      return wizard.build_course_plan();
+      wizard.build_course_plan();
+      return wizard.persist();
     },
     set_degree_plan: function(new_degree_plan) {
       var group, k, len1, ref;
       wizard.degree_plan = new_degree_plan;
+      wizard.degree_plan.refresh_needed();
       wizard.clear_groups();
       ref = wizard.degree_plan.course_groups;
       for (k = 0, len1 = ref.length; k < len1; k++) {
@@ -1783,9 +2452,54 @@
       return wizard.setup_course_listeners();
     },
     build_course_plan: function() {
-      var k, l, len1, len2, len3, len4, m, n, table_html, term_total_credits, this_year_term_courses, year_term;
+      var any_forced, k, l, len1, len2, len3, len4, m, n, prior, prior_credits, table_html, term_total_credits, this_year_term_courses, year_term;
       $('#course-plan').html('');
       table_html = "";
+      any_forced = false;
+      // Courses finished before the planning window opens: transfer credit and
+      // anything marked completed on the first term. These have a real
+      // year_term_taken, but it sits earlier than any term the table loops
+      // over, so without this block they vanish from the printed plan.
+      prior = [];
+      for (k = 0, len1 = courses.length; k < len1; k++) {
+        course = courses[k];
+        if ((course.completed || course.enrolling) && course.year_term_taken) {
+          if (course.year_term_taken.value() < year_terms[0].value()) {
+            prior.push(course);
+          }
+        }
+      }
+      if (prior.length > 0) {
+        prior_credits = 0;
+        for (l = 0, len2 = prior.length; l < len2; l++) {
+          prior_credits += prior[l].credits;
+        }
+        table_html += "  <thead>\n";
+        table_html += "    <tr class='wz-plan__term'><th scope='colgroup' colspan=3>Already completed</th></tr>\n";
+        table_html += "    <tr class='wz-plan__head'>\n";
+        table_html += "      <th scope='col'>Course</th>\n";
+        table_html += "      <th scope='col'>Title</th>\n";
+        table_html += "      <th scope='col' class='wz-plan__credits'>Credits</th>\n";
+        table_html += "    </tr>\n";
+        table_html += "  </thead>\n";
+        table_html += "  <tbody>\n";
+        for (m = 0, len3 = prior.length; m < len3; m++) {
+          course = prior[m];
+          table_html += "    <tr>\n";
+          table_html += `      <td class='wz-plan__desig'>${course.field} ${course.number}${course.forced ? " <span class='wz-plan__flag'>&#9888;</span>" : ''}</td>\n`;
+          table_html += `      <td>${course.name}</td>\n`;
+          table_html += `      <td class='wz-plan__credits'>${course.credits}</td>\n`;
+          table_html += "    </tr>\n";
+          if (course.forced) {
+            any_forced = true;
+          }
+        }
+        table_html += "    <tr class='wz-plan__total'>\n";
+        table_html += "      <td colspan='2'>Prior total</td>\n";
+        table_html += `      <td class='wz-plan__credits'>${prior_credits}</td>\n`;
+        table_html += "    </tr>\n";
+        table_html += "  </tbody>\n";
+      }
       for (k = 0, len1 = year_terms.length; k < len1; k++) {
         year_term = year_terms[k];
         this_year_term_courses = [];
@@ -1804,39 +2518,70 @@
             course = this_year_term_courses[m];
             term_total_credits += course.credits;
           }
-          table_html += "  <thead class='thead-dark'>\n";
-          table_html += `    <tr><th scope='col' colspan=3 class='text-center'>${year_term}</th></tr>\n`;
-          table_html += "  </thead>\n";
-          table_html += "  <thead class='thead-light'>\n";
-          table_html += "    <tr>\n";
-          table_html += "      <th scope='col'>Course #</th>\n";
-          table_html += "      <th scope='col'>Course Name</th>\n";
-          table_html += "      <th scope='col'>Credits</th>\n";
+          table_html += "  <thead>\n";
+          table_html += `    <tr class='wz-plan__term'><th scope='colgroup' colspan=3>${year_term}</th></tr>\n`;
+          table_html += "    <tr class='wz-plan__head'>\n";
+          table_html += "      <th scope='col'>Course</th>\n";
+          table_html += "      <th scope='col'>Title</th>\n";
+          table_html += "      <th scope='col' class='wz-plan__credits'>Credits</th>\n";
           table_html += "    </tr>\n";
           table_html += "  </thead>\n";
           table_html += "  <tbody>\n";
           for (n = 0, len4 = this_year_term_courses.length; n < len4; n++) {
             course = this_year_term_courses[n];
             table_html += "    <tr>\n";
-            table_html += `      <td>${course.field} ${course.number}</td>\n`;
+            table_html += `      <td class='wz-plan__desig'>${course.field} ${course.number}${course.forced ? " <span class='wz-plan__flag'>&#9888;</span>" : ''}</td>\n`;
             table_html += `      <td>${course.name}</td>\n`;
-            table_html += `      <td>${course.credits}</td>\n`;
+            table_html += `      <td class='wz-plan__credits'>${course.credits}</td>\n`;
             table_html += "    </tr>\n";
+            if (course.forced) {
+              any_forced = true;
+            }
           }
 
           // Add the credit summary row
-          table_html += "    <tr class='bg-light font-weight-bold'>\n";
-          table_html += "      <td colspan='2' class='text-right'>Term Total:</td>\n";
-          table_html += `      <td>${term_total_credits}</td>\n`;
+          table_html += "    <tr class='wz-plan__total'>\n";
+          table_html += "      <td colspan='2'>Term total</td>\n";
+          table_html += `      <td class='wz-plan__credits'>${term_total_credits}</td>\n`;
           table_html += "    </tr>\n";
           table_html += "  </tbody>\n";
         }
       }
       if (table_html !== "") {
-        table_html = `<table class='table table-hover table-sm'>\n${table_html}</table>\n`;
-        return $('#course-plan').html(`<h1 class='my-4'>Course Plan</h1>\n${table_html}`);
+        table_html = `<table>\n${table_html}</table>\n`;
+        if (any_forced) {
+          table_html += "<p class='wz-plan__note'><span class='wz-plan__flag'>&#9888;</span> Added by hand for a term the catalog does not offer it in. Confirm the substitution with your advisor.</p>\n";
+        }
+        return $('#course-plan').html(`<h1 class='wz-plan__title'>Course plan</h1>\n${table_html}`);
       }
     },
+    // The conversation that turns a locked course into a recorded
+    // substitution. Nothing changes until it is confirmed.
+    ask_force: function(course) {
+      var reasons;
+      reasons = course.blocking_reasons(wizard.year_term);
+      $('#force-confirm-label').text(`${course}: ${course.name}`);
+      $('#force-term').text(`${wizard.year_term}`);
+      $('#force-reasons').html(reasons.map(function(r) {
+        return '<li>' + r + '</li>';
+      }).join(''));
+      $('#force-confirm').data('pending-course', course);
+      return $('#force-confirm').modal();
+    },
+
+    force_pending: function() {
+      var course;
+      course = $('#force-confirm').data('pending-course');
+      $('#force-confirm').modal('hide');
+      if (course == null) {
+        return;
+      }
+      course.forced = true;
+      course.completed = false;
+      course.enrolling = true;
+      return wizard.refresh(wizard.year_term);
+    },
+
     setup_course_listeners: function() {
       // activate switch listeners
       $('input.completed').click(function() {
@@ -1856,7 +2601,16 @@
 
         // Get the course based on the element ID
         this_course = get_course_from_element_id(checkbox_id);
+        // Switching one on for a course the plan says is closed is a real
+        // decision, so it gets asked about rather than silently refused.
+        if (this.checked && !this_course.available(wizard.year_term)) {
+          this.checked = false;
+          return wizard.ask_force(this_course);
+        }
         this_course.toggle_enrolling();
+        if (!this_course.enrolling) {
+          this_course.forced = false;
+        }
         return wizard.refresh(wizard.year_term);
       });
       // activate modal description listeners
@@ -1877,6 +2631,9 @@
           event.preventDefault;
           // Get the course from the data attribute we set above
           course = $('#course-info').data('current-course');
+          // The dialog has already listed why it is closed, so choosing it
+          // here is the same informed decision the card asks about.
+          course.forced = !course.available(wizard.year_term);
           course.enrolling = true;
           course.completed = false;
           wizard.refresh(wizard.year_term);
@@ -1896,6 +2653,10 @@
     setup: function() {
       /* Year Term Menu and Next Button */
       var dp, first_year, i, k, l, len1, term, year;
+      // Hold off saving until load_initial_state() has decided what should be
+      // on screen. The first refresh below would otherwise write an empty
+      // default over whatever the student had saved.
+      wizard.restoring = true;
       first_year = year_terms[0].year;
       first_term = year_terms[0].term.replace(/^\w/, (c) => {
         return c.toUpperCase();
@@ -1981,10 +2742,108 @@
         $('#degree-plan-dropdown').html(wizard.degree_plan.name);
         return wizard.refresh(wizard.year_term);
       });
+      /* Reset, with a confirmation step so a stray click cannot wipe a plan */
+      $('#reset-plan').click(function(event) {
+        event.preventDefault();
+        return $('#reset-confirm').modal();
+      });
+      $('#reset-confirm-go').click(function(event) {
+        event.preventDefault();
+        wizard.reset();
+        return $('#reset-confirm').modal('hide');
+      });
+      /* Copy link */
+      $('#copy-link').click(function(event) {
+        var done, fail;
+        event.preventDefault();
+        done = function() {
+          // Two different surprises, so say whichever one applies rather than
+          // cramming both in. The placeholder only warns about notes while the
+          // field is empty, and this is the moment it actually costs you.
+          if (($('#notes-input').val() || '').trim()) {
+            return wizard.flash_copy('Copied \u2014 your notes stay on this device');
+          }
+          return wizard.flash_copy('Copied \u2014 opens as a separate copy');
+        };
+        fail = function() {
+          // Nothing is selected, so pointing at the clipboard shortcut would be
+          // useless. The address bar always holds the current plan.
+          return wizard.flash_copy('Copy it from the address bar');
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(window.location.href).then(done, fail);
+        } else {
+          return fail();
+        }
+      });
+      $('#back-to-mine').click(function(event) {
+        event.preventDefault();
+        return wizard.back_to_my_plan();
+      });
+      $('.wz-notice__dismiss').click(function(event) {
+        event.preventDefault();
+        return $(this).closest('.wz-notice').hide();
+      });
+      /* Phone-sized bar: More reveals degree, requirements and plan actions */
+      $('#bar-toggle').click(function(event) {
+        var open;
+        event.preventDefault();
+        open = !$('.wz-bar').hasClass('is-open');
+        $('.wz-bar').toggleClass('is-open', open);
+        $('#bar-toggle').attr('aria-expanded', open ? 'true' : 'false');
+        return $('#bar-toggle .wz-bar__more').text(open ? 'Less' : 'More');
+      });
+      $('#print-plan').click(function(event) {
+        event.preventDefault();
+        return window.print();
+      });
+      /* One delegated popover for every lock: the content function runs at
+         show time, so it is never stale, and no per-card instances are made. */
+      $('#body').popover({
+        selector: '.wz-card.wz-unavailable .wz-card__icon',
+        trigger: 'hover focus',
+        html: true,
+        container: 'body',
+        placement: 'top',
+        title: function() {
+          var course;
+          course = get_course_from_element_id($(this).data('course'));
+          return `${course} is not open in ${wizard.year_term}`;
+        },
+        content: function() {
+          var course, reasons;
+          course = get_course_from_element_id($(this).data('course'));
+          reasons = course.blocking_reasons(wizard.year_term);
+          return `<ul class='wz-reasons mb-0'>${reasons.map(function(r) {
+            return '<li>' + r + '</li>';
+          }).join('')}</ul>`;
+        }
+      });
+      $('#force-confirm-go').click(function(event) {
+        event.preventDefault();
+        return wizard.force_pending();
+      });
+      wizard.setup_notes();
       /* Setup Initial Degree Plan */
       wizard.set_degree_plan(wizard.degree_plan);
       // set up initial availability
-      return wizard.refresh(wizard.year_term);
+      wizard.refresh(wizard.year_term);
+      // ...then lay any saved or shared plan over the top of it
+      wizard.load_initial_state();
+      wizard.restoring = false;
+      return wizard.persist();
+    },
+
+    flash_copy: function(message) {
+      var el;
+      el = $('#copy-flash');
+      el.text(message).addClass('is-visible');
+      if (wizard.flash_timer) {
+        clearTimeout(wizard.flash_timer);
+      }
+      return wizard.flash_timer = setTimeout(function() {
+        return el.removeClass('is-visible');
+      }, 2600);
     }
   };
 
@@ -1997,8 +2856,7 @@
     });
     return $('a#print-page').click(function(event) {
       event.preventDefault();
-      window.print();
-      return setTimeout("window.close()", 100);
+      return window.print();
     });
   });
 

@@ -1,0 +1,1122 @@
+/* ==========================================================================
+   Physics Advising Wizard — UW-Eau Claire brand skin
+   Scoped to body.wizard-page so nothing here leaks into the rest of the site.
+
+   Two independent visual channels carry the information:
+     colour        -> course STATE  (available / enrolling / completed / off)
+     fill vs line  -> whether the course is REQUIRED for the selected degree
+   Required courses are solid blocks; electives are outlined and quiet.
+   A Font Awesome glyph doubles up on state so it never rests on hue alone.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- tokens */
+.wizard-page {
+  /* Primary + secondary */
+  --uwec-royal:    #242B99;
+  --uwec-gold:     #EDAC1A;
+  --uwec-navy:     #07233D;
+  --uwec-old-gold: #B28114;
+  /* Neutral support */
+  --uwec-earth:    #725E49;
+  --uwec-slate:    #B2C5D5;
+  --uwec-gray:     #EEF3FA;
+  /* Specialty */
+  --uwec-bright:   #0160F2;
+
+  --wz-ink:        #16202C;
+  --wz-ink-soft:   #52627A;
+  --wz-rule:       #D8E2ED;
+  --wz-gradient:   linear-gradient(118deg, var(--uwec-navy) 0%, #12306A 46%, var(--uwec-royal) 100%);
+
+  --wz-radius:     4px;
+  --wz-sans:       "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --wz-serif:      "PT Serif", Georgia, "Times New Roman", serif;
+  /* Write in monospace, read in proportional: the Preview tab covers comfort,
+     so the editor can show markdown the way every markdown editor does.
+     Swap this one line to undo it. */
+  --wz-mono:       ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+                   "Liberation Mono", "Courier New", monospace;
+}
+
+/* --------------------------------------------------------- state colours
+   Gold for available, royal for enrolling, green for completed. The brand has
+   no green, but completed is the one state with a universal colour
+   convention, and green is far easier to tell from royal at a glance than a
+   second blue would be. Tuned warm and deep so it sits with the royal and the
+   gold rather than fighting them; 6.6:1 on white.
+
+   Each state carries a solid fill and an "ink" that is legible on white, the
+   second being what an outlined card's rule and icon use. */
+.wizard-page {
+  --wz-avail-fill:  var(--uwec-gold);    --wz-avail-on:  var(--uwec-navy);
+  --wz-avail-ink:   var(--uwec-old-gold);
+  --wz-enrol-fill:  var(--uwec-royal);   --wz-enrol-on:  #fff;
+  --wz-enrol-ink:   var(--uwec-royal);
+  --wz-done-fill:   #1A6B41;             --wz-done-on:   #fff;
+  --wz-done-ink:    #14593A;
+}
+
+/* Unavailable is the absence of a state rather than one of them. */
+.wizard-page {
+  --wz-off-fill: var(--uwec-gray);
+  --wz-off-on:   #5B6B7C;
+  --wz-off-ink:  #6B7C8D;
+}
+
+/* ------------------------------------------------------------ typography */
+.wizard-page {
+  font-family: var(--wz-sans);
+  font-weight: 400;
+  color: var(--wz-ink);
+  background: #fff;
+}
+
+.wizard-page h1,
+.wizard-page h2,
+.wizard-page h3 {
+  font-family: var(--wz-serif);
+  font-weight: 700;
+  color: var(--uwec-navy);
+  letter-spacing: -0.005em;
+}
+
+.wizard-page p { line-height: 1.65; }
+.wizard-page a { color: var(--uwec-royal); }
+.wizard-page a:hover { color: var(--uwec-old-gold); }
+
+.wizard-page :focus-visible {
+  outline: 3px solid var(--uwec-gold);
+  outline-offset: 2px;
+}
+
+/* ----------------------------------------------------------------- hero */
+.wz-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--wz-gradient);
+  color: #fff;
+  padding: 4.25rem 0 3.25rem;
+}
+
+.wz-hero__art {
+  position: absolute;
+  inset: 0;
+  color: #fff;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.wz-hero__art svg { width: 100%; height: 100%; }
+
+.wz-hero__inner { position: relative; }
+
+.wizard-page .wz-hero__eyebrow {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--uwec-gold);
+  margin-bottom: 0.6rem;
+}
+
+.wizard-page .wz-hero__title {
+  font-family: var(--wz-serif);
+  font-weight: 700;
+  color: #fff;
+  font-size: clamp(2.3rem, 6vw, 3.9rem);
+  line-height: 1.04;
+  margin: 0 0 0.9rem;
+}
+
+.wz-hero__lede {
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: #DCE6F2;
+  max-width: 46ch;
+  margin: 0;
+}
+
+/* ------------------------------------------------------- status bar
+   The hero's gradient continues here, so scrolling reads as the banner
+   collapsing into a control strip rather than a new element appearing.   */
+.wz-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--uwec-navy);
+  color: #fff;
+  box-shadow: 0 2px 0 var(--uwec-gold), 0 10px 22px rgba(7, 35, 61, 0.22);
+}
+
+.wz-bar__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 0;
+}
+
+.wz-cell {
+  padding: 0.85rem 1.1rem;
+  min-width: 0;
+}
+.wz-cell + .wz-cell { box-shadow: inset 1px 0 0 rgba(178, 197, 213, 0.28); }
+
+/* "Credits toward major" needs two lines in half a phone, which drags the
+   whole bar taller; "Major credits" says the same thing on one. */
+.wz-label-short { display: none; }
+
+.wz-cell__label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--uwec-slate);
+  margin-bottom: 0.3rem;
+}
+
+.wz-cell__value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  color: #fff;
+}
+
+/* Met / unmet readouts. Gold plus a glyph, so it is never hue alone. */
+.wz-cell__value.wz-met { color: var(--uwec-gold); }
+.wz-cell__value.wz-met::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f00c";
+  margin-right: 0.45rem;
+  font-size: 0.85em;
+}
+
+/* Controls living on the navy bar */
+.wz-bar .dropdown { display: inline-block; }
+
+.wz-cell__controls {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.wz-cell__controls .dropdown { min-width: 0; }
+
+.wizard-page .wz-bar .btn {
+  font-family: var(--wz-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--wz-radius);
+  padding: 0.35rem 0.8rem;
+}
+
+.wizard-page .wz-bar .wz-select {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(178, 197, 213, 0.5);
+  color: #fff;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wizard-page .wz-bar .wz-select:hover,
+.wizard-page .wz-bar .wz-select:focus {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: var(--uwec-gold);
+  color: #fff;
+}
+
+/* Advance-a-term control: the gold circle-arrow from the university's own
+   pages, used where the arrow is the actual function.                     */
+.wizard-page .wz-next {
+  background: var(--uwec-gold);
+  border: none;
+  color: var(--uwec-navy);
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  border-radius: 50%;
+  margin-left: 0.45rem;
+  vertical-align: middle;
+}
+.wizard-page .wz-next:hover { background: #fff; color: var(--uwec-navy); }
+
+.wizard-page .wz-bar .dropdown-menu {
+  border: 1px solid var(--wz-rule);
+  border-radius: var(--wz-radius);
+  box-shadow: 0 12px 28px rgba(7, 35, 61, 0.22);
+  padding: 0.35rem;
+  font-size: 0.95rem;
+}
+.wizard-page .dropdown-item {
+  border-radius: 3px;
+  padding: 0.4rem 0.7rem;
+  color: var(--wz-ink);
+}
+.wizard-page .dropdown-item:hover { background: var(--uwec-gray); }
+.wizard-page .dropdown-item.active,
+.wizard-page .dropdown-item:active {
+  background: var(--uwec-royal);
+  color: #fff;
+}
+
+/* Plan actions: quiet next to the gold advance arrow, which is the one
+   control on this bar that should pull the eye. */
+.wz-cell--actions { min-width: 11.5rem; }
+
+.wizard-page .wz-ghost {
+  background: transparent;
+  border: 1px solid rgba(178, 197, 213, 0.5);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.28rem 0.6rem;
+  border-radius: var(--wz-radius);
+}
+.wizard-page .wz-ghost + .wz-ghost { margin-left: 0.35rem; }
+.wizard-page .wz-ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--uwec-gold);
+  color: #fff;
+}
+.wizard-page .wz-ghost--dark {
+  border-color: rgba(7, 35, 61, 0.35);
+  color: var(--uwec-navy);
+}
+.wizard-page .wz-ghost--dark:hover {
+  background: rgba(7, 35, 61, 0.08);
+  border-color: var(--uwec-navy);
+  color: var(--uwec-navy);
+}
+
+/* Hangs below the bar as a chip rather than sitting in the grid. In flow it
+   reserved height whether or not it had anything to say, and a wrapped
+   message pushed the whole sticky bar taller for good. */
+.wz-flash {
+  position: absolute;
+  top: 100%;
+  right: 1.1rem;
+  z-index: 1;
+  white-space: nowrap;
+  padding: 0.32rem 0.7rem;
+  margin-top: 0.4rem;
+  border-radius: var(--wz-radius);
+  background: var(--uwec-navy);
+  color: var(--uwec-gold);
+  box-shadow: 0 8px 20px rgba(7, 35, 61, 0.35);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+.wz-flash.is-visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wz-flash { transition: none; }
+}
+
+/* Only earns its place on a phone, where the full bar is most of the screen. */
+.wz-bar__toggle { display: none; }
+
+.wz-actions__sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 0 0.15rem 0 0.5rem;
+  background: rgba(178, 197, 213, 0.3);
+}
+.wizard-page .wz-ghost--warn { border-color: rgba(178, 197, 213, 0.28); color: #D9E3EE; }
+.wizard-page .wz-ghost--warn:hover { border-color: #C4633A; background: rgba(196, 99, 58, 0.22); color: #fff; }
+
+/* -------------------------------------------------------------- notes
+   On screen the notes sit above the plan, where you write them. On paper
+   they belong after the course breakdown, so the two swap with flex order. */
+.wz-output { display: flex; flex-direction: column; }
+.wz-notes { order: 1; padding-top: 2.5rem; }
+.wz-output .wz-plan { order: 2; }
+
+.wz-notes__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.wizard-page .wz-notes__head h2 { font-size: 1.9rem; margin: 0; }
+
+.wz-notes__tabs { display: flex; gap: 0.3rem; }
+.wizard-page .wz-tab {
+  font-family: var(--wz-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2px;
+  border: 1px solid var(--uwec-slate);
+  background: #fff;
+  color: var(--uwec-navy);
+}
+.wizard-page .wz-tab.is-active {
+  background: var(--uwec-navy);
+  border-color: var(--uwec-navy);
+  color: #fff;
+}
+
+.wz-notes__input {
+  display: block;
+  width: 100%;
+  min-height: 120px;
+  padding: 0.85rem 1rem;
+  font-family: var(--wz-mono);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  tab-size: 2;
+  color: var(--wz-ink);
+  background: #fff;
+  border: 1px solid var(--wz-rule);
+  border-top: 3px solid var(--uwec-slate);
+  border-radius: var(--wz-radius);
+  resize: vertical;
+  overflow: hidden;
+}
+.wz-notes__input:focus {
+  outline: none;
+  border-color: var(--uwec-slate);
+  border-top-color: var(--uwec-gold);
+  box-shadow: 0 0 0 3px rgba(237, 172, 26, 0.35);
+}
+
+/* The rendered copy is always kept current for printing; on screen it only
+   appears when the Preview tab is chosen. */
+.wz-notes__body { display: block; }
+.wz-notes__rendered { display: none; }
+.wz-notes.is-previewing .wz-notes__input { display: none; }
+.wz-notes.is-previewing .wz-notes__rendered {
+  display: block;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--wz-rule);
+  border-top: 3px solid var(--uwec-slate);
+  border-radius: var(--wz-radius);
+  min-height: 120px;
+}
+.wz-notes__rendered > :first-child { margin-top: 0; }
+.wz-notes__rendered > :last-child { margin-bottom: 0; }
+.wz-notes__rendered h1,
+.wz-notes__rendered h2,
+.wz-notes__rendered h3 { font-size: 1.15rem; margin: 1rem 0 0.4rem; }
+.wz-notes__rendered ul,
+.wz-notes__rendered ol { padding-left: 1.3rem; }
+.wz-notes__rendered code {
+  font-size: 0.9em;
+  background: var(--uwec-gray);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+}
+.wz-notes__rendered blockquote {
+  margin: 0.6rem 0;
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--uwec-slate);
+  color: var(--wz-ink-soft);
+}
+
+/* Wide enough for two readable columns: show the markdown and its rendering
+   together and drop the tabs, which only exist to choose between them. */
+@media (min-width: 1200px) {
+  .wz-notes__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .wz-notes__tabs { display: none; }
+  .wz-notes .wz-notes__input,
+  .wz-notes.is-previewing .wz-notes__input { display: block; }
+  .wz-notes .wz-notes__rendered,
+  .wz-notes.is-previewing .wz-notes__rendered {
+    display: block;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--wz-rule);
+    border-top: 3px solid var(--uwec-slate);
+    border-radius: var(--wz-radius);
+    background: #FBFCFE;
+    min-height: 120px;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ------------------------------------------------------------- notices */
+.wz-notice {
+  display: none;
+  margin-top: 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--wz-radius);
+  border-left: 4px solid var(--uwec-gold);
+  background: #FDF7E8;
+}
+.wz-notice p { margin: 0 0 0.6rem; font-size: 0.95rem; }
+.wz-notice__actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.wz-notice--skipped,
+.wz-notice--restored {
+  border-left-color: var(--uwec-slate);
+  background: var(--uwec-gray);
+}
+
+.wizard-page .wz-btn-danger {
+  background: #8F3708;
+  color: #fff;
+}
+.wizard-page .wz-btn-danger:hover { background: #A64510; color: #fff; }
+
+/* ---------------------------------------------------------- introduction */
+.wz-intro { padding: 2.75rem 0 0.5rem; }
+
+.wizard-page .wz-intro h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.wz-steps {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+.wz-steps li { margin-bottom: 0.5rem; line-height: 1.6; }
+
+.wz-caution {
+  border-left: 4px solid var(--uwec-gold);
+  background: #FDF7E8;
+  padding: 0.9rem 1.1rem;
+  margin-top: 1.4rem;
+}
+.wz-caution p { margin: 0; }
+
+/* -------------------------------------------------------------- legend */
+.wz-legend { list-style: none; margin: 0 0 1.4rem; padding: 0; }
+
+.wz-legend li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--wz-rule);
+}
+
+.wz-chip {
+  flex: 0 0 auto;
+  display: inline-block;
+  min-width: 7.1rem;
+  text-align: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.wz-chip::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.4rem;
+}
+
+.wz-chip--avail { background: var(--wz-avail-fill); color: var(--wz-avail-on); }
+.wz-chip--avail::before { content: "\f0a9"; }
+.wz-chip--enrol { background: var(--wz-enrol-fill); color: var(--wz-enrol-on); }
+.wz-chip--enrol::before { content: "\f073"; }
+.wz-chip--done  { background: var(--wz-done-fill);  color: var(--wz-done-on); }
+.wz-chip--done::before  { content: "\f00c"; }
+.wz-chip--off   { background: var(--wz-off-fill);   color: var(--wz-off-on); }
+.wz-chip--off::before   { content: "\f023"; }
+
+.wz-legend__note { font-size: 0.95rem; line-height: 1.5; }
+
+/* Miniature of the required/elective distinction, shown in the legend. */
+.wz-swatch-pair { display: flex; gap: 0.6rem; align-items: stretch; margin-bottom: 0.5rem; }
+.wz-swatch {
+  flex: 1;
+  border: 1px solid var(--wz-rule);
+  border-radius: var(--wz-radius);
+  overflow: hidden;
+  font-size: 0.72rem;
+  text-align: center;
+}
+.wz-swatch span { display: block; padding: 0.3rem; }
+.wz-swatch__solid { background: var(--wz-avail-fill); color: var(--wz-avail-on); font-weight: 700; }
+.wz-swatch__line {
+  border-top: 3px solid var(--wz-avail-ink);
+  color: var(--uwec-navy);
+  font-weight: 600;
+}
+.wz-swatch__body { color: var(--wz-ink-soft); }
+
+/* ------------------------------------------------------------- groups */
+.wz-group { padding-top: 2.25rem; }
+
+.wizard-page .wz-group__title {
+  font-size: 1.65rem;
+  margin: 0 0 1.15rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 2px solid var(--uwec-navy);
+}
+
+/* Equal-height cards across each row. */
+.wz-grid > [class*="col-"] { display: flex; }
+
+/* ------------------------------------------------------------- cards */
+.wizard-page .wz-card {
+  width: 100%;
+  border: 1px solid var(--wz-rule);
+  border-radius: var(--wz-radius);
+  background: #fff;
+  box-shadow: none;
+  transition: border-color 0.12s ease, transform 0.12s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wizard-page .wz-card { transition: none; }
+}
+
+.wizard-page .wz-card > .card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--wz-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.55rem 0.8rem;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  color: var(--uwec-navy);
+  border-top: 3px solid var(--wz-off-ink);
+  border-bottom: 1px solid var(--wz-rule);
+}
+
+.wz-card__icon {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+.wz-card__credits {
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 0.82rem;
+  opacity: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Badges wrap onto their own line so they never crowd the designation. */
+.wizard-page .wz-card > .card-header .badge {
+  flex: 0 0 100%;
+  text-align: left;
+  font-family: var(--wz-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 2px;
+  white-space: normal;
+}
+.wizard-page .wz-card > .card-header .badge::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.35rem;
+}
+.wizard-page .wz-card > .card-header .badge-danger {
+  background: #FBEADF;
+  color: #8F3708;
+}
+.wizard-page .wz-card > .card-header .badge-danger::before { content: "\f071"; }
+.wizard-page .wz-card > .card-header .badge-info {
+  background: #E4EDF7;
+  color: var(--uwec-navy);
+}
+.wizard-page .wz-card > .card-header .badge-info::before { content: "\f017"; }
+
+.wizard-page .wz-card > .card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+}
+
+.wz-card__name {
+  font-family: var(--wz-serif);
+  font-size: 1.02rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--wz-ink);
+  margin: 0 0 0.85rem;
+}
+
+.wz-card__actions { margin-top: auto; }
+
+/* --- state: the card's top rule, icon and (when required) header fill --- */
+.wz-card.wz-available   { border-color: var(--wz-avail-ink); }
+.wz-card.wz-available   > .card-header { border-top-color: var(--wz-avail-ink); }
+.wz-card.wz-available   .wz-card__icon { color: var(--wz-avail-ink); }
+.wz-card.wz-available   .wz-card__icon::before { content: "\f0a9"; }
+
+.wz-card.wz-enrolling   { border-color: var(--wz-enrol-ink); }
+.wz-card.wz-enrolling   > .card-header { border-top-color: var(--wz-enrol-ink); }
+.wz-card.wz-enrolling   .wz-card__icon { color: var(--wz-enrol-ink); }
+.wz-card.wz-enrolling   .wz-card__icon::before { content: "\f073"; }
+
+.wz-card.wz-completed   { border-color: var(--wz-done-ink); }
+.wz-card.wz-completed   > .card-header { border-top-color: var(--wz-done-ink); }
+.wz-card.wz-completed   .wz-card__icon { color: var(--wz-done-ink); }
+.wz-card.wz-completed   .wz-card__icon::before { content: "\f00c"; }
+
+/* Unavailable cards sink into a tinted panel. Everything you can act on sits
+   on white, so availability reads from across the grid without needing a
+   louder accent on the available state itself. */
+.wz-card.wz-unavailable {
+  background: #F1F5FA;
+  border-color: #DBE4EE;
+}
+.wz-card.wz-unavailable > .card-header {
+  background: #F1F5FA;
+  border-top-color: var(--uwec-slate);
+  border-bottom-color: #DFE7F0;
+  color: var(--wz-ink-soft);
+}
+.wz-card.wz-unavailable .wz-card__icon { color: var(--wz-off-ink); }
+.wz-card.wz-unavailable .wz-card__icon::before { content: "\f023"; }
+.wz-card.wz-unavailable .wz-card__name { color: var(--wz-ink-soft); }
+
+/* --- requirement: required courses fill their header, electives outline --- */
+.wz-card.wz-required > .card-header { border-top-width: 0; }
+
+.wz-card.wz-required.wz-available > .card-header {
+  background: var(--wz-avail-fill);
+  color: var(--wz-avail-on);
+  border-bottom-color: var(--wz-avail-fill);
+}
+.wz-card.wz-required.wz-available .wz-card__icon { color: var(--wz-avail-on); }
+
+.wz-card.wz-required.wz-enrolling > .card-header {
+  background: var(--wz-enrol-fill);
+  color: var(--wz-enrol-on);
+  border-bottom-color: var(--wz-enrol-fill);
+}
+.wz-card.wz-required.wz-enrolling .wz-card__icon { color: var(--wz-enrol-on); }
+
+.wz-card.wz-required.wz-completed > .card-header {
+  background: var(--wz-done-fill);
+  color: var(--wz-done-on);
+  border-bottom-color: var(--wz-done-fill);
+}
+.wz-card.wz-required.wz-completed .wz-card__icon { color: var(--wz-done-on); }
+
+.wz-card.wz-required.wz-unavailable > .card-header {
+  background: var(--uwec-slate);
+  color: var(--uwec-navy);
+  border-bottom-color: var(--uwec-slate);
+}
+.wz-card.wz-required.wz-unavailable .wz-card__icon { color: var(--wz-off-on); }
+
+.wz-card.wz-required .wz-card__credits { opacity: 0.75; }
+
+/* ------------------------------------------------------------ switches */
+.wizard-page .wz-card .custom-control { min-height: 1.5rem; padding-left: 2.6rem; }
+.wizard-page .wz-card .custom-control + .custom-control { margin-top: 0.25rem; }
+
+.wizard-page .wz-card .custom-control-label {
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: var(--wz-ink);
+  cursor: pointer;
+  padding-top: 0.05rem;
+}
+.wizard-page .wz-card .custom-control-input:disabled ~ .custom-control-label {
+  color: #9AA8B6;
+  cursor: not-allowed;
+}
+
+.wizard-page .wz-card .custom-control-label::before {
+  left: -2.6rem;
+  width: 2rem;
+  height: 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--uwec-slate);
+  background: #E7EDF4;
+}
+.wizard-page .wz-card .custom-control-label::after {
+  left: calc(-2.6rem + 2px);
+  top: calc(0.25rem + 2px);
+  width: calc(1.1rem - 6px);
+  height: calc(1.1rem - 6px);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(7, 35, 61, 0.3);
+}
+.wizard-page .wz-card .custom-control-input:checked ~ .custom-control-label::after {
+  transform: translateX(0.9rem);
+}
+
+.wizard-page .wz-switch--done .custom-control-input:checked ~ .custom-control-label::before {
+  background: var(--wz-done-fill);
+  border-color: var(--wz-done-fill);
+}
+.wizard-page .wz-switch--enrol .custom-control-input:checked ~ .custom-control-label::before {
+  background: var(--wz-enrol-fill);
+  border-color: var(--wz-enrol-fill);
+}
+.wizard-page .wz-card .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 3px rgba(237, 172, 26, 0.6);
+}
+
+/* Details stays neutral in every state: the header already says three times
+   over what state the course is in. */
+.wizard-page .wz-details {
+  align-self: flex-start;
+  margin-top: 0.7rem;
+  font-family: var(--wz-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2px;
+  border: 1px solid var(--uwec-slate);
+  background: #fff;
+  color: var(--uwec-navy);
+}
+.wizard-page .wz-details:hover {
+  background: var(--uwec-navy);
+  border-color: var(--uwec-navy);
+  color: #fff;
+}
+
+/* --------------------------------------------------------- course plan */
+.wz-plan { padding-top: 2.5rem; }
+
+.wizard-page .wz-plan__title {
+  font-size: 1.9rem;
+  margin: 0 0 1.1rem;
+}
+
+.wizard-page .wz-plan table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.wizard-page .wz-plan th,
+.wizard-page .wz-plan td {
+  padding: 0.45rem 0.7rem;
+  border: 0;
+  border-bottom: 1px solid var(--wz-rule);
+  vertical-align: top;
+}
+
+.wizard-page .wz-plan .wz-plan__term th {
+  background: var(--uwec-navy);
+  color: #fff;
+  font-family: var(--wz-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: 0.01em;
+  border-bottom: 0;
+}
+
+.wizard-page .wz-plan .wz-plan__head th {
+  background: var(--uwec-gray);
+  color: var(--uwec-navy);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--uwec-slate);
+}
+
+.wizard-page .wz-plan tbody tr:hover td { background: #F7FAFD; }
+
+.wizard-page .wz-plan .wz-plan__desig {
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.wizard-page .wz-plan .wz-plan__credits {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  width: 5.5rem;
+}
+
+.wizard-page .wz-plan .wz-plan__total td {
+  font-weight: 700;
+  color: var(--uwec-navy);
+  border-bottom: 2px solid var(--uwec-navy);
+  background: #fff;
+}
+.wizard-page .wz-plan .wz-plan__total td:first-child { text-align: right; }
+
+.wz-plan__print {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  color: var(--wz-ink-soft);
+}
+
+/* A course added despite not being open: marked on the card and on the
+   printout, since it is the one entry an advisor has to look at twice. */
+.wz-card.wz-forced > .card-header::after {
+  content: "\f071";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.78em;
+  margin-left: 0.1rem;
+  opacity: 0.85;
+}
+
+/* Enrolling stays reachable on a locked course, but reads as the unusual
+   action it is: clicking it asks before doing anything. */
+.wz-card.wz-unavailable .wz-switch--enrol .custom-control-label {
+  color: var(--wz-ink-soft);
+  font-style: italic;
+}
+
+.wz-reasons {
+  margin: 0 0 0.9rem;
+  padding-left: 1.15rem;
+}
+.wz-reasons li {
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.wz-plan__note {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--wz-ink-soft);
+}
+.wz-plan__flag {
+  font-weight: 700;
+  color: #8F3708;
+}
+
+/* -------------------------------------------------------------- modal */
+.wizard-page .modal-content {
+  border: 0;
+  border-radius: var(--wz-radius);
+  border-top: 5px solid var(--uwec-gold);
+}
+.wizard-page .modal-header {
+  background: var(--uwec-navy);
+  color: #fff;
+  border-bottom: 0;
+  padding: 0.9rem 1.1rem;
+}
+.wizard-page .modal-title {
+  font-family: var(--wz-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+.wizard-page .modal-header .close { color: #fff; opacity: 0.85; text-shadow: none; }
+.wizard-page .modal-header .close:hover { opacity: 1; }
+.wizard-page .modal-body { padding: 1.1rem; }
+.wizard-page .modal-body p { font-size: 0.95rem; margin-bottom: 0.6rem; }
+.wizard-page .modal-footer { border-top: 1px solid var(--wz-rule); padding: 0.8rem 1.1rem; }
+
+.wizard-page .modal-footer .btn {
+  font-family: var(--wz-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: var(--wz-radius);
+  border: 1px solid transparent;
+  padding: 0.4rem 0.95rem;
+}
+.wizard-page .wz-btn-quiet {
+  background: #fff;
+  border-color: var(--uwec-slate);
+  color: var(--uwec-navy);
+}
+.wizard-page .wz-btn-quiet:hover { background: var(--uwec-gray); color: var(--uwec-navy); }
+.wizard-page .wz-btn-enrol {
+  background: var(--wz-enrol-fill);
+  color: var(--wz-enrol-on);
+}
+.wizard-page .wz-btn-enrol:hover { filter: brightness(1.15); color: var(--wz-enrol-on); }
+.wizard-page .wz-btn-done {
+  background: var(--wz-done-fill);
+  color: var(--wz-done-on);
+}
+.wizard-page .wz-btn-done:hover { filter: brightness(1.35); color: var(--wz-done-on); }
+
+.wizard-page .popover-header { font-family: var(--wz-sans); font-weight: 700; }
+.wizard-page .popover-body { font-size: 0.9rem; }
+
+/* ------------------------------------------------------------- footer */
+.wizard-page .footer { color: var(--wz-ink-soft); font-size: 0.9rem; }
+
+/* ------------------------------------------------------------ responsive */
+@media (max-width: 991.98px) {
+  .wz-bar__grid { grid-template-columns: repeat(2, 1fr); }
+  .wz-cell:nth-child(3) { box-shadow: none; }
+  .wz-cell:nth-child(n + 3) { box-shadow: inset 0 1px 0 rgba(178, 197, 213, 0.28); }
+  .wz-cell:nth-child(4) { box-shadow: inset 0 1px 0 rgba(178, 197, 213, 0.28), inset 1px 0 0 rgba(178, 197, 213, 0.28); }
+  .wz-cell--actions { grid-column: 1 / -1; }
+}
+
+/* Between the collapsing bar and a roomy desktop the five cells are tight:
+   at 1100px the term menu came up nine pixels short and the credits label
+   wrapped onto a second line, which set the height of the whole bar. Print
+   keeps its icon, and the credits label uses its shorter wording. */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .wz-label-long { display: none; }
+  .wz-label-short { display: inline; }
+  .wz-cell--actions .wz-btn-text { display: none; }
+  .wizard-page .wz-bar .btn { padding: 0.35rem 0.62rem; font-size: 0.95rem; }
+  .wz-cell { padding: 0.85rem 0.75rem; }
+}
+
+/* --------------------------------------- the bar once it stops fitting
+   Collapsed, the bar keeps the two things the board is read against: which
+   term you are looking at, and how the credits stand. Degree, requirements
+   and the plan actions are all set-and-forget, so they wait behind More.
+   Everything here reuses the real controls, so the term menu and its advance
+   arrow keep working while collapsed. */
+@media (max-width: 991.98px) {
+  .wz-bar .container-fluid {
+    display: flex;
+    align-items: stretch;
+    padding-right: 0;
+  }
+  .wz-bar__grid {
+    flex: 1;
+    min-width: 0;
+    /* The term needs the room: it carries a menu and the advance arrow,
+       while the credits read "0.5 / 36". */
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  }
+
+  .wz-bar__toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    flex: 0 0 auto;
+    width: 4.1rem;
+    padding: 0.4rem 0.3rem;
+    border: 0;
+    border-left: 1px solid rgba(178, 197, 213, 0.28);
+    border-radius: 0;
+    background: transparent;
+    color: var(--uwec-slate);
+    font-family: var(--wz-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .wz-bar__toggle:hover,
+  .wz-bar__toggle:focus { color: #fff; background: rgba(255, 255, 255, 0.08); }
+  .wz-bar__toggle .fa-chevron-down { transition: transform 0.18s ease; }
+
+  /* Collapsed: term and credits only. */
+  .wz-cell--degree,
+  .wz-cell--reqs,
+  .wz-cell--actions { display: none; }
+  .wz-cell--term { box-shadow: none; }
+
+  .wz-bar.is-open .wz-cell--degree,
+  .wz-bar.is-open .wz-cell--reqs { display: block; }
+  .wz-bar.is-open .wz-cell--actions { display: block; grid-column: 1 / -1; }
+  .wz-bar.is-open .wz-bar__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .wz-bar.is-open .wz-bar__toggle .fa-chevron-down { transform: rotate(180deg); }
+
+  .wz-cell { padding: 0.5rem 0.6rem; }
+  .wz-cell__label { font-size: 0.64rem; margin-bottom: 0.15rem; }
+  .wz-cell__value { font-size: 1.02rem; }
+  .wz-label-long { display: none; }
+  .wz-label-short { display: inline; }
+  .wz-bar__toggle { width: 3.5rem; }
+
+  .wz-flash {
+    right: 0.6rem;
+    left: 0.6rem;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wz-bar__toggle .fa-chevron-down { transition: none; }
+}
+
+@media (max-width: 575.98px) {
+  /* Phone width: a degree name and a term menu with its arrow cannot share a
+     row, so each takes its own. The extra height only lands in the opened
+     state, which is deliberate and temporary, not the bar you work against. */
+  .wz-bar.is-open .wz-cell--degree,
+  .wz-bar.is-open .wz-cell--term { grid-column: 1 / -1; }
+
+  .wz-hero { padding: 2.75rem 0 2.25rem; }
+  .wz-cell { padding: 0.65rem 0.7rem; }
+  .wz-cell__value { font-size: 1.1rem; }
+  .wz-chip { min-width: 6.4rem; }
+  /* Keep the term and its advance arrow on one line without truncating the year. */
+  .wizard-page .wz-bar .btn { font-size: 0.9rem; padding: 0.3rem 0.5rem; }
+  .wizard-page .wz-next { width: 2rem; height: 2rem; margin-left: 0.3rem; }
+}
+
+/* ---------------------------------------------------------------- print
+   Printing is how a student walks out with the plan, so the plan gets the
+   whole page and drops every screen-only flourish.                        */
+@media print {
+  /* header_common.html declares .no-print, but this file loads after it and
+     at the same specificity, so any display: block here would quietly beat
+     it -- which is how the raw notes textarea ended up on the printout
+     beside its own rendered copy. Settle it for the whole page. */
+  .wizard-page .no-print { display: none !important; }
+
+  .wizard-page { background: #fff; }
+  .wz-plan { padding-top: 0; }
+  .wizard-page .wz-plan__title { font-size: 1.5rem; }
+  .wizard-page .wz-plan .wz-plan__term th {
+    background: #fff !important;
+    color: #000;
+    border-bottom: 2px solid #000;
+  }
+  .wizard-page .wz-plan .wz-plan__head th {
+    background: #fff !important;
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+  .wizard-page .wz-plan .wz-plan__total td { border-bottom: 1.5px solid #000; }
+  .wz-plan__flag { color: #000; }
+  .wz-plan__note { color: #000; }
+  .wizard-page .wz-plan table { page-break-inside: auto; }
+  .wizard-page .wz-plan tr { page-break-inside: avoid; }
+
+  /* Notes print after the course breakdown, rendered, and an empty notes
+     field prints nothing at all. */
+  .wz-notes { order: 2; padding-top: 1.5rem; }
+  .wz-output .wz-plan { order: 1; }
+  .wz-notes.is-empty { display: none; }
+  /* Matches the Preview-tab rule's specificity, so the on-screen box does not
+     follow the notes onto paper when Preview happens to be the active tab. */
+  .wz-notes .wz-notes__rendered,
+  .wz-notes.is-previewing .wz-notes__rendered {
+    display: block;
+    border: 0;
+    padding: 0;
+    min-height: 0;
+  }
+  .wz-notes::before {
+    content: "Notes";
+    display: block;
+    font-family: var(--wz-serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #000;
+    border-bottom: 1.5px solid #000;
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.6rem;
+  }
+}

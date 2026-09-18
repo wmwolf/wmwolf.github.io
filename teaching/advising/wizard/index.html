@@ -27,190 +27,329 @@
 
 </head>
 
-  <meta name="keywords" content="UWEC, university, Wisconsin, Eau Claire,
-  astrophysics, astronomy, astro, professor Bill, William, Wolf, research, theory, nova, novae, supernova, physics"/>
-  <title>Physics Adising Wizard</title>
+  <meta name="keywords" content="UWEC, university, Wisconsin, Eau Claire, physics,
+  astronomy, advising, degree plan, course planning, major, minor, Blugold"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Serif:wght@400;700&display=swap">
+  <link rel="stylesheet" type="text/css" href="/css/wizard.css" media="screen, print">
+  <!-- Markdown for the notes field. If it fails to load, wizard.js falls back
+       to plain text with the line breaks kept. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js"></script>
+  <title>Physics Advising Wizard</title>
 </head>
+<body class="wizard-page">
+  <div class="wrapper">
 
-<body>
-  <div class='wrapper'>
-    <div class="splash bckgrd-physics no-print">
-    </div>
-    <div class="container">
-      <div class="text-center pb-3 no-print">
-        <h1 class='display-3'>Physics Advising Wizard</h1>
+    <header class="wz-hero no-print">
+      <div class="wz-hero__art" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round">
+          <path d="M-40,81.0 C260,-1.9000000000000057 380,218.1 620,271.5 S980,248.1 1080,98.1 S1240,-49.0 1460,1.0"/>
+          <path d="M-40,94.0 C260,25.4 380,245.4 620,291.0 S980,275.4 1080,125.4 S1240,-36.0 1460,14.0"/>
+          <path d="M-40,107.0 C260,52.7 380,272.7 620,310.5 S980,302.7 1080,152.7 S1240,-23.0 1460,27.0"/>
+          <path d="M-40,120.0 C260,80.0 380,300.0 620,330.0 S980,330.0 1080,180.0 S1240,-10.0 1460,40.0"/>
+          <path d="M-40,133.0 C260,107.3 380,327.3 620,349.5 S980,357.3 1080,207.3 S1240,3.0 1460,53.0"/>
+          <path d="M-40,146.0 C260,134.6 380,354.6 620,369.0 S980,384.6 1080,234.6 S1240,16.0 1460,66.0"/>
+          <path d="M-40,159.0 C260,161.9 380,381.9 620,388.5 S980,411.9 1080,261.9 S1240,29.0 1460,79.0"/>
+        </g>
+      </svg>
       </div>
-      <div class="sticky bg-white no-print py-3">
+      <div class="container wz-hero__inner">
+        <p class="wz-hero__eyebrow">Department of Physics and Astronomy</p>
+        <h1 class="wz-hero__title">Physics Advising Wizard</h1>
+        <p class="wz-hero__lede">
+          Plan every term between now and graduation, and watch courses open up
+          as you satisfy their prerequisites.
+        </p>
+      </div>
+    </header>
+
+    <div class="wz-bar no-print">
   <div class="container-fluid">
+    <div class="wz-bar__grid" id="bar-grid">
+
+      <div class="wz-cell wz-cell--degree">
+        <span class="wz-cell__label" id="degree-label">Degree</span>
+        <div class="dropdown">
+          <button class="btn wz-select dropdown-toggle" type="button" id="degree-plan-dropdown"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  aria-labelledby="degree-label degree-plan-dropdown"></button>
+          <div class="dropdown-menu" aria-labelledby="degree-plan-dropdown" id="degree-plan-menu">
+            <!-- filled in by wizard.js -->
+          </div>
+        </div>
+      </div>
+
+      <div class="wz-cell wz-cell--term">
+        <span class="wz-cell__label" id="term-label">Term</span>
+        <div class="wz-cell__controls">
+        <div class="dropdown">
+          <button class="btn wz-select dropdown-toggle" type="button" id="year-term-dropdown"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  aria-labelledby="term-label year-term-dropdown">Term 0</button>
+          <div class="dropdown-menu" aria-labelledby="year-term-dropdown" id="year-term-menu">
+            <a class="dropdown-item year-term-option active" data-position=0 href="#">Term 0</a>
+            <a class="dropdown-item year-term-option" data-position=1 href="#">Term 1</a>
+            <a class="dropdown-item year-term-option" data-position=2 href="#">Term 2</a>
+            <a class="dropdown-item year-term-option" data-position=3 href="#">Term 3</a>
+            <a class="dropdown-item year-term-option" data-position=4 href="#">Term 4</a>
+            <a class="dropdown-item year-term-option" data-position=5 href="#">Term 5</a>
+            <a class="dropdown-item year-term-option" data-position=6 href="#">Term 6</a>
+            <a class="dropdown-item year-term-option" data-position=7 href="#">Term 7</a>
+            <a class="dropdown-item year-term-option" data-position=8 href="#">Term 8</a>
+            <a class="dropdown-item year-term-option" data-position=9 href="#">Term 9</a>
+            <a class="dropdown-item year-term-option" data-position=10 href="#">Term 10</a>
+            <a class="dropdown-item year-term-option" data-position=11 href="#">Term 11</a>
+          </div>
+        </div>
+        <button class="btn wz-next" id="next-term" title="Go to the next term">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          <span class="sr-only">Go to the next term</span>
+        </button>
+        </div>
+      </div>
+
+      <div class="wz-cell wz-cell--credits">
+        <span class="wz-cell__label"><span class="wz-label-long">Credits toward major</span><span class="wz-label-short">Major credits</span></span>
+        <p class="wz-cell__value" id="credit-status">
+          <span id="credit_count">0</span> / <span id="credits-needed"></span>
+        </p>
+      </div>
+
+      <div class="wz-cell wz-cell--reqs">
+        <span class="wz-cell__label">Requirements</span>
+        <p class="wz-cell__value" id="requirement-status">Incomplete</p>
+      </div>
+
+      <div class="wz-cell wz-cell--actions">
+        <span class="wz-cell__label">This plan</span>
+        <div class="wz-cell__controls">
+          <button type="button" class="btn wz-ghost" id="copy-link"
+                  title="Copy as link" aria-label="Copy as link">
+            <i class="fas fa-copy" aria-hidden="true"></i> <span class="wz-btn-text">Copy as link</span>
+          </button>
+          <button type="button" class="btn wz-ghost" id="print-plan"
+                  title="Print this plan" aria-label="Print this plan">
+            <i class="fas fa-print" aria-hidden="true"></i> <span class="wz-btn-text">Print</span>
+          </button>
+          <span class="wz-actions__sep" aria-hidden="true"></span>
+          <button type="button" class="btn wz-ghost wz-ghost--warn" id="reset-plan">Reset</button>
+        </div>
+      </div>
+
+    </div>
+    <button type="button" class="btn wz-bar__toggle" id="bar-toggle"
+            aria-expanded="false" aria-controls="bar-grid">
+      <span class="wz-bar__more">More</span>
+      <i class="fas fa-chevron-down" aria-hidden="true"></i>
+    </button>
+  </div>
+  <span class="wz-flash" id="copy-flash" role="status" aria-live="polite"></span>
+</div>
+
+<div class="container no-print">
+  <div class="wz-notice wz-notice--shared" id="shared-notice" role="status">
+    <p>
+      <b>You are looking at a shared plan.</b> Your own plan is still saved on this
+      device and is not being changed. Anything you do here lives only in the address
+      bar, so copy the link before you leave if you want to come back to it.
+    </p>
+    <div class="wz-notice__actions">
+      <button type="button" class="btn wz-ghost wz-ghost--dark" id="back-to-mine">Back to my plan</button>
+      <button type="button" class="btn wz-ghost wz-ghost--dark wz-notice__dismiss">Dismiss</button>
+    </div>
+  </div>
+
+  <div class="wz-notice wz-notice--restored" id="restored-notice" role="status">
+    <p>
+      <b>Picked up the plan you had going on this device.</b><span id="restored-when"></span>
+      It is saved here automatically, so you can close the page and come back to it.
+      To open it somewhere else, or to send it to an advisor, use <b>Copy as link</b>.
+    </p>
+    <div class="wz-notice__actions">
+      <button type="button" class="btn wz-ghost wz-ghost--dark wz-notice__dismiss">Got it</button>
+    </div>
+  </div>
+
+  <div class="wz-notice wz-notice--skipped" id="skipped-notice" role="status">
+    <p>
+      Some courses in that plan are no longer in the catalog and were left out:
+      <b id="skipped-courses"></b>. Everything else came through.
+    </p>
+    <div class="wz-notice__actions">
+      <button type="button" class="btn wz-ghost wz-ghost--dark wz-notice__dismiss">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div id="instructions" class="wz-intro no-print">
     <div class="row">
-      <!-- Left Section - Degree and Term -->
-      <div class="col-12 col-lg-6">
-        <!-- Degree Row -->
-        <div class="row mb-2">
-          <div class="col-5">
-            <h3 class='text-right'>Degree</h3>
-          </div>
-          <div class="col-7">
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" id="degree-plan-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                
-              </button>
-              <div class="dropdown-menu" aria-labelledby="degree-plan-dropdown" id='degree-plan-menu'>
-                <!-- This gets filled in by javascript -->
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Term Row -->
-        <div class="row">
-          <div class="col-5">
-            <h3 class='text-right'>Term</h3>
-          </div>
-          <div class="col-7">
-            <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" id="year-term-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Term 0
-              </button>
-              <div class="dropdown-menu" aria-labelledby="year-term-dropdown" id='year-term-menu'>
-                <a class="dropdown-item year-term-option active" data-position=0 href="#">Term 0</a>
-                <a class="dropdown-item year-term-option" data-position=1 href="#">Term 1</a>
-                <a class="dropdown-item year-term-option" data-position=2 href="#">Term 2</a>
-                <a class="dropdown-item year-term-option" data-position=3 href="#">Term 3</a>
-                <a class="dropdown-item year-term-option" data-position=4 href="#">Term 4</a>
-                <a class="dropdown-item year-term-option" data-position=5 href="#">Term 5</a>
-                <a class="dropdown-item year-term-option" data-position=6 href="#">Term 6</a>
-                <a class="dropdown-item year-term-option" data-position=7 href="#">Term 7</a>
-                <a class="dropdown-item year-term-option" data-position=8 href="#">Term 8</a>
-                <a class="dropdown-item year-term-option" data-position=9 href="#">Term 9</a>
-                <a class="dropdown-item year-term-option" data-position=10 href="#">Term 10</a>
-                <a class="dropdown-item year-term-option" data-position=11 href="#">Term 11</a>
-              </div>
-              <button class="btn btn-success" id="next-term"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
-            </div>
-          </div>
+
+      <div class="col-12 col-lg-7">
+        <h2>Build your plan</h2>
+        <ol class="wz-steps">
+          <li>Pick your degree plan from the <b>Degree</b> menu.</li>
+          <li>Turn on <b>Completed</b> for every course you have already finished.</li>
+          <li>Turn on <b>Enrolling</b> for the courses you are taking in the selected term.</li>
+          <li>Move to the next term with the gold arrow, or jump to any term from the <b>Term</b> menu.</li>
+          <li>Repeat steps 3 and 4 until you reach graduation.</li>
+        </ol>
+        <p class="mt-3">
+          Your choices build up the course plan at the bottom of the page.
+          <b>Print</b> gives you just that plan and your notes, ready for an
+          advising appointment.
+        </p>
+        <p>
+          The wizard covers courses for a major or minor in Physics and Astronomy. It does
+          not yet track liberal education requirements, it knows nothing about your second
+          major or minor, and it cannot handle repeatable variable-credit courses such as
+          PHYS 399 or PHYS 495.
+        </p>
+        <div class="wz-caution">
+          <p>
+            <b>This tool is not a substitute for meeting with your advisors.</b> Meet with
+            your academic and faculty advisors each semester to confirm your plan and to
+            talk through research, internships, careers, and graduate study.
+          </p>
         </div>
       </div>
-      
-      <!-- Right Section - Credits and Requirements -->
-      <div class="col-12 col-lg-6 mt-3 mt-lg-0">
-        <!-- Credits Row -->
-        <div class="row mb-2">
-          <div class="col-5">
-            <h3 class='text-right'>Credits</h3>
+
+      <div class="col-12 col-lg-5">
+        <h2>Reading the board</h2>
+        <ul class="wz-legend">
+          <li>
+            <span class="wz-chip wz-chip--avail">Available</span>
+            <span class="wz-legend__note">You can take it in the selected term.</span>
+          </li>
+          <li>
+            <span class="wz-chip wz-chip--enrol">Enrolling</span>
+            <span class="wz-legend__note">You have chosen it for the selected term.</span>
+          </li>
+          <li>
+            <span class="wz-chip wz-chip--done">Completed</span>
+            <span class="wz-legend__note">Finished in this term or an earlier one.</span>
+          </li>
+          <li>
+            <span class="wz-chip wz-chip--off">Unavailable</span>
+            <span class="wz-legend__note">Shaded. Not offered this term, or you are missing a requirement.</span>
+          </li>
+        </ul>
+
+        <div class="wz-swatch-pair">
+          <div class="wz-swatch">
+            <span class="wz-swatch__solid">PHYS 231</span>
+            <span class="wz-swatch__body">You have to take this</span>
           </div>
-          <div class="col-7">
-            <h3 class="text-danger font-weight-bold" id='credit-status'><span id='credit_count'>0</span> / <span id="credits-needed"></span></h3>
+          <div class="wz-swatch">
+            <span class="wz-swatch__line">PHYS 445</span>
+            <span class="wz-swatch__body">Optional for this plan</span>
           </div>
         </div>
-        
-        <!-- Requirements Row -->
-        <div class="row">
-          <div class="col-5">
-            <h3 class='text-right'>Requirements</h3>
-          </div>
-          <div class="col-7">
-            <h3 class="text-danger font-weight-bold" id='requirement-status'>Incomplete</h3>
-          </div>
+        <p>
+          A course with a filled header is one you have to take to finish the selected
+          plan. That covers the plan's outright requirements, any option you have not
+          ruled out yet, and anything those courses depend on &mdash; which is why the
+          calculus sequence is filled even though it earns no credit toward the major.
+          Applied Physics majors, for instance, must take PHYS 255 <b>and</b> PHYS 356,
+          <b>or</b> either PHYS 365 or PHYS 375 &mdash; once any one of those is satisfied,
+          the others go quiet. You have met the <em>major</em> requirements when every
+          filled-header course is completed and you have the
+          <a tabindex="5" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="Credits Counted Toward Major" data-content="These include all required physics courses except PHYS 240. Additionally, any physics electives numbered over 325, and select courses from MSE count. Up to 6 credits may be counted from any combination of PHYS 399, PHYS 491, and PHYS 499. Up to 3 credits may be counted from PHYS 495.">credits counted toward the major</a>.
+        </p>
+        <p>
+          An unavailable course may be waiting on a
+          <a tabindex="1" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="Corequisite Courses" data-content="These are courses that must be taken before or concurrently with a particular course. For example, PHYS 231 has MATH 114 as a corequisite, so you must take MATH 114 before, or along with PHYS 231.">corequisite</a>, a
+          <a tabindex="2" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="Prerequisite Courses" data-content="These are courses that must be completed before enrolling in another course. For example, PHYS 232 has PHYS 231 as a prerequisite, so you must complete PHYS 231 before you can enroll in PHYS 232.">prerequisite</a>, a
+          <a tabindex="3" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="Complex Prerequisites" data-content="This isn't common, but sometimes courses have multiple potential prerequisites. For exampls, PHYS 430 requires completing any two of PHYS 340, PHYS 350, and PHYS 360">more complex set of courses</a>, or the
+          <a tabindex="4" class="popover-dismiss" role="button" data-toggle="popover" data-trigger="focus" title="Course Scheduling" data-content="Some courses, like PHYS 231/232/332 are offered every single term. Others, like PHYS 350, are offered once a year. Still others, like PHYS 375, are only offered every other year.">term it is offered in</a>.
+          Open <b>Details</b> on any card to see what it needs. PHYS 486 has a looser
+          requirement than the wizard can model, so it may look available early.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="body" class="no-print"></div>
+
+  <div class="wz-output">
+    <section class="wz-notes is-empty" id="notes">
+      <div class="wz-notes__head no-print">
+        <h2>Notes</h2>
+        <div class="wz-notes__tabs" role="tablist">
+          <button type="button" class="btn wz-tab is-active" id="notes-write" role="tab" aria-selected="true">Write</button>
+          <button type="button" class="btn wz-tab" id="notes-preview" role="tab" aria-selected="false">Preview</button>
         </div>
+      </div>
+      <div class="wz-notes__body">
+      <textarea id="notes-input" class="wz-notes__input no-print"
+                placeholder="Questions for your advisor, why you chose an elective, a substitution you want to ask about. Markdown works.&#10;&#10;Notes print with your plan, but they stay on this device — Copy as link does not carry them."></textarea>
+      <div class="wz-notes__rendered" id="notes-rendered"></div>
+      </div>
+    </section>
+
+    <div id="course-plan" class="wz-plan"></div>
+  </div>
+</div>
+
+<!-- Enrolling in something the plan says is not open -->
+<div class="modal fade no-print" id="force-confirm" tabindex="-1" aria-labelledby="force-confirm-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="force-confirm-label">Course title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="force-lede">This course is not open to you in <b id="force-term">the selected term</b>:</p>
+        <ul class="wz-reasons" id="force-reasons"></ul>
+        <p class="mb-0">
+          Add it anyway if you have arranged a substitution, an independent study, or
+          a seat in a term the catalog does not show. It will count toward your plan
+          and be marked on the printout so your advisor can see it was added by hand.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn wz-btn-quiet" data-dismiss="modal">Leave it alone</button>
+        <button type="button" class="btn wz-btn-enrol" id="force-confirm-go">Add it anyway</button>
       </div>
     </div>
   </div>
 </div>
 
-<div id="instructions" class='no-print'>
-  <div class="row">
-    <div class="col-12 col-lg-6">
-      <h1>Instructions</h1>
-      <p>
-        This wizard will guide you through planning out the rest of your
-        studies for a major or minor in the department of Physics and Astronomy
-        at UWEC. It does <em>not</em> account for liberal education
-        requirements (yet), and obviously won't account for your second major
-        or minor. It also cannot handle repeatable variable credit classes like
-        PHYS 399 or PHYS 495.
-      </p>
-      <p>
-        Here's how to use it:
-      </p>
-      <ol>
-        <li>
-          Select your degree plan from the "Degree" dropdown menu.
-        </li>
-        <li>
-          Mark all courses you have <em>already completed</em> in prior terms
-          by toggling the "Completed" switches for those classes.
-        </li>
-        <li>
-          Mark all courses you are enrolling in for the selected term by toggling the "Enrolling" switch for those courses.
-        </li>
-        <li>
-          Advance to the next tern by clicking the green button next to the
-          "Term" indicator, or by selecting a new term from the dropdown menu.
-        </li>
-        <li>
-          Repeat steps 3 and 4 as needed to build up a plan.
-        </li>
-      </ol>
-      <p>
-        As you mark courses enrolled or completed, they will appear in your
-        course plan at the bottom of the page. When you're done, you can
-        <a href='#' id='print-page'>print the page</a> to a printer or to pdf to get just the final
-        course plan.
-      </p>
-      <p>
-        <b>This tool is not a substitute for meeting with your academic and faculty advisors!</b> You should meet with your advisors each semester to confirm your course plan and discuss research, internship, career, and graduate study plans.
-      </p>
-    </div>
-    <div class="col-12 col-lg-6">
-      <h1>More information</h1>
-      <p>Courses in <span class="font-weight-bold text-warning">gold</span> are
-        <span class="font-weight-bold text-warning">available</span> for you to
-        take in the selected term. You have completed their prerequisites or enrolled in their corequsites, and they are offered in the indicacted term (though PHYS 486 has a more nebulous
-        requirement, so it may appear prematurely available).
-      </p>
-      <p>
-        Courses in <span class="font-weight-bold text-primary">blue</span> are
-        courses you are
-        <span class="font-weight-bold text-primary">enrolling</span> in for the
-        designated term. Advancing to a later term will turn them
-        <span class="font-weight-bold text-success">green</span>, indicating
-        that you have
-        <span class='font-weight-bold text-success'>completed</span> them.
-      </p>
-      <p>
-        Courses that are <span class="font-weight-bold text-muted">gray</span>
-        are <span class="font-weight-bold text-muted">unavailable</span>.
-        They may require one or more <a tabindex="1" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Corequisite Courses" data-content="These are courses that must be taken before or concurrently with a particular course. For example, PHYS 231 has MATH 114 as a corequisite, so you must take MATH 114 before, or along with PHYS 231.">corequisite</a> or <a tabindex="2" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Prerequisite Courses" data-content="These are courses that must be completed before enrolling in another course. For example, PHYS 232 has PHYS 231 as a prerequisite, so you must complete PHYS 231 before you can enroll in PHYS 232.">prerequisite</a> courses, a <a tabindex="3" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Complex Prerequisites" data-content="This isn't common, but sometimes courses have multiple potential prerequisites. For exampls, PHYS 430 requires completing any two of PHYS 340, PHYS 350, and PHYS 360">more complex set of courses</a>, or
-        they may <a tabindex="4" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Course Scheduling" data-content="Some courses, like PHYS 231/232/332 are offered every single term. Others, like PHYS 350, are offered once a year. Still others, like PHYS 375, are only offered every other year.">not be offered in that particular term</a>. Check the requirements and
-        availability of a course by clicking on its "Details" button.
-      </p>
-      <p>
-        Finally, courses with a 
-        <span class='font-weight-bold'>thicker border and title</span> are 
-        <span class='font-weight-bold'>required</span> for the selected
-        degree plan. They may be outright required, or they may be part of
-        a selection of courses that you may opt to take. For instance, Applied
-        Physics emphasis majors must take both PHYS 255 <b>and</b> PHYS 356,
-        <b>or</b> they may take either of PHYS 365 or PHYS 375. Once any of
-        these three requirements are completed, the other courses will no
-        longer be indicated as required. You will have satisfied all
-        <em>major</em> degree requirements when all bold classes are green and
-        <a tabindex="5" class='popover-dismiss' role='button' data-toggle="popover" data-trigger="focus" title="Credits Counted Toward Major" data-content="These include all required physics courses except PHYS 240. Additionally, any physics electives numbered over 325, and select courses from MSE count. Up to 6 credits may be counted from any combination of PHYS 399, PHYS 491, and PHYS 499. Up to 3 credits may be counted from PHYS 495.">credits counted towards the major</a>.      
-      </p>
+<!-- Reset confirmation -->
+<div class="modal fade no-print" id="reset-confirm" tabindex="-1" aria-labelledby="reset-confirm-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reset-confirm-label">Start this plan over?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Every course goes back to untouched, your notes are cleared, and the term
+          returns to the present one. Your degree plan selection stays as it is.
+        </p>
+        <p>
+          This clears the copy saved on this device too, so it cannot be undone. If you
+          might want this plan back, copy its link first.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn wz-btn-quiet" data-dismiss="modal">Keep my plan</button>
+        <button type="button" class="btn wz-btn-danger" id="reset-confirm-go">Reset the plan</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="body" class="no-print">
-  
-</div>
-
-<div id="course-plan">
-  
-</div>
-
-<!-- Modal -->
+<!-- Course detail dialog -->
 <div class="modal fade no-print" id="course-info" tabindex="-1" aria-labelledby="course-info-label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -220,17 +359,18 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id=course-description>
-      </div>
-
+      <div class="modal-body" id="course-description"></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id='modal-enrolling'>Enrolling</button>
-        <button type="button" class="btn btn-success" id='modal-completed'>Completed</button>
+        <button type="button" class="btn wz-btn-quiet" data-dismiss="modal">Close</button>
+        <button type="button" class="btn wz-btn-enrol" id="modal-enrolling">Enrolling</button>
+        <button type="button" class="btn wz-btn-done" id="modal-completed">Completed</button>
       </div>
     </div>
   </div>
 </div>
+
+
+    <div class="container">
       <div class="push no-print">
         <hr>
 <footer class="footer no-print"> 
