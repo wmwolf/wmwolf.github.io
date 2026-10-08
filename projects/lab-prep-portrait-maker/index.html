@@ -94,8 +94,10 @@
         <p class="label-sm">Color</p>
         <div class="seg" role="radiogroup" aria-label="Color variant">
           <label><input type="radio" name="variant" value="royal" checked><span><i class="sw" style="background:linear-gradient(135deg,#232C99,#07233D);box-shadow:inset 0 -6px 0 #EDAC1A"></i>Royal</span></label>
-          <label><input type="radio" name="variant" value="navy"><span><i class="sw" style="background:radial-gradient(circle at 0 0,#0160F2,#07233D 70%);box-shadow:inset 0 -6px 0 #FFFFFF"></i>Navy</span></label>
           <label><input type="radio" name="variant" value="gold"><span><i class="sw" style="background:#EDAC1A;box-shadow:inset 0 -6px 0 #07233D"></i>Gold</span></label>
+          <label><input type="radio" name="variant" value="light"><span><i class="sw" style="background:linear-gradient(135deg,#EEF3FA,#FFFFFF);box-shadow:inset 0 -6px 0 #232C99"></i>Light</span></label>
+          <label><input type="radio" name="variant" value="split"><span><i class="sw" style="background:linear-gradient(180deg,#232C99 0 68%,#EDAC1A 68%)"></i>Split</span></label>
+          <label><input type="radio" name="variant" value="navy"><span><i class="sw" style="background:radial-gradient(circle at 0 0,#0160F2,#07233D 70%);box-shadow:inset 0 -6px 0 #FFFFFF"></i>Navy</span></label>
         </div>
       </div>
 
@@ -151,12 +153,30 @@
       art: "wave", artColor: "#FFFFFF", blend: "overlay", alpha: 0.9,
       echo: "#232C99", name: "#07233D", label: "#232C99", rule: "#232C99", photoBg: "#D9A01C", figure: "rgba(7,35,61,.18)", figureText: "rgba(7,35,61,.6)",
     },
+    light: {   // gray -> white, gold wave, royal name, gold outline (the brand's light ground)
+      paint: c => { const g = c.createLinearGradient(-BLEED, -BLEED, W + BLEED, H + BLEED); g.addColorStop(0, "#EEF3FA"); g.addColorStop(1, "#FFFFFF"); c.fillStyle = g; c.fillRect(-BLEED, -BLEED, W + 2 * BLEED, H + 2 * BLEED); },
+      art: "wave", artColor: "#EDAC1A", blend: "source-over", alpha: 0.9,
+      echo: "#EDAC1A", name: "#232C99", label: "#07233D", rule: "#EDAC1A", photoBg: "#DCE5F0", figure: "rgba(35,44,153,.16)", figureText: "rgba(7,35,61,.5)",
+    },
+    split: {   // royal -> navy above, gold band below the photo; the portrait sits on the seam
+      paint: c => {
+        const g = c.createLinearGradient(-BLEED, -BLEED, W + BLEED, H + BLEED); g.addColorStop(0, "#232C99"); g.addColorStop(1, "#07233D");
+        c.fillStyle = g; c.fillRect(-BLEED, -BLEED, W + 2 * BLEED, SEAM + BLEED);
+        c.fillStyle = "#EDAC1A"; c.fillRect(-BLEED, SEAM, W + 2 * BLEED, H - SEAM + BLEED);
+      },
+      clipArt: true,                            // keep the river on the royal part
+      river: { x: -900, y: -120, h: 1150 },     // higher, so it shows in the strip left of the photo
+      art: "river", artColor: "#FFFFFF", blend: "overlay", alpha: 1,
+      labelBottom: true,                        // label ends at the seam so it stays on royal
+      echo: "#FFFFFF", name: "#07233D", label: "#FFFFFF", rule: "#EDAC1A", photoBg: "#1A2E7A", figure: "rgba(178,197,213,.3)", figureText: "rgba(238,243,250,.6)",
+    },
   };
 
   // ---------- layout (trim units) ----------
   // 4:5 portrait set to the right margin; offset outline drops down-left (echoes the boxed monogram).
   const PH = { x: W - M - 620, y: M, w: 620, h: 775 };
   const ECHO = { dx: -24, dy: 24 };
+  const SEAM = PH.y + PH.h;                     // split variant: royal above, gold below
   const RIVER = { x: -260, y: 330, h: 1000 };
 
   const state = { variant: "royal", page: "letter" };
@@ -191,10 +211,11 @@
     const a = art[V.art + V.artColor];
     if (a) {
       c.save(); c.globalCompositeOperation = V.blend; c.globalAlpha = V.alpha;
+      if (V.clipArt) { c.beginPath(); c.rect(-BLEED, -BLEED, W + 2 * BLEED, SEAM + BLEED); c.clip(); }
       if (V.art === "river") {
         // River sweeps from upper left down behind the photo to the lower right
-        const rh = RIVER.h, rw = rh * (1969.74 / 1608.51);
-        c.drawImage(a, RIVER.x, RIVER.y, rw, rh);
+        const R = V.river || RIVER, rh = R.h, rw = rh * (1969.74 / 1608.51);
+        c.drawImage(a, R.x, R.y, rw, rh);
       } else {
         // Wave fragment in the upper-left corner, fading out toward the name
         const b = bleed ? BLEED : 0;
@@ -249,7 +270,7 @@
 
     // Optional label: Inter Black caps, set vertically in the band left of the photo, reading upward
     const label = F.label.value.trim().toUpperCase();
-    const bandTop = PH.y, bandBottom = PH.y + ECHO.dy + PH.h;
+    const bandTop = PH.y, bandBottom = V.labelBottom ? SEAM - 20 : PH.y + ECHO.dy + PH.h;
     let ls = 26; c.font = `900 ${ls}px Inter`;
     while (label && ls > 14 && spacedWidth(label, ls * 0.2) > bandBottom - bandTop - 110) { ls -= 1; c.font = `900 ${ls}px Inter`; }
     c.save(); c.translate(M + ls * 0.73, bandBottom); c.rotate(-Math.PI / 2);
@@ -377,6 +398,7 @@
   Promise.all([
     load(svgURL(recolor(SVG.river, "#FFFFFF"))).then(i => (art["river#FFFFFF"] = i)),
     load(svgURL(recolor(SVG.wave, "#FFFFFF"))).then(i => (art["wave#FFFFFF"] = i)),
+    load(svgURL(recolor(SVG.wave, "#EDAC1A"))).then(i => (art["wave#EDAC1A"] = i)),
     document.fonts ? Promise.all(["900 24px Inter", "700 24px Inter", '700 150px "PT Serif"'].map(f => document.fonts.load(f))).catch(() => {}) : null,
   ]).then(draw);
   if (document.fonts) document.fonts.ready.then(draw);
