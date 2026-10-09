@@ -1068,6 +1068,11 @@
 /* ---------------------------------------------------------------- print
    Printing is how a student walks out with the plan, so the plan gets the
    whole page and drops every screen-only flourish.                        */
+
+/* Bootstrap 4's print styles set @page { size: a3 }, which sends the plan
+   out on A3 paper. Students print on US letter. */
+@page { size: letter; }
+
 @media print {
   /* header_common.html declares .no-print, but this file loads after it and
      at the same specificity, so any display: block here would quietly beat
